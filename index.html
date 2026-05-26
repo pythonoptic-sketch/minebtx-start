@@ -233,15 +233,15 @@
           <div class="split-heading">
             <div>
               <p class="eyebrow">Fee model</p>
-              <h2 id="fee-model-title">Recommended pool fee: 1.5% to 2.5%.</h2>
+              <h2 id="fee-model-title">Launch promo fee: 0.50%.</h2>
             </div>
             <a class="text-link" href="FEE_MODEL.md">Open full model</a>
           </div>
           <div class="fee-model-grid">
             <article class="fee-model-card emphasis">
-              <span class="metric-label">Suggested default today</span>
-              <strong>2.00%</strong>
-              <p>Use `200 bps` if the goal is fast miner acquisition while still funding pool operations.</p>
+              <span class="metric-label">Launch promo now</span>
+              <strong>0.50%</strong>
+              <p>Use `50 bps` to be visibly more attractive than typical mining-pool fees during the acquisition window.</p>
             </article>
             <article class="fee-model-card">
               <span class="metric-label">Current live pool fee</span>
@@ -249,9 +249,9 @@
               <p>The live pool currently reports this through the public stats API. This static page does not change the backend fee.</p>
             </article>
             <article class="fee-model-card">
-              <span class="metric-label">Growth-first promo</span>
+              <span class="metric-label">Post-promo target</span>
               <strong>1.50%</strong>
-              <p>Use `150 bps` for a lower-friction launch window while the pool is below 1% of network hashrate.</p>
+              <p>Move to `150 bps` only after the pool has clear retained hashrate and visible payout history.</p>
             </article>
           </div>
           <div class="formula-panel">
@@ -262,15 +262,16 @@
               <code>f* = 1 / (1 + epsilon)</code>.
             </p>
             <div class="elasticity-row" aria-label="Elasticity fee recommendations">
-              <span>ε=30 → 3.23%</span>
-              <span>ε=40 → 2.44%</span>
-              <span>ε=50 → 1.96%</span>
-              <span>ε=60 → 1.64%</span>
+              <span>Launch → 0.50%</span>
+              <span>Pool share 1% → 1.00%</span>
+              <span>Pool share 2% → 1.50%</span>
+              <span>Stable ops → 2.00%</span>
             </div>
             <p>
-              Because BTX is early, switching costs are low, and the BTX 12-month
-              forward model implies growth upside comes from retained hashrate,
-              the practical range is below the high-fee extraction zone.
+              A 0.50% launch fee is below the static revenue optimum on purpose.
+              The goal is miner acquisition: lower friction, more hashrate, more
+              visible payout history, and stronger pool-share growth before BTX's
+              forward-price path matters.
             </p>
           </div>
         </div>

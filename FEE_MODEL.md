@@ -107,43 +107,48 @@ Fee revenue comparison at current share:
 
 | Fee | Current model price revenue/day | 12m forward revenue/day |
 | ---: | ---: | ---: |
+| 0.25% | $1.32 | $42.63 |
+| 0.50% | $2.64 | $85.26 |
+| 0.75% | $3.96 | $127.89 |
 | 1.0% | $5.28 | $170.52 |
 | 1.5% | $7.92 | $255.78 |
 | 2.0% | $10.56 | $341.03 |
 | 2.5% | $13.19 | $426.29 |
-| 3.0% | $15.83 | $511.55 |
-| 4.0% | $21.11 | $682.07 |
-| 5.0% | $26.39 | $852.59 |
 
-The absolute dollar difference between `2.0%` and `2.5%` is currently small,
-while the acquisition signal to miners is meaningful. If the 12-month forward
-price path materializes, fee revenue grows with price and pool share. That
-argues for maximizing miner adoption and retained hashrate now.
+The absolute dollar difference between `0.50%` and `2.50%` is currently about
+`$10.56/day` at current model price and current pool share. That is not enough
+to justify being fee-average during launch. If the 12-month forward price path
+materializes, fee revenue grows mainly through price and pool-share growth, so
+the better near-term objective is maximizing miner adoption and retained
+hashrate.
 
 ## Recommendation
 
-Recommended live fee range:
+Recommended launch fee:
 
 ```text
-1.5% to 2.5%
+0.50% = 50 bps
 ```
 
-Recommended default today:
+Recommended launch schedule:
 
 ```text
-2.0% = 200 bps
+Pool share below 1.0%:      0.50%  (50 bps)
+Pool share 1.0% to 2.0%:    1.00%  (100 bps)
+Pool share 2.0% to 5.0%:    1.50%  (150 bps)
+Stable retained pool:       2.00%  (200 bps)
 ```
 
-Growth-first promotional fee:
+Upper bound while still growing:
 
 ```text
-1.5% = 150 bps
+2.50% = 250 bps
 ```
 
 Avoid for now:
 
 ```text
-> 3.0%
+> 2.50%
 ```
 
 Reasoning:
@@ -153,6 +158,24 @@ Reasoning:
 - The 12-month price model implies revenue upside comes more from network and
   pool-share growth than from extracting another 50 bps today.
 - A lower fee improves the visible value proposition for new miners.
+- Public mining-pool fee references commonly sit around `0.25%` to `2%`.
+  To be clearly more attractive, the launch offer should be near the low end,
+  not merely average.
+
+## Competitive Positioning
+
+The offer should be simple:
+
+```text
+0.50% launch fee while the pool is below 1% network share.
+Weekly payouts.
+No minimum beyond dust.
+Published fee and treasury addresses.
+Open-source miner.
+```
+
+This is more compelling than competing on claims like "fast" or "community"
+alone because it directly improves the miner's expected net payout.
 
 ## Implementation Note
 
@@ -164,7 +187,7 @@ show the recommendation, but the real pool fee remains whatever
 To actually change the live pool fee, update the pool backend policy/config to:
 
 ```text
-pool_fee_bps = 200
+pool_fee_bps = 50
 ```
 
 Then confirm the change with:
