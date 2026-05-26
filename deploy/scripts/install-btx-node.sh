@@ -64,6 +64,7 @@ daemon=0
 listen=1
 rpcbind=127.0.0.1
 rpcallowip=127.0.0.1
+rpcport=19334
 rpcuser=${RPC_USER}
 rpcpassword=${RPC_PASS}
 datadir=${DATA_DIR}

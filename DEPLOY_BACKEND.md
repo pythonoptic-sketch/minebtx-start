@@ -16,6 +16,7 @@ Use a Linux VM with:
 - 16+ GB RAM
 - 1 TB SSD minimum for chainstate headroom
 - inbound TCP 443 and 3333 open
+- outbound peer connectivity for `btxd`; inbound TCP 19335 is recommended for a healthier public node
 - SSH access
 
 Set DNS once the server IP exists:
