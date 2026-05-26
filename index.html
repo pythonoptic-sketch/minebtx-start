@@ -23,6 +23,7 @@
         <a href="#start">Start</a>
         <a href="#compatibility">Compatibility</a>
         <a href="#gpu-ranking">GPU ranking</a>
+        <a href="#rent-gpu">Rent GPUs</a>
         <a href="#track">Track</a>
         <a href="#transparency">Transparency</a>
         <a href="#operating-model">Model</a>
@@ -362,6 +363,91 @@
               <tbody id="gpu-ranking-body">
                 <tr>
                   <td colspan="8">Loading GPU ranking...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="band vast-band" id="rent-gpu" aria-labelledby="vast-title">
+        <div class="section-inner">
+          <div class="split-heading">
+            <div>
+              <p class="eyebrow">Rent GPUs</p>
+              <h2 id="vast-title">Live Vast.ai pricing ranked for BTX mining.</h2>
+            </div>
+            <p id="vast-status" class="status-text">Loading Vast marketplace snapshot...</p>
+          </div>
+
+          <div class="vast-summary" aria-label="Vast rental summary">
+            <article class="profile-metric">
+              <span class="metric-label">Available offers</span>
+              <strong id="vast-offer-count">Loading</strong>
+              <p>Verified, rentable Vast offers from the latest marketplace snapshot.</p>
+            </article>
+            <article class="profile-metric">
+              <span class="metric-label">Lowest hourly</span>
+              <strong id="vast-best-price">Loading</strong>
+              <p>Raw hourly GPU rental price. Vast confirms final cost at checkout.</p>
+            </article>
+            <article class="profile-metric">
+              <span class="metric-label">Best cost / BTX</span>
+              <strong id="vast-best-cost">Loading</strong>
+              <p>Estimated from Vast price and the BTX Start GPU yield model.</p>
+            </article>
+            <article class="profile-metric">
+              <span class="metric-label">Best expected yield</span>
+              <strong id="vast-best-yield">Loading</strong>
+              <p>Expected BTX/hour before pool luck and rental interruptions.</p>
+            </article>
+            <article class="profile-metric">
+              <span class="metric-label">Referral</span>
+              <strong id="vast-referral-status">Checking</strong>
+              <p>All offer buttons use the configured Vast referral link when active.</p>
+            </article>
+          </div>
+
+          <div class="formula-panel compact-formula">
+            <p id="vast-disclosure">
+              BTX Start may earn Vast.ai referral credits or commission from GPU rental links. This does not affect your BTX payout address, pool payout, or mining rewards.
+            </p>
+          </div>
+
+          <div class="gpu-ranking-controls" aria-label="Vast offer controls">
+            <label for="vast-search">
+              <span>Search Vast offers</span>
+              <input id="vast-search" type="search" placeholder="Search RTX 4090, 5060 Ti, Spain, Utah..." autocomplete="off">
+            </label>
+            <label for="vast-sort">
+              <span>Sort by</span>
+              <select id="vast-sort">
+                <option value="cost">Cost / BTX</option>
+                <option value="price">Lowest price</option>
+                <option value="yield">BTX/hour</option>
+                <option value="reliability">Reliability</option>
+              </select>
+            </label>
+            <p class="status-text">Pricing comes from Vast.ai and is cached on this site for reliability.</p>
+          </div>
+
+          <div class="table-wrap vast-table" tabindex="0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Vast offer</th>
+                  <th>Price</th>
+                  <th>BTX/hour</th>
+                  <th>Cost / BTX</th>
+                  <th>Region</th>
+                  <th>Reliability</th>
+                  <th>Rental link</th>
+                </tr>
+              </thead>
+              <tbody id="vast-offers-body">
+                <tr>
+                  <td colspan="8">Loading Vast GPU offers...</td>
                 </tr>
               </tbody>
             </table>

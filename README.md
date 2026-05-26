@@ -10,6 +10,7 @@ proof-of-work.
 - **Stats API target**: `https://api.drinknile.com/stats`
 - **BTX Start platform fee**: 0.00%, pending first-party backend launch
 - **Revenue model**: [REVENUE_MODEL.md](REVENUE_MODEL.md)
+- **GPU rentals**: [VAST_AI.md](VAST_AI.md)
 
 ---
 

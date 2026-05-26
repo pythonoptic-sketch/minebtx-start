@@ -1,0 +1,7 @@
+{
+  "provider": "Vast.ai",
+  "referral_configured": false,
+  "referral_url": "https://cloud.vast.ai/?ref=YOUR_VAST_REFERRAL_CODE",
+  "fallback_url": "https://cloud.vast.ai/",
+  "disclosure": "BTX Start may earn Vast.ai referral credits or commission from GPU rental links. This does not affect your BTX payout address, pool payout, or mining rewards."
+}

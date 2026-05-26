@@ -1,0 +1,37 @@
+name: Update Vast GPU offers
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17,47 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-vast-offers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch Vast offers
+        run: |
+          set -euo pipefail
+          node scripts/update-vast-offers.js vast-offers.json
+
+      - name: Commit changed offers
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- vast-offers.json; then
+            echo "No Vast offer changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add vast-offers.json
+          git commit -m "Update Vast GPU offers"
+          git push

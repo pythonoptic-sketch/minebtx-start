@@ -3,6 +3,8 @@ const installerUrl = `${siteBaseUrl}/install.sh`;
 const statsUrl = "https://api.drinknile.com/stats";
 const statsFallbackUrl = "stats-snapshot.json";
 const treasuryUrl = "platform-treasury.json";
+const vastOffersUrl = "vast-offers.json";
+const vastReferralUrl = "vast-referral.json";
 const placeholderAddress = "btx1z...YOUR_BTX_ADDRESS...";
 const blockRewardBtx = 20;
 const targetBlockSeconds = 90;
@@ -12,6 +14,8 @@ const btxModelPriceUsd = 5.707747399717103;
 const referenceNetworkHashNps = 2_338_067;
 let currentNetworkHashNps = referenceNetworkHashNps;
 let currentPlatformFeeBps = 0;
+let vastOffers = [];
+let vastReferralConfig = null;
 
 const formatNumber = new Intl.NumberFormat("en-US");
 const formatBtx = new Intl.NumberFormat("en-US", {
@@ -28,6 +32,12 @@ const formatUsdPrice = new Intl.NumberFormat("en-US", {
   currency: "USD",
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
+});
+const formatUsdPrecise = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 3,
+  maximumFractionDigits: 3,
 });
 
 const gpuProfiles = [
@@ -129,6 +139,18 @@ function formatSatToBtx(value) {
   return `${formatBtx.format(number / 100_000_000)} BTX`;
 }
 
+function formatHourlyUsd(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "Unknown";
+  return `${number < 1 ? formatUsdPrecise.format(number) : formatUsdPrice.format(number)}/h`;
+}
+
+function formatCostPerBtx(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "Unknown";
+  return `${formatUsdPrecise.format(number)}/BTX`;
+}
+
 function formatBtxRate(value) {
   if (!Number.isFinite(value)) return "Unknown";
   if (value >= 100) return formatNumber.format(Math.round(value));
@@ -157,6 +179,106 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function normalizeGpuText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\bnvidia\b|\bgeforce\b|\bsxm\b|\bpcie\b|\blaptop\b/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function gpuModelKey(value) {
+  const text = normalizeGpuText(value);
+  const specialKeys = [
+    "b200", "b100", "h200", "h100", "l40s", "l40", "l4",
+    "a100", "a40", "a6000", "a5000", "a4000", "a2000",
+    "titan rtx",
+  ];
+  const special = specialKeys.find((key) => text.includes(key));
+  if (special) return special;
+
+  const proMatch = text.match(/\brtx pro\s+(\d{4})\b/);
+  if (proMatch) return `rtx pro ${proMatch[1]}`;
+
+  const adaMatch = text.match(/\brtx\s+(\d{4})\s+ada\b/);
+  if (adaMatch) return `rtx ${adaMatch[1]} ada`;
+
+  const rtxMatch = text.match(/\brtx\s*(\d{4})(?:\s*(ti|super))?(?:\s*(super))?\b/);
+  if (rtxMatch) {
+    return [
+      "rtx",
+      rtxMatch[1],
+      rtxMatch[2] || "",
+      rtxMatch[3] || "",
+    ].filter(Boolean).join(" ");
+  }
+
+  const gtxMatch = text.match(/\bgtx\s*(\d{3,4})(?:\s*(ti|super))?\b/);
+  if (gtxMatch) {
+    return ["gtx", gtxMatch[1], gtxMatch[2] || ""].filter(Boolean).join(" ");
+  }
+
+  return text;
+}
+
+function findGpuProfileForOffer(offer) {
+  const offerKey = gpuModelKey(offer.gpu_name);
+  return gpuProfiles.find((profile) => gpuModelKey(profile.gpu) === offerKey)
+    || gpuProfiles.find((profile) => {
+      const profileText = normalizeGpuText(profile.gpu);
+      const offerText = normalizeGpuText(offer.gpu_name);
+      return profileText.includes(offerText) || offerText.includes(profileText);
+    })
+    || null;
+}
+
+function enrichVastOffer(offer) {
+  const profile = findGpuProfileForOffer(offer);
+  const numGpus = Number(offer.num_gpus) || 1;
+  const hourly = Number(offer.discounted_dph_total || offer.dph_total);
+  const nps = profile ? profile.nps * numGpus : null;
+  const btxHour = Number.isFinite(nps) ? estimateBtxPerHour(nps) : null;
+  const costPerBtx = Number.isFinite(hourly) && Number.isFinite(btxHour) && btxHour > 0
+    ? hourly / btxHour
+    : null;
+
+  return {
+    ...offer,
+    profile,
+    numGpus,
+    hourly,
+    nps,
+    btxHour,
+    costPerBtx,
+  };
+}
+
+function buildVastLink(offer) {
+  const config = vastReferralConfig || {};
+  const base = config.referral_configured ? config.referral_url : config.fallback_url;
+  if (!base) return "https://cloud.vast.ai/";
+
+  const replacements = {
+    "{offer_id}": offer.id,
+    "{ask_contract_id}": offer.ask_contract_id,
+    "{gpu_name}": encodeURIComponent(offer.gpu_name || "gpu"),
+  };
+  let url = String(base);
+  Object.entries(replacements).forEach(([token, value]) => {
+    url = url.replaceAll(token, value ?? "");
+  });
+
+  try {
+    const parsed = new URL(url);
+    parsed.searchParams.set("utm_source", "btx_start");
+    parsed.searchParams.set("utm_medium", "gpu_rental");
+    if (offer.id) parsed.searchParams.set("utm_content", `vast_offer_${offer.id}`);
+    return parsed.toString();
+  } catch (error) {
+    return url;
+  }
 }
 
 async function hydrateStats() {
@@ -376,6 +498,97 @@ function setupGpuRanking() {
   renderGpuRanking();
 }
 
+async function hydrateVastOffers() {
+  const status = document.getElementById("vast-status");
+  try {
+    const [offersResponse, referralResponse] = await Promise.all([
+      fetch(vastOffersUrl, { cache: "no-store" }),
+      fetch(vastReferralUrl, { cache: "no-store" }),
+    ]);
+    if (!offersResponse.ok) throw new Error(`Vast offers request failed: ${offersResponse.status}`);
+    if (!referralResponse.ok) throw new Error(`Vast referral config failed: ${referralResponse.status}`);
+
+    const offersPayload = await offersResponse.json();
+    vastReferralConfig = await referralResponse.json();
+    vastOffers = Array.isArray(offersPayload.offers) ? offersPayload.offers : [];
+
+    const timestamp = offersPayload.fetched_at
+      ? new Date(offersPayload.fetched_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      : "recently";
+    if (status) status.textContent = `Vast pricing snapshot updated ${timestamp}`;
+    setText("vast-referral-status", vastReferralConfig.referral_configured ? "Active" : "Needs link");
+    setText("vast-disclosure", vastReferralConfig.disclosure);
+    renderVastOffers();
+  } catch (error) {
+    if (status) status.textContent = "Vast pricing unavailable. Check the latest Vast marketplace directly.";
+  }
+}
+
+function renderVastOffers() {
+  const body = document.getElementById("vast-offers-body");
+  if (!body) return;
+
+  const search = document.getElementById("vast-search")?.value.trim().toLowerCase() || "";
+  const sort = document.getElementById("vast-sort")?.value || "cost";
+  const enriched = vastOffers
+    .map(enrichVastOffer)
+    .filter((offer) => {
+      const haystack = `${offer.gpu_name} ${offer.geolocation} ${offer.driver_version} ${offer.verification}`.toLowerCase();
+      return haystack.includes(search);
+    })
+    .sort((left, right) => {
+      if (sort === "price") return left.hourly - right.hourly;
+      if (sort === "yield") return (right.btxHour || 0) - (left.btxHour || 0);
+      if (sort === "reliability") return (right.reliability2 || 0) - (left.reliability2 || 0);
+      return (left.costPerBtx ?? Number.POSITIVE_INFINITY) - (right.costPerBtx ?? Number.POSITIVE_INFINITY);
+    });
+
+  const bestByCost = enriched.find((offer) => Number.isFinite(offer.costPerBtx));
+  const cheapest = enriched.find((offer) => Number.isFinite(offer.hourly));
+  const bestYield = enriched.find((offer) => Number.isFinite(offer.btxHour));
+
+  setText("vast-offer-count", `${formatNumber.format(enriched.length)} offers`);
+  setText("vast-best-price", cheapest ? formatHourlyUsd(cheapest.hourly) : "Pending");
+  setText("vast-best-cost", bestByCost ? formatCostPerBtx(bestByCost.costPerBtx) : "Pending");
+  setText("vast-best-yield", bestYield ? `${formatBtxRate(bestYield.btxHour)} BTX/h` : "Pending");
+
+  body.innerHTML = enriched.length
+    ? enriched.slice(0, 24).map((offer, index) => {
+      const reliability = Number.isFinite(offer.reliability2)
+        ? `${(offer.reliability2 * 100).toFixed(1)}%`
+        : "Unknown";
+      const vramGb = Number.isFinite(offer.gpu_ram_mb)
+        ? `${Math.round(offer.gpu_ram_mb / 1024)}GB`
+        : "VRAM n/a";
+      const linkLabel = vastReferralConfig?.referral_configured ? "Rent via Vast" : "Open Vast";
+
+      return `
+        <tr>
+          <td>${index + 1}</td>
+          <td>
+            <strong>${escapeHtml(offer.gpu_name || "Vast GPU")}</strong>
+            <span>${offer.numGpus} GPU · ${vramGb}</span>
+          </td>
+          <td>${formatHourlyUsd(offer.hourly)}</td>
+          <td>${Number.isFinite(offer.btxHour) ? `${formatBtxRate(offer.btxHour)} BTX` : "Profile needed"}</td>
+          <td>${Number.isFinite(offer.costPerBtx) ? formatCostPerBtx(offer.costPerBtx) : "Unknown"}</td>
+          <td>${escapeHtml(offer.geolocation || "Unknown")}</td>
+          <td>${reliability}</td>
+          <td>
+            <a class="mini-link" href="${escapeHtml(buildVastLink(offer))}" target="_blank" rel="noreferrer">${linkLabel}</a>
+          </td>
+        </tr>
+      `;
+    }).join("")
+    : `<tr><td colspan="8">No Vast offers matched this search.</td></tr>`;
+}
+
+function setupVastOffers() {
+  document.getElementById("vast-search")?.addEventListener("input", renderVastOffers);
+  document.getElementById("vast-sort")?.addEventListener("change", renderVastOffers);
+  hydrateVastOffers();
+}
+
 function renderOperatingModel() {
   const body = document.getElementById("operating-model-body");
   if (!body) return;
@@ -532,6 +745,7 @@ setupHeroCanvas();
 setupCopyButtons();
 setupAddressBuilder();
 setupGpuRanking();
+setupVastOffers();
 renderOperatingModel();
 hydrateStats();
 hydrateTreasuryConfig();

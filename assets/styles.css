@@ -555,6 +555,12 @@ main {
     #0a0f15;
 }
 
+.vast-band {
+  background:
+    linear-gradient(90deg, rgba(255, 123, 0, 0.05), transparent 46%),
+    #0c1117;
+}
+
 .tracking-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -564,15 +570,21 @@ main {
 .status-grid,
 .treasury-grid,
 .tracker-grid,
-.profile-metrics {
+.profile-metrics,
+.vast-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
-.profile-metrics {
+.profile-metrics,
+.vast-summary {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-bottom: 14px;
+}
+
+.vast-summary {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .status-card,
@@ -1026,6 +1038,10 @@ main {
   min-width: 920px;
 }
 
+.vast-table table {
+  min-width: 1060px;
+}
+
 .operating-table td strong,
 .operating-table td span {
   display: block;
@@ -1228,6 +1244,25 @@ th {
   text-transform: uppercase;
 }
 
+.mini-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 123, 0, 0.55);
+  border-radius: 6px;
+  color: var(--orange);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mini-link:hover {
+  border-color: var(--orange);
+  background: rgba(255, 123, 0, 0.08);
+}
+
 tr:last-child td {
   border-bottom: 0;
 }
@@ -1313,6 +1348,7 @@ tr:last-child td {
   .treasury-grid,
   .tracker-grid,
   .profile-metrics,
+  .vast-summary,
   .flow-grid,
   .friction-grid,
   .fee-model-grid,
@@ -1422,6 +1458,7 @@ tr:last-child td {
   .treasury-grid,
   .tracker-grid,
   .profile-metrics,
+  .vast-summary,
   .flow-grid,
   .friction-grid,
   .transparency-grid,
