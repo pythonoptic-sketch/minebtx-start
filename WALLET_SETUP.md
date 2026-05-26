@@ -56,13 +56,15 @@ first-party stratum endpoint: `stratum.drinknile.com:3333`. This avoids moving
 miners from an old pool later.
 
 The first-party stats target is `https://api.drinknile.com/stats`. Until that
-API is live, the site shows a provisioning snapshot with `pool_fee_bps = 0` and
-zero active workers.
+API is live, the site shows a provisioning snapshot with a 7-day free trial,
+`post_trial_fee_bps = 50`, and zero active workers.
 
 BTX Start should use a dedicated public platform treasury address for fees. The
-platform fee is intended to fund infrastructure, security, miner tooling, and
-collectively selected new BTX projects. It should not be a personal day-to-day
-wallet, and it should not imply miner ownership, dividends, or profit-sharing.
+target policy gives each payout address 7 days at 0.00%, then applies a 0.50%
+fee through backend payout accounting. The platform fee is intended to fund
+infrastructure, security, miner tooling, and collectively selected new BTX
+projects. It should not be a personal day-to-day wallet, and it should not
+imply miner ownership, dividends, or profit-sharing.
 
 Before announcing the pool as live, deploy the stratum endpoint, stats API,
 payout wallet, per-wallet dashboard, and release artifacts, then run

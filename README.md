@@ -8,7 +8,7 @@ proof-of-work.
 - **Installer URL**: https://drinknile.com/install.sh
 - **Default stratum target**: `stratum.drinknile.com:3333`
 - **Stats API target**: `https://api.drinknile.com/stats`
-- **BTX Start platform fee**: 0.00%, pending first-party backend launch
+- **BTX Start platform fee**: 0.00% for 7 days per payout address, then 0.50% after backend launch
 - **Revenue model**: [REVENUE_MODEL.md](REVENUE_MODEL.md)
 - **GPU rentals**: [VAST_AI.md](VAST_AI.md)
 
@@ -44,9 +44,9 @@ installer. You won't silently mine on CPU for three weeks like we did.
 reorg storm). BTX Start keeps the miner path to `curl | bash | mine`.
 One binary, one YAML, one tmux session. No node admin.
 
-**Fee transparency.** The public site shows BTX Start's 0.00% platform-fee
-policy, first-party backend readiness, and the public fee/treasury addresses
-once the backend wallet is connected.
+**Fee transparency.** The public site shows BTX Start's 7-day fee-free trial,
+0.50% post-trial platform fee, first-party backend readiness, and the public
+fee/treasury addresses once the backend wallet is connected.
 
 **Near-zero friction.** The default path requires no account, no email, no
 chat app, no wallet connection, and no custody. A miner pastes a payout address,

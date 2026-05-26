@@ -21,7 +21,9 @@ public template referral links; if you create a BTX Start template, paste that
 template referral URL here instead.
 
 The site displays a disclosure next to the rental table. Referral earnings are
-separate from the BTX mining fee policy. BTX Start platform fee remains 0.00%.
+separate from the BTX mining fee policy. BTX Start gives each payout address a
+7-day 0.00% platform-fee trial, then targets a 0.50% post-trial fee through
+backend payout accounting.
 
 Do not commit a Vast API key. Store it as the GitHub Actions repository secret
 `VAST_API_KEY`; the refresh workflow passes it only to

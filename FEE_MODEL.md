@@ -13,7 +13,7 @@ BTX Start is now configured for first-party backend cutover:
 
 - Installer default pool: `stratum.drinknile.com:3333`
 - Public stats API target: `https://api.drinknile.com/stats`
-- Current launch pool fee: `0 bps` = `0.00%`
+- Current target pool fee: first 7 days `0 bps`, then `50 bps` = `0.50%`
 - Active workers now: `0`
 - Active workers, 24h: `0`
 - Fee address: pending dedicated first-party backend wallet
@@ -121,15 +121,17 @@ retained hashrate.
 
 ## Recommendation
 
-Current BTX Start platform fee:
+Current BTX Start platform fee policy:
 
 ```text
-0.00% = 0 bps
+trial_days = 7
+trial_fee_bps = 0
+post_trial_fee_bps = 50
 ```
 
 Future fee activation should follow `REVENUE_MODEL.md` and
-`backend/platform-revenue-policy.example.json`. In short: keep the platform fee
-at `0 bps` until BTX Start controls stratum, payout policy, fee routing, the
+`backend/platform-revenue-policy.example.json`. In short: keep fee routing
+disabled until BTX Start controls stratum, payout policy, fee routing, the
 public fee address, and a per-wallet dashboard with payout history.
 
 Reasoning:
@@ -137,10 +139,9 @@ Reasoning:
 - The immediate product goal is miner activation, not fee extraction.
 - New miners need a clear path: add address, run preflight, install, confirm
   shares, confirm GPU work, and check balance commands.
-- A zero BTX Start platform fee is easier to understand than a promotional fee
-  ladder.
-- Fee policy should not be revisited until BTX Start owns the backend, fee
-  routing, and first-party per-wallet dashboard.
+- A 7-day 0.00% trial is easier to evaluate than a paid-first mining path.
+- Fee routing should not be marked live until BTX Start owns the backend, fee
+  wallet, and first-party per-wallet dashboard.
 - Optional premium tools should be monetized separately from mining payouts
   where possible: fleet alerts, rig analytics, CSV exports, and managed setup
   support.
@@ -150,7 +151,8 @@ Reasoning:
 The offer should be simple:
 
 ```text
-0.00% BTX Start platform fee during onboarding.
+0.00% BTX Start platform fee for the first 7 days.
+0.50% disclosed post-trial platform fee.
 Customer mines to their own BTX address.
 Preflight before install.
 Visible share, GPU, balance, block-credit, and aggregate stats signals.
@@ -167,22 +169,26 @@ It does not contain the live pool server configuration. The static site can
 show the recommendation, but the real pool fee remains whatever
 `https://api.drinknile.com/stats` reports as `policy.pool_fee_bps`.
 
-The live backend also controls where the fee goes. The first-party launch
-policy is zero fee. The installer has been pointed at
+The live backend also controls where the fee goes. The first-party policy is a
+7-day free trial followed by a 0.50% backend payout-accounting fee. The installer has been pointed at
 `stratum.drinknile.com:3333` so there is no migration from the old pool later,
 but public mining should wait until `scripts/verify-owned-backend.sh` passes
 against the production backend.
 
-BTX Start platform fee is currently 0.00%. If a platform fee is later enabled,
-it should route to a dedicated public platform treasury wallet, not a personal
-day-to-day wallet. The intended use would be infrastructure, security, miner
-tooling, and collectively selected new BTX projects. This treasury would not
-create miner ownership, dividends, or profit-sharing claims.
+The post-trial platform fee should route to a dedicated public platform
+treasury wallet, not a personal day-to-day wallet. The intended use is
+infrastructure, security, miner tooling, and collectively selected new BTX
+projects. This treasury does not create miner ownership, dividends, or
+profit-sharing claims.
 
 To actually change the live pool fee, update the pool backend policy/config to:
 
 ```text
-pool_fee_bps = 0
+fee_model = "per_wallet_trial_then_pool_fee"
+trial_days = 7
+trial_fee_bps = 0
+post_trial_fee_bps = 50
+pool_fee_bps = 50
 ```
 
 Then confirm the change with:

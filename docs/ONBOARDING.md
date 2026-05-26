@@ -28,9 +28,10 @@ by pointing your hashrate at DEXBTX:
 - **Simplicity.** Solo mining = run your own btxd (600 GB chainstate,
   manual peer wrangling, manual restart after reorg storms). Pooled
   mining = `curl | bash | mine`. One binary, one YAML, one tmux.
-- **Transparent pool economics.** BTX Start launch policy is 0.00% platform
-  fee. Payout policy, treasury, and fee receiving addresses must be published
-  through the first-party dashboard before the pool is marked live.
+- **Transparent pool economics.** BTX Start policy is 0.00% for the first
+  7 days per payout address, then 0.50% after the trial. Payout policy,
+  treasury, and fee receiving addresses must be published through the
+  first-party dashboard before the pool is marked live.
 
 ---
 
@@ -273,9 +274,10 @@ own BTX wallet until BTX Start ships a first-party per-wallet dashboard.
 ## Operational notes
 
 ### Pool fee
-BTX Start launch policy is 0.00% platform fee. If a later fee is enabled, it
-must route to a dedicated public platform address, not a personal mining
-address. PPLNS distribution should remain visible in the first-party dashboard.
+BTX Start policy is 0.00% platform fee for the first 7 days per payout address,
+then 0.50% after the trial. It must route to a dedicated public platform
+address, not a personal mining address. PPLNS distribution should remain visible
+in the first-party dashboard.
 
 ### Payouts
 Every Friday 18:00 UTC. Single batched multi-output transaction (low on-chain fee per recipient). No minimum threshold — only the network dust floor (10K sats ≈ 0.0001 BTX). Below dust, your balance rolls over to the next week.

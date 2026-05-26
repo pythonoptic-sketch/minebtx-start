@@ -44,7 +44,13 @@ cat > "${OUTPUT_FILE}" <<JSON
   "platform_fee_balance_btx": "0.00000000",
   "balance_source": "Local wallet created by scripts/create-platform-fee-wallet.sh",
   "backend_policy": {
-    "pool_fee_bps": 0,
+    "fee_model": "per_wallet_trial_then_pool_fee",
+    "fee_routing": "pool_payout_accounting",
+    "account_key_scope": "payout_address",
+    "trial_days": 7,
+    "trial_fee_bps": 0,
+    "post_trial_fee_bps": 50,
+    "pool_fee_bps": 50,
     "fee_address": "${ADDRESS}",
     "treasury_address": "${ADDRESS}"
   }
@@ -54,5 +60,5 @@ JSON
 log "created public platform fee address: ${ADDRESS}"
 log "wrote public metadata to ${OUTPUT_FILE}"
 log "next: copy the public address into platform-treasury.json and deploy backend policy:"
-printf 'pool_fee_bps = 0\nfee_address = "%s"\ntreasury_address = "%s"\n' "$ADDRESS" "$ADDRESS"
+printf 'fee_model = "per_wallet_trial_then_pool_fee"\ntrial_days = 7\ntrial_fee_bps = 0\npost_trial_fee_bps = 50\npool_fee_bps = 50\nfee_address = "%s"\ntreasury_address = "%s"\n' "$ADDRESS" "$ADDRESS"
 log "backup and secure the wallet on the machine running btxd. Never commit wallet.dat or private keys."

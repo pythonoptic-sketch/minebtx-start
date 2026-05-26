@@ -13,7 +13,7 @@ const blocksPerDay = 86400 / targetBlockSeconds;
 const btxModelPriceUsd = 5.707747399717103;
 const referenceNetworkHashNps = 2_338_067;
 let currentNetworkHashNps = referenceNetworkHashNps;
-let currentPlatformFeeBps = 0;
+let currentPlatformFeeBps = 50;
 let vastOffers = [];
 let vastReferralConfig = null;
 
@@ -137,6 +137,21 @@ function formatSatToBtx(value) {
   const number = Number(value);
   if (!Number.isFinite(number)) return "0.00000000 BTX";
   return `${formatBtx.format(number / 100_000_000)} BTX`;
+}
+
+function formatFeeBps(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? `${(number / 100).toFixed(2)}%` : "0.00%";
+}
+
+function formatFeePolicy(policy) {
+  const trialDays = Number(policy.trial_days ?? 0);
+  const trialBps = Number(policy.trial_fee_bps ?? 0);
+  const postTrialBps = Number(policy.post_trial_fee_bps ?? policy.post_trial_pool_fee_bps ?? policy.pool_fee_bps ?? 0);
+  if (trialDays > 0 && postTrialBps > trialBps) {
+    return `${formatFeeBps(trialBps)} first ${trialDays}d, then ${formatFeeBps(postTrialBps)}`;
+  }
+  return formatFeeBps(postTrialBps);
 }
 
 function formatHourlyUsd(value) {
@@ -297,8 +312,8 @@ async function hydrateStats() {
 
     setText("workers-now", formatMaybeNumber(pool.workers_active_now));
     setText("blocks-24h", formatMaybeNumber(pool.blocks_found_24h));
-    const backendFeeBps = Number(policy.pool_fee_bps ?? 0);
-    const backendFee = `${(backendFeeBps / 100).toFixed(2)}%`;
+    const backendFeeBps = Number(policy.post_trial_fee_bps ?? policy.pool_fee_bps ?? 0);
+    const backendFee = formatFeePolicy(policy);
     currentNetworkHashNps = Number(pool.network_hash_nps || btxd.network_hash_ps) || currentNetworkHashNps;
     const feeAddress = policy.fee_address || "Pending first-party backend";
     const treasuryAddress = policy.treasury_address || "Pending first-party backend";
@@ -358,13 +373,18 @@ async function hydrateTreasuryConfig() {
     const response = await fetch(treasuryUrl, { cache: "no-store" });
     if (!response.ok) throw new Error(`Treasury request failed: ${response.status}`);
     const treasury = await response.json();
-    const targetBps = Number(treasury.target_pool_fee_bps ?? 0);
+    const targetBps = Number(treasury.post_trial_pool_fee_bps ?? treasury.target_pool_fee_bps ?? 0);
+    const feePolicyLabel = formatFeePolicy({
+      trial_days: treasury.trial_days,
+      trial_fee_bps: treasury.trial_fee_bps,
+      post_trial_fee_bps: targetBps,
+    });
     const status = treasury.active ? "Connected" : "Provisioning";
 
     currentPlatformFeeBps = targetBps;
     setText("platform-treasury-status", status);
-    setText("platform-target-fee", `${(targetBps / 100).toFixed(2)}%`);
-    setText("platform-fee-hero", `${(targetBps / 100).toFixed(2)}%`);
+    setText("platform-target-fee", feePolicyLabel);
+    setText("platform-fee-hero", feePolicyLabel);
     setText("platform-fee-address", treasury.platform_fee_address || "Pending wallet creation");
     setText("platform-treasury-address", treasury.platform_treasury_address || "Pending wallet creation");
     setText("platform-fee-balance", treasury.platform_fee_balance_btx || "0.00000000 BTX");

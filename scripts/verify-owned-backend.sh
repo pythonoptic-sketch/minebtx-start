@@ -10,7 +10,10 @@ PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:${PATH:-}"
 STATS_URL="${STATS_URL:-https://api.drinknile.com/stats}"
 STRATUM_HOST="${STRATUM_HOST:-stratum.drinknile.com}"
 STRATUM_PORT="${STRATUM_PORT:-3333}"
-EXPECTED_POOL_FEE_BPS="${EXPECTED_POOL_FEE_BPS:-0}"
+EXPECTED_POOL_FEE_BPS="${EXPECTED_POOL_FEE_BPS:-50}"
+EXPECTED_TRIAL_DAYS="${EXPECTED_TRIAL_DAYS:-7}"
+EXPECTED_TRIAL_FEE_BPS="${EXPECTED_TRIAL_FEE_BPS:-0}"
+EXPECTED_POST_TRIAL_FEE_BPS="${EXPECTED_POST_TRIAL_FEE_BPS:-50}"
 EXPECTED_FEE_ADDRESS="${EXPECTED_FEE_ADDRESS:-}"
 EXPECTED_TREASURY_ADDRESS="${EXPECTED_TREASURY_ADDRESS:-}"
 PROTECTED_PAYOUT_ADDRESSES="${PROTECTED_PAYOUT_ADDRESSES:-}"
@@ -58,8 +61,50 @@ else
 fi
 
 pool_fee_bps="$(jq -r '.policy.pool_fee_bps // empty' "$tmp" 2>/dev/null || true)"
+fee_model="$(jq -r '.policy.fee_model // empty' "$tmp" 2>/dev/null || true)"
+fee_routing="$(jq -r '.policy.fee_routing // empty' "$tmp" 2>/dev/null || true)"
+account_key_scope="$(jq -r '.policy.account_key_scope // empty' "$tmp" 2>/dev/null || true)"
+trial_days="$(jq -r '.policy.trial_days // empty' "$tmp" 2>/dev/null || true)"
+trial_fee_bps="$(jq -r '.policy.trial_fee_bps // empty' "$tmp" 2>/dev/null || true)"
+post_trial_fee_bps="$(jq -r '.policy.post_trial_fee_bps // .policy.pool_fee_bps // empty' "$tmp" 2>/dev/null || true)"
 fee_address="$(jq -r '.policy.fee_address // empty' "$tmp" 2>/dev/null || true)"
 treasury_address="$(jq -r '.policy.treasury_address // empty' "$tmp" 2>/dev/null || true)"
+
+if [ "$fee_model" = "per_wallet_trial_then_pool_fee" ]; then
+  pass "fee model is per-wallet trial"
+else
+  fail "fee model is ${fee_model:-missing}; expected per_wallet_trial_then_pool_fee"
+fi
+
+if [ "$fee_routing" = "pool_payout_accounting" ]; then
+  pass "fee routing is backend payout accounting"
+else
+  fail "fee routing is ${fee_routing:-missing}; expected pool_payout_accounting"
+fi
+
+if [ "$account_key_scope" = "payout_address" ]; then
+  pass "trial key scope is payout address"
+else
+  fail "trial key scope is ${account_key_scope:-missing}; expected payout_address"
+fi
+
+if [ "$trial_days" = "$EXPECTED_TRIAL_DAYS" ]; then
+  pass "trial window is ${trial_days} day(s)"
+else
+  fail "trial window is ${trial_days:-missing}; expected ${EXPECTED_TRIAL_DAYS}"
+fi
+
+if [ "$trial_fee_bps" = "$EXPECTED_TRIAL_FEE_BPS" ]; then
+  pass "trial fee policy is ${trial_fee_bps} bps"
+else
+  fail "trial fee policy is ${trial_fee_bps:-missing} bps; expected ${EXPECTED_TRIAL_FEE_BPS}"
+fi
+
+if [ "$post_trial_fee_bps" = "$EXPECTED_POST_TRIAL_FEE_BPS" ]; then
+  pass "post-trial fee policy is ${post_trial_fee_bps} bps"
+else
+  fail "post-trial fee policy is ${post_trial_fee_bps:-missing} bps; expected ${EXPECTED_POST_TRIAL_FEE_BPS}"
+fi
 
 if [ "$pool_fee_bps" = "$EXPECTED_POOL_FEE_BPS" ]; then
   pass "pool fee policy is ${pool_fee_bps} bps"

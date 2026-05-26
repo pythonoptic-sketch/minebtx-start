@@ -4,8 +4,8 @@ This project does not currently contain the private DEXBTX pool backend. The
 public `dexbtx/minebtx` repository only ships the miner client and installer.
 The installer is intentionally pointed at `stratum.drinknile.com:3333` before
 public mining launch. Do not mark the backend live, advertise active mining, or
-enable fees until a first-party stratum pool, payout engine, stats API, and BTX
-wallet/node are running.
+enable fees until a first-party stratum pool, payout engine, stats API, BTX
+wallet/node, and dedicated platform fee wallet are running.
 
 ## Non-Negotiable Wallet Separation
 
@@ -43,16 +43,22 @@ The public stats payload must include:
 ```json
 {
   "policy": {
-    "pool_fee_bps": 0,
+    "fee_model": "per_wallet_trial_then_pool_fee",
+    "fee_routing": "pool_payout_accounting",
+    "account_key_scope": "payout_address",
+    "trial_days": 7,
+    "trial_fee_bps": 0,
+    "post_trial_fee_bps": 50,
+    "pool_fee_bps": 50,
     "fee_address": "btx1z...",
     "treasury_address": "btx1z..."
   }
 }
 ```
 
-The launch policy is zero platform fee. If a later fee is introduced, the fee
-address must be a dedicated public BTX Start address, not a personal payout
-address.
+The launch policy is 0.00% for seven days per payout address, then 0.50% after
+the trial. This must be enforced in backend payout accounting. The fee address
+must be a dedicated public BTX Start address, not a personal payout address.
 
 ## Required Backend Components
 
@@ -61,7 +67,9 @@ Minimum production backend:
 - synced `btxd` mainnet node with RPC locked to localhost/private network
 - stratum server compatible with the current `dexbtx-miner` client
 - per-worker share database keyed by `(payout_address, worker_name)`
+- first-accepted-share table keyed by `payout_address` for the 7-day trial
 - PPLNS accounting and payout journal
+- platform-fee ledger that accumulates post-trial fees to the public fee wallet
 - payout wallet with explicit operator approval flow
 - public stats API
 - per-wallet dashboard API
@@ -81,7 +89,10 @@ Run this before changing `install.sh` or the site to point at the owned pool:
 STATS_URL='https://api.drinknile.com/stats' \
 STRATUM_HOST='stratum.drinknile.com' \
 STRATUM_PORT='3333' \
-EXPECTED_POOL_FEE_BPS='0' \
+EXPECTED_POOL_FEE_BPS='50' \
+EXPECTED_TRIAL_DAYS='7' \
+EXPECTED_TRIAL_FEE_BPS='0' \
+EXPECTED_POST_TRIAL_FEE_BPS='50' \
 EXPECTED_FEE_ADDRESS='btx1z...platform-fee...' \
 EXPECTED_TREASURY_ADDRESS='btx1z...platform-treasury...' \
 PROTECTED_PAYOUT_ADDRESSES='btx1z...personal...,btx1z...vast...' \

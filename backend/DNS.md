@@ -49,7 +49,10 @@ After DNS is live:
 STATS_URL='https://api.drinknile.com/stats' \
 STRATUM_HOST='stratum.drinknile.com' \
 STRATUM_PORT='3333' \
-EXPECTED_POOL_FEE_BPS='0' \
+EXPECTED_POOL_FEE_BPS='50' \
+EXPECTED_TRIAL_DAYS='7' \
+EXPECTED_TRIAL_FEE_BPS='0' \
+EXPECTED_POST_TRIAL_FEE_BPS='50' \
 PROTECTED_PAYOUT_ADDRESSES='btx1z...personal...,btx1z...vast...' \
 scripts/verify-owned-backend.sh
 ```

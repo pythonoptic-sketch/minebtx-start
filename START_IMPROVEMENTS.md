@@ -60,14 +60,15 @@ had already begun. BTX Start should answer them before installation.
   efficiency, and expected BTX/hour from the current network snapshot.
 - Promoted the default start flow to one address plus one install command, with
   preflight still available as an optional dry run.
-- Added the operating model section: current 0.00% fee, backend ownership
-  gates, future 0.50% / 1.00% fee scenarios, and optional premium tools.
+- Added the operating model section: 7-day fee-free trial, backend ownership
+  gates, 0.50% post-trial fee, future 1.00% scenario, and optional premium
+  tools.
 - Added `backend/platform-revenue-policy.example.json` and `REVENUE_MODEL.md`
   so fee activation rules are explicit and machine-readable.
 - Pointed the default installer pool at `stratum.drinknile.com:3333` before
   public launch so future miners do not need to migrate from another backend.
 - Added `backend/OWNED_BACKEND.md` and `scripts/verify-owned-backend.sh` to
-  block cutover unless the first-party stats API, stratum endpoint, zero-fee
+  block cutover unless the first-party stats API, stratum endpoint, trial fee
   policy, and protected personal-address checks pass.
 
 ## Next backend work
@@ -80,10 +81,10 @@ frontend:
 - Deploy a BTX Start stratum endpoint.
 - Deploy a BTX Start stats API and payout index.
 - Deploy a BTX Start per-wallet web dashboard.
-- Set the BTX Start backend pool fee policy to `pool_fee_bps = 0` while
-  onboarding remains the priority.
-- Keep the platform fee at 0 bps until all activation gates in
-  `backend/platform-revenue-policy.example.json` are complete.
+- Set the BTX Start backend policy to a 7-day 0 bps trial and 50 bps
+  post-trial fee after all activation gates are complete.
+- Keep fee routing disabled until the dedicated public fee wallet and
+  per-wallet dashboard are live.
 - Build a first-party per-wallet dashboard backed by our own share/payout index.
 
 Until those are deployed, the honest user experience is: BTX Start controls the

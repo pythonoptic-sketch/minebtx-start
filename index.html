@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="BTX Start is a zero-platform-fee BTX mining onboarding page with local laptop setup, clear commands, miner tracking, and live pool signals."
+      content="BTX Start is a BTX mining onboarding page with a 7-day fee-free trial, local laptop setup, clear commands, miner tracking, and live pool signals."
     >
-    <title>BTX Start | Zero-Fee BTX Mining</title>
+    <title>BTX Start | 7-Day Fee-Free BTX Mining</title>
     <link rel="stylesheet" href="assets/styles.css">
     <script src="assets/site.js" defer></script>
   </head>
@@ -39,7 +39,7 @@
     <header class="hero">
       <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
       <div class="hero-shell">
-        <p class="eyebrow">Zero-fee BTX mining launcher</p>
+        <p class="eyebrow">7-day fee-free BTX mining launcher</p>
         <h1>Your BTX mining console.</h1>
         <p class="hero-copy">
           Enter your own BTX address, check the machine before installing,
@@ -63,7 +63,7 @@
         </div>
         <div>
           <span class="metric-label">BTX Start fee</span>
-          <strong id="platform-fee-hero">0.00%</strong>
+          <strong id="platform-fee-hero">0% first 7d</strong>
         </div>
       </div>
     </header>
@@ -86,8 +86,8 @@
             </article>
             <article class="status-card positive">
               <span class="metric-label">BTX Start platform fee</span>
-              <strong>0.00%</strong>
-              <p>BTX Start is not adding a platform fee while the priority is simple customer onboarding and miner visibility.</p>
+              <strong>0% first 7d</strong>
+              <p>Each payout address starts with a 7-day fee-free trial. After that, the backend target fee is 0.50% through public payout accounting.</p>
             </article>
             <article class="status-card positive">
               <span class="metric-label">Friction</span>
@@ -162,7 +162,7 @@
             </article>
             <article>
               <strong>No hidden fee</strong>
-              <p>BTX Start platform fee stays at 0.00% until backend ownership and dashboard visibility exist.</p>
+              <p>First 7 days are 0.00%. After that, the disclosed target fee is 0.50% and must route to the public treasury wallet.</p>
             </article>
           </div>
           <label class="address-builder" for="btx-address-input">
@@ -416,7 +416,7 @@
               <p class="eyebrow">GPU ranking</p>
               <h2 id="gpu-ranking-title">Find your card and expected BTX/hour.</h2>
             </div>
-            <p class="status-text">Estimates use the current network snapshot and a 0.00% BTX Start platform fee.</p>
+            <p class="status-text">Estimates use the current network snapshot and the post-trial BTX Start platform fee.</p>
           </div>
 
           <div class="profile-metrics" aria-label="Mining yield assumptions">
@@ -690,7 +690,7 @@
               <dl>
                 <div>
                   <dt>Owned backend fee</dt>
-                  <dd id="backend-policy-fee">0.00%</dd>
+                  <dd id="backend-policy-fee">0.00% first 7d, then 0.50%</dd>
                 </div>
                 <div>
                   <dt>Fee address</dt>
@@ -723,13 +723,13 @@
               <p class="eyebrow">Public platform treasury</p>
               <h2 id="treasury-title">Every platform-fee address is public.</h2>
             </div>
-            <p class="status-text">Target platform fee: <strong id="platform-target-fee">0.00%</strong></p>
+            <p class="status-text">Target platform fee: <strong id="platform-target-fee">0.00% first 7d, then 0.50%</strong></p>
           </div>
           <div class="treasury-grid">
             <article class="treasury-card highlight">
               <span class="metric-label">BTX Start fee wallet</span>
               <strong id="platform-treasury-status">Pending</strong>
-              <p>Dedicated backend fee wallet is not connected yet. Once created and deployed, all platform fees should be paid to the public address below.</p>
+              <p>Dedicated backend fee wallet is not connected yet. Once created and deployed, post-trial platform fees should be paid to the public address below.</p>
               <dl>
                 <div>
                   <dt>Fee address</dt>
@@ -752,12 +752,12 @@
             <article class="treasury-card">
               <span class="metric-label">Use of platform fee</span>
               <strong>Project treasury</strong>
-              <p id="platform-funds-use">BTX Start platform fee is currently 0.00%. If fees are later enabled, they are intended to fund infrastructure, security, miner tooling, and collectively selected new BTX projects.</p>
+              <p id="platform-funds-use">Each payout address receives a 7-day 0.00% platform-fee trial. After that, the target platform fee is 0.50% and is intended to fund BTX Start infrastructure, security, miner tooling, and collectively selected new BTX projects.</p>
               <p id="platform-notice">Treasury spending does not create miner ownership, dividends, or profit-sharing claims.</p>
             </article>
             <article class="treasury-card">
               <span class="metric-label">First-party backend fee wallet</span>
-              <strong id="backend-fee-rate">0.00%</strong>
+              <strong id="backend-fee-rate">0.50%</strong>
               <p>This will show the fee destination reported by the owned backend once the stats API is live.</p>
               <dl>
                 <div>
@@ -779,20 +779,20 @@
           <div class="split-heading">
             <div>
               <p class="eyebrow">Fee policy</p>
-              <h2 id="fee-model-title">BTX Start platform fee: 0.00%.</h2>
+              <h2 id="fee-model-title">7 days fee-free, then 0.50%.</h2>
             </div>
             <a class="text-link" href="FEE_MODEL.md">Open full model</a>
           </div>
           <div class="fee-model-grid">
             <article class="fee-model-card emphasis">
-              <span class="metric-label">BTX Start fee now</span>
+              <span class="metric-label">Trial fee</span>
               <strong>0.00%</strong>
-              <p>No BTX Start platform fee while the product focus is making BTX mining easy to start and easy to observe.</p>
+              <p>Every payout address gets seven days from its first accepted share before the platform fee begins.</p>
             </article>
             <article class="fee-model-card">
-              <span class="metric-label">Owned backend fee</span>
-              <strong id="backend-live-fee">0.00%</strong>
-              <p>The first-party backend is configured for zero launch fee and must pass the cutover checks before the page marks it live.</p>
+              <span class="metric-label">Post-trial fee</span>
+              <strong id="backend-live-fee">0.50%</strong>
+              <p>The first-party backend should deduct the post-trial fee in payout accounting and route it to the public fee wallet.</p>
             </article>
             <article class="fee-model-card">
               <span class="metric-label">Customer priority</span>
@@ -802,21 +802,22 @@
           </div>
           <div class="formula-panel">
             <p>
-              Current BTX Start policy: <code>platform_fee_bps = 0</code>.
-              New miners should be able to evaluate the process without fee
-              confusion: their address, their worker, their shares, expected
-              BTX/hour, and visible GPU activity.
+              Current BTX Start policy: <code>trial_days = 7</code>,
+              <code>trial_fee_bps = 0</code>, and
+              <code>post_trial_fee_bps = 50</code>. The backend should key the
+              trial by payout address, record the first accepted share, and
+              deduct the fee from pool payout accounting after the trial ends.
             </p>
             <div class="elasticity-row" aria-label="Elasticity fee recommendations">
-              <span>Start → 0.00%</span>
-              <span>Preflight first</span>
-              <span>Track shares</span>
-              <span>Build dashboard</span>
+              <span>Day 0-7 → 0.00%</span>
+              <span>After day 7 → 0.50%</span>
+              <span>Route to treasury</span>
+              <span>Show on dashboard</span>
             </div>
             <p>
-              If a platform fee is revisited later, it should only happen after
-              the customer dashboard, backend fee routing, and public treasury
-              reporting are fully operational.
+              This should be backend-enforced and visible. The miner command
+              remains simple; the pool backend handles fee splits, treasury
+              accumulation, and per-wallet dashboard reporting.
             </p>
           </div>
         </div>
@@ -827,25 +828,25 @@
           <div class="split-heading">
             <div>
               <p class="eyebrow">Operating model</p>
-              <h2 id="operating-model-title">Profit later, only after trust is visible.</h2>
+              <h2 id="operating-model-title">Profit through a disclosed post-trial fee.</h2>
             </div>
             <p class="status-text">Model price reference: <strong id="operating-price">$5.71</strong> / BTX</p>
           </div>
           <div class="operating-grid">
             <article class="operating-card emphasis">
               <span class="metric-label">Now</span>
-              <strong>0.00%</strong>
-              <p>Keep onboarding free while we prove installs, shares, GPU use, and payout visibility.</p>
+              <strong>7 days</strong>
+              <p>Give every payout address a real fee-free trial while they verify installs, shares, GPU use, and expected yield.</p>
             </article>
             <article class="operating-card">
               <span class="metric-label">Activation gate</span>
               <strong>Backend</strong>
-              <p>Do not charge until BTX Start controls stratum, payout policy, fee routing, and wallet indexing.</p>
+              <p>Do not mark fees live until BTX Start controls stratum, payout policy, fee routing, and wallet indexing.</p>
             </article>
             <article class="operating-card">
-              <span class="metric-label">First fee</span>
+              <span class="metric-label">Standard fee</span>
               <strong>0.50%</strong>
-              <p>Only after public fee address, dashboard, and payout history are live. Keep launch at zero until trust is visible.</p>
+              <p>After each wallet's 7-day trial, deduct 0.50% in backend payout accounting and accumulate it in the public fee wallet.</p>
             </article>
             <article class="operating-card">
               <span class="metric-label">Premium tools</span>
