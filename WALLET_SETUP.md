@@ -63,6 +63,11 @@ latest checked snapshot, `pool_fee_bps` is `250`, meaning 2.50%. That fee goes
 to the backend-configured fee and treasury addresses, not to BTX Start unless
 those backend addresses and policy are moved under BTX Start control.
 
+BTX Start should use a dedicated public platform treasury address for fees. The
+platform fee is intended to fund infrastructure, security, miner tooling, and
+collectively selected new BTX projects. It should not be a personal day-to-day
+wallet, and it should not imply miner ownership, dividends, or profit-sharing.
+
 Until those are deployed, mining still depends on the existing BTX backend
 configured by the installer. To become a fully independent competitor, the next
 step is to deploy our own stratum endpoint, stats API, payout wallet, bot, and

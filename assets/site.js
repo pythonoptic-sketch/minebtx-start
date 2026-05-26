@@ -1,9 +1,14 @@
 const siteBaseUrl = "https://pythonoptic-sketch.github.io/minebtx-start";
 const installerUrl = `${siteBaseUrl}/install.sh`;
 const statsUrl = "stats-snapshot.json";
+const treasuryUrl = "platform-treasury.json";
 const placeholderAddress = "btx1z...YOUR_BTX_ADDRESS...";
 
 const formatNumber = new Intl.NumberFormat("en-US");
+const formatBtx = new Intl.NumberFormat("en-US", {
+  minimumFractionDigits: 8,
+  maximumFractionDigits: 8,
+});
 
 function setText(id, value) {
   const element = document.getElementById(id);
@@ -17,6 +22,11 @@ function formatHashrate(value) {
   if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(2)}M n/s`;
   if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K n/s`;
   return `${Math.round(value)} n/s`;
+}
+
+function formatSatToBtx(value) {
+  if (!Number.isFinite(value)) return "Unknown";
+  return `${formatBtx.format(value / 100_000_000)} BTX`;
 }
 
 async function hydrateStats() {
@@ -37,6 +47,10 @@ async function hydrateStats() {
     setText("pool-fee", `${((policy.pool_fee_bps || 250) / 100).toFixed(2)}%`);
     setText("fee-address", policy.fee_address);
     setText("treasury-address", policy.treasury_address);
+    setText("backend-fee-address", policy.fee_address);
+    setText("backend-treasury-address", policy.treasury_address);
+    setText("backend-fee-balance", formatSatToBtx(pool.pending_fee_sat));
+    setText("backend-fee-rate", `${((policy.pool_fee_bps || 250) / 100).toFixed(2)}%`);
     setText("chain-height", formatNumber.format(btxd.blocks));
     setText("workers-24h", formatNumber.format(pool.workers_active_24h));
     setText("network-hash", formatHashrate(pool.network_hash_nps || btxd.network_hash_ps));
@@ -50,6 +64,27 @@ async function hydrateStats() {
     if (status) {
       status.textContent = "Live stats unavailable, showing latest bundled snapshot.";
     }
+  }
+}
+
+async function hydrateTreasuryConfig() {
+  try {
+    const response = await fetch(treasuryUrl, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Treasury request failed: ${response.status}`);
+    const treasury = await response.json();
+    const targetBps = Number(treasury.target_pool_fee_bps || 50);
+    const status = treasury.active ? "Connected" : "Pending";
+
+    setText("platform-treasury-status", status);
+    setText("platform-target-fee", `${(targetBps / 100).toFixed(2)}%`);
+    setText("platform-fee-address", treasury.platform_fee_address || "Pending wallet creation");
+    setText("platform-treasury-address", treasury.platform_treasury_address || "Pending wallet creation");
+    setText("platform-fee-balance", treasury.platform_fee_balance_btx || "0.00000000 BTX");
+    setText("platform-balance-source", treasury.balance_source);
+    setText("platform-funds-use", treasury.use_of_funds);
+    setText("platform-notice", treasury.notice);
+  } catch (error) {
+    setText("platform-treasury-status", "Unavailable");
   }
 }
 
@@ -239,3 +274,4 @@ setupHeroCanvas();
 setupCopyButtons();
 setupAddressBuilder();
 hydrateStats();
+hydrateTreasuryConfig();

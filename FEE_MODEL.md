@@ -190,6 +190,11 @@ The fee is paid to the backend-configured `policy.fee_address` and related
 treasury address, not to BTX Start unless those backend settings are moved
 under BTX Start control.
 
+BTX Start should route fees to a dedicated public platform treasury wallet,
+not a personal day-to-day wallet. The intended use is infrastructure, security,
+miner tooling, and collectively selected new BTX projects. This treasury does
+not create miner ownership, dividends, or profit-sharing claims.
+
 To actually change the live pool fee, update the pool backend policy/config to:
 
 ```text

@@ -332,6 +332,12 @@ main {
     #0a0f15;
 }
 
+.treasury-band {
+  background:
+    linear-gradient(90deg, rgba(255, 123, 0, 0.05), transparent 44%),
+    #101720;
+}
+
 .flow-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -520,6 +526,7 @@ main {
 }
 
 .status-grid,
+.treasury-grid,
 .tracker-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -527,12 +534,18 @@ main {
 }
 
 .status-card,
+.treasury-card,
 .tracker-grid article {
   min-width: 0;
   padding: 22px;
   background: var(--bg-panel);
   border: 1px solid var(--line);
   border-radius: 8px;
+}
+
+.treasury-card.highlight {
+  border-color: rgba(255, 123, 0, 0.56);
+  box-shadow: inset 0 0 0 1px rgba(255, 123, 0, 0.14);
 }
 
 .status-card.positive {
@@ -550,6 +563,14 @@ main {
   line-height: 1;
 }
 
+.treasury-card strong {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--orange);
+  font-size: 28px;
+  line-height: 1;
+}
+
 .status-card.positive strong {
   color: var(--green);
 }
@@ -559,9 +580,48 @@ main {
 }
 
 .status-card p,
+.treasury-card p,
 .tracker-grid p {
   margin-bottom: 0;
   color: var(--muted);
+}
+
+.treasury-card p + p {
+  margin-top: 12px;
+}
+
+.treasury-card dl {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0 0;
+}
+
+.treasury-card dt {
+  margin-bottom: 4px;
+  color: var(--quiet);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.treasury-card dd {
+  min-width: 0;
+  margin: 0;
+}
+
+.treasury-card code {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #090d12;
+  color: #dce7f2;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .personal-tracker {
@@ -1082,6 +1142,7 @@ tr:last-child td {
   .stat-grid,
   .tracking-grid,
   .status-grid,
+  .treasury-grid,
   .tracker-grid,
   .flow-grid,
   .fee-model-grid,
@@ -1186,6 +1247,7 @@ tr:last-child td {
   .stat-grid,
   .tracking-grid,
   .status-grid,
+  .treasury-grid,
   .tracker-grid,
   .flow-grid,
   .transparency-grid,

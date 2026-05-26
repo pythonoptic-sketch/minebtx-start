@@ -48,6 +48,11 @@ had already begun. BTX Start should answer them before installation.
   backend stats API.
 - Added an operating-status section that separates "can mine now" from
   "BTX Start receives the fee."
+- Added `platform-treasury.json` so the public page can show the BTX Start fee
+  wallet status, target fee, intended use of funds, and wallet balance once
+  connected.
+- Added `scripts/create-platform-fee-wallet.sh` for creating the dedicated
+  platform fee address with `btx-cli` on the backend custody machine.
 - Added a personal tracker section with copyable commands for worker id, local
   miner logs, GPU utilization, Telegram balance, Telegram block credit, and
   aggregate pool stats.

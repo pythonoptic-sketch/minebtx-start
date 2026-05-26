@@ -27,6 +27,8 @@ btx-gbt-miner.py
 config.yaml         # use config.example.yaml as a template
 miner.log
 *.bak
+*.local.json
+wallet.dat
 
 # Editor / OS
 .idea/

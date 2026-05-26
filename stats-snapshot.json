@@ -1,110 +1,112 @@
 {
-  "fetched_at": "2026-05-26T05:16:18Z",
   "pool": {
-    "workers_active_24h": 15,
-    "workers_total": 16,
-    "shares_24h": 2130,
-    "blocks_found_24h": 3,
-    "blocks_matured_total": 2,
+    "workers_active_24h": 16,
+    "workers_total": 17,
+    "shares_24h": 5491,
+    "blocks_found_24h": 4,
+    "blocks_matured_total": 3,
     "total_btx_paid_sat": 0,
-    "pending_fee_sat": 100000250,
-    "pending_miner_payout_sat": 5850000000,
-    "workers_active_now": 10,
-    "workers_active_pay_period": 16,
-    "blocks_found_pay_period": 3,
-    "shares_accepted_pay_period": 2137,
-    "estimated_pool_hashrate_nps": 3246.4557152554785,
-    "network_hash_nps": 2256873.768077521,
-    "pool_share_of_network": 0.001438474655151367
+    "pending_fee_sat": 150000250,
+    "pending_miner_payout_sat": 7800000000,
+    "workers_active_now": 12,
+    "workers_active_pay_period": 17,
+    "blocks_found_pay_period": 4,
+    "shares_accepted_pay_period": 5533,
+    "estimated_pool_hashrate_nps": 3795.790166695465,
+    "pool_hashrate_live_nps": 10097.85931667082,
+    "network_hash_nps": 2354227.350328491,
+    "pool_share_of_network": 0.00428924560546875
   },
   "health": {
     "btxd": {
-      "blocks": 111922,
-      "headers": 111922,
-      "peers": 129,
+      "blocks": 111979,
+      "headers": 111979,
+      "peers": 128,
       "ibd": false,
-      "verification_progress": 0.9999921406887976,
-      "network_hash_ps": 2256873.768077521,
-      "last_probe_unix": 1779772551,
+      "verification_progress": 0.9999878797383512,
+      "network_hash_ps": 2354227.350328491,
+      "last_probe_unix": 1779777933,
       "reachable": true
     },
     "dispatcher_errors": 0,
-    "shares_accepted": 139,
-    "shares_rejected": 41,
-    "rpc_p50_ms": 2.240554,
-    "rpc_p95_ms": 4.185603,
-    "share_validation_p50_ms": 533.014581,
-    "share_validation_p95_ms": 769.4785039999999,
-    "last_probe_age_secs": 13,
-    "hashrate_ema_nps": 6509.763969014982,
+    "shares_accepted": 1913,
+    "shares_rejected": 1367,
+    "rpc_p50_ms": 1.182233,
+    "rpc_p95_ms": 5.436667,
+    "share_validation_p50_ms": 514.985959,
+    "share_validation_p95_ms": 718.169748,
+    "last_probe_age_secs": 12,
+    "hashrate_ema_nps": 9554.079390998346,
     "rpc_by_method": {
-      "getblockchaininfo": {
-        "ok_count": 21,
-        "err_count": 0,
-        "p50_ms": 2.240554,
-        "p95_ms": 4.185603,
-        "p99_ms": 6.267926
-      },
-      "getmininginfo": {
-        "ok_count": 21,
-        "err_count": 0,
-        "p50_ms": 4.290979999999999,
-        "p95_ms": 6.943314,
-        "p99_ms": 7.807765000000001
-      },
       "getmatmulchallenge": {
-        "ok_count": 130,
+        "ok_count": 639,
         "err_count": 0,
-        "p50_ms": 6.107869999999999,
-        "p95_ms": 8.846348,
-        "p99_ms": 10.319177
+        "p50_ms": 6.224044,
+        "p95_ms": 10.769291,
+        "p99_ms": 16.475889000000002
       },
       "getblock": {
-        "ok_count": 11,
+        "ok_count": 45,
+        "err_count": 5,
+        "p50_ms": 4.981188,
+        "p95_ms": 12.118543,
+        "p99_ms": 15.394204
+      },
+      "getmininginfo": {
+        "ok_count": 102,
         "err_count": 0,
-        "p50_ms": 5.824784999999999,
-        "p95_ms": 7.768516,
-        "p99_ms": 7.768516
+        "p50_ms": 4.548011,
+        "p95_ms": 7.710731,
+        "p99_ms": 8.627739
       },
       "getblocktemplate": {
-        "ok_count": 8,
+        "ok_count": 31,
         "err_count": 0,
-        "p50_ms": 7.856548,
-        "p95_ms": 14.096607,
-        "p99_ms": 14.096607
+        "p50_ms": 7.476012,
+        "p95_ms": 12.977861,
+        "p99_ms": 13.038518
       },
       "getconnectioncount": {
-        "ok_count": 21,
+        "ok_count": 102,
         "err_count": 0,
-        "p50_ms": 1.1554250000000001,
-        "p95_ms": 3.1806479999999997,
-        "p99_ms": 3.196128
+        "p50_ms": 1.7463870000000001,
+        "p95_ms": 4.2179720000000005,
+        "p99_ms": 4.852979
+      },
+      "getblockchaininfo": {
+        "ok_count": 102,
+        "err_count": 0,
+        "p50_ms": 1.182233,
+        "p95_ms": 5.436667,
+        "p99_ms": 8.647825
       }
     },
     "share_reject_by_code": {
-      "22": 8,
-      "23": 33
+      "21": 298,
+      "23": 377,
+      "22": 692
     },
     "task_heartbeat_age_secs": {
-      "btxd_zmq": 81,
-      "work_dispatcher": 4,
-      "invariants_checker": 614,
-      "peer_observer": 14,
-      "maturation_tracker": 14,
-      "pplns_engine": 14,
-      "block_propagation": 4,
-      "reorg_attribution": 14,
-      "retention": 614,
-      "health_monitor": 14,
-      "pool_forwarder": 81,
-      "btxd_zmq_rawblock": 81,
-      "pool_alerts_phase_c": 14,
-      "miner_anomaly": 14
+      "work_dispatcher": 2,
+      "pplns_engine": 12,
+      "reorg_attribution": 12,
+      "btxd_zmq_rawblock": 118,
+      "maturation_tracker": 42,
+      "peer_observer": 42,
+      "btxd_zmq": 118,
+      "invariants_checker": 3042,
+      "pool_alerts_phase_c": 42,
+      "miner_anomaly": 42,
+      "health_monitor": 12,
+      "pool_forwarder": 118,
+      "block_propagation": 2,
+      "retention": 3042
     }
   },
   "policy": {
     "pool_fee_bps": 250,
     "treasury_address": "btx1zatnjdqpw4cjswjeajst5lkj8mrdsj8mhgzu3emycncuctfrtqmzst94c6s",
     "fee_address": "btx1zqzv4vgyhzyqqrkccxre0r4wgq9awwp6kjsdj6n8tfa0em0lfm22safa89n"
-  }
+  },
+  "fetched_at": "2026-05-26T06:45:45Z"
 }

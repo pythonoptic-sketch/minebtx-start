@@ -24,7 +24,9 @@ http://localhost:8080/
 - `assets/styles.css` - responsive layout and visual design
 - `assets/site.js` - live stat hydration, copy button behavior, and hero canvas
 - `START_IMPROVEMENTS.md` - release-based onboarding analysis
+- `TREASURY.md` - platform fee wallet and backend policy procedure
 - `WALLET_SETUP.md` - miner-facing setup guide
+- `platform-treasury.json` - public platform treasury status and address data
 - `stats-snapshot.json` - same-origin stats payload for the static page
 
 The page is static and can be deployed to GitHub Pages, Netlify, Vercel, Caddy,
