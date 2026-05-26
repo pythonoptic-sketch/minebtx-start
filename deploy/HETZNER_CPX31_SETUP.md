@@ -64,7 +64,7 @@ On the server:
 ```bash
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y git curl ca-certificates jq netcat-openbsd
-git clone https://github.com/pythonoptic-sketch/minebtx-start.git /opt/btx-start
+git clone https://github.com/pythonoptic-sketch/drinknile.git /opt/btx-start
 cd /opt/btx-start
 deploy/scripts/server-readiness-check.sh
 ```

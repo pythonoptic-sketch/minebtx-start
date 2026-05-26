@@ -330,8 +330,8 @@ is more work than most miners want to take on.
 ## Contributing / building from source
 
 ```bash
-git clone https://github.com/pythonoptic-sketch/minebtx-start
-cd minebtx-start
+git clone https://github.com/pythonoptic-sketch/drinknile
+cd drinknile
 
 # Run the Python wrapper directly:
 pip install --user -e .
@@ -358,5 +358,5 @@ you don't strip the copyright notice from your distribution.
 
 ## Where to ask questions
 
-- **GitHub Issues**: https://github.com/pythonoptic-sketch/minebtx-start/issues
+- **GitHub Issues**: https://github.com/pythonoptic-sketch/drinknile/issues
 - **Network info**: [btxprice.com](https://btxprice.com)

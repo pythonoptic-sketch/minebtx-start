@@ -38,11 +38,11 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PATH
 # / fork use; if set, it skips the remote pyproject.toml fetch.
 #
 PREBUILDS_TAG="${PREBUILDS_TAG:-v4.3-sm89-native}"
-BTX_START_REPO_URL="${BTX_START_REPO_URL:-https://github.com/pythonoptic-sketch/minebtx-start}"
-PREBUILDS_BASE="${PREBUILDS_BASE:-https://github.com/pythonoptic-sketch/minebtx-start/releases/download/${PREBUILDS_TAG}}"
+BTX_START_REPO_URL="${BTX_START_REPO_URL:-https://github.com/pythonoptic-sketch/drinknile}"
+PREBUILDS_BASE="${PREBUILDS_BASE:-https://github.com/pythonoptic-sketch/drinknile/releases/download/${PREBUILDS_TAG}}"
 DEFAULT_SOLVER_URL="${PREBUILDS_BASE}/btx-gbt-solve"
 SOLVER_URL="${SOLVER_URL:-$DEFAULT_SOLVER_URL}"
-PYPROJECT_URL="${PYPROJECT_URL:-https://raw.githubusercontent.com/pythonoptic-sketch/minebtx-start/main/pyproject.toml}"
+PYPROJECT_URL="${PYPROJECT_URL:-https://raw.githubusercontent.com/pythonoptic-sketch/drinknile/main/pyproject.toml}"
 
 # Default pool — override with --pool flag or DEXBTX_POOL env var.
 # Keep this first-party from launch so future miners do not need migration.
@@ -778,7 +778,7 @@ compatible with your GPU/driver combination. Driver: $(nvidia-smi --query-gpu=dr
 
 This is a binary issue, NOT a driver issue — DO NOT downgrade your driver.
 
-Action: file an issue at github.com/pythonoptic-sketch/minebtx-start/issues with:
+Action: file an issue at github.com/pythonoptic-sketch/drinknile/issues with:
   - GPU model: ${GPU_NAME}
   - Driver version: $(nvidia-smi --query-gpu=driver_version --format=csv,noheader | head -1)
   - CUDA runtime: $(nvidia-smi --query-gpu=cuda_version --format=csv,noheader 2>/dev/null | head -1)

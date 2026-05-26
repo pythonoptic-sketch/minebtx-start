@@ -313,7 +313,7 @@ to a local `btxd` and skips stratum entirely.
 
 ## Support
 
-- **Issues**: https://github.com/pythonoptic-sketch/minebtx-start/issues
+- **Issues**: https://github.com/pythonoptic-sketch/drinknile/issues
 - **Network data**: [btxprice.com](https://btxprice.com)
 
 ---

@@ -27,7 +27,7 @@ install -d -m 0755 "$APP_DIR"
 install -d -m 0750 -o "$APP_USER" -g "$APP_USER" "$DATA_DIR"
 
 if [ ! -d "$APP_DIR/.git" ]; then
-  git clone https://github.com/pythonoptic-sketch/minebtx-start.git "$APP_DIR"
+  git clone https://github.com/pythonoptic-sketch/drinknile.git "$APP_DIR"
 else
   git -C "$APP_DIR" fetch origin main
   git -C "$APP_DIR" reset --hard origin/main
