@@ -19,6 +19,10 @@ ownership, dividends, or profit-sharing claims.
 The static site cannot redirect fees. Fee routing changes only when the pool
 backend is configured with the BTX Start fee address.
 
+Your personal mining address must stay a miner payout address only. It should
+never be reused as the pool fee address, treasury address, hot wallet, or payout
+aggregation wallet.
+
 ## Create the Dedicated Fee Wallet
 
 Run this on the machine that will custody the BTX Start fee wallet and has
@@ -47,10 +51,16 @@ treasury_address = "<BTX_START_PLATFORM_TREASURY_ADDRESS>"
 
 The same placeholders are included in `backend/pool-policy.example.env`.
 
-Then verify that the backend stats API reports the same values:
+Then verify that the backend stats API reports the same values and that neither
+backend address matches a protected personal payout address:
 
 ```sh
-curl -s https://stats.minebtx.com/stats | jq '.policy'
+STATS_URL='https://api.drinknile.com/stats' \
+STRATUM_HOST='stratum.drinknile.com' \
+STRATUM_PORT='3333' \
+EXPECTED_POOL_FEE_BPS='0' \
+PROTECTED_PAYOUT_ADDRESSES='btx1z...personal...' \
+scripts/verify-owned-backend.sh
 ```
 
 Only after that verification should the website mark the platform treasury as

@@ -28,6 +28,8 @@ config.yaml         # use config.example.yaml as a template
 miner.log
 *.bak
 *.local.json
+*.local.env
+protected-addresses.txt
 wallet.dat
 
 # Editor / OS
