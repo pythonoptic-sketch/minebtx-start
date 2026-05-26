@@ -6,7 +6,6 @@ proof-of-work.
 
 - **BTX Start site**: https://pythonoptic-sketch.github.io/minebtx-start/
 - **Installer URL**: https://pythonoptic-sketch.github.io/minebtx-start/install.sh
-- **Telegram bot dependency**: [@btxdexbot](https://t.me/btxdexbot) — `/stats`, `/mybalance`, `/blocks_today`
 - **BTX Start platform fee**: 0.00%, pending backend pool-policy ownership
 
 ---
@@ -92,19 +91,10 @@ tmux new -d -s dexbtx 'dexbtx-miner --config ~/.dexbtx-miner/config.yaml 2>&1 | 
 ```
 
 Within a minute you should see `share OK` lines in the log. Use the BTX Start
-site and Telegram balance command to track work and payouts.
+site to track local miner signals, expected GPU yield, and aggregate network
+stats.
 
-### Get DM'd on weekly payouts
-
-Pick a `worker_name` in your config (default: your hostname). Then on Telegram:
-
-```
-/link <your_worker_name>
-```
-
-The bot binds your TG chat to that worker and DMs you the payout transaction
-every Friday 18:00 UTC. Other bot commands: `/stats`, `/mybalance <name>`,
-`/blocks_today`, `/myblock <name>`, `/help`.
+### Worker naming
 
 **Recommended naming pattern:** `<alias>-<gpu>-<country2>-<color>`
 (four dash-separated parts, all lowercase) — e.g. `kappa-5060ti-us-blue`,
@@ -118,8 +108,7 @@ Parts:
 
 Why the country + color suffix? Two miners both running 5060 Tis in the US
 would otherwise collide on `home-5060ti`. The country + color tail keeps
-your worker rows unique on the dashboard and routable through the bot's
-`/link` command without ambiguity.
+your worker rows unique in logs and future dashboard views.
 
 Stick with one name per rig once chosen — renaming creates a new worker
 row and earned shares stay with the old name.
@@ -307,6 +296,5 @@ you don't strip the copyright notice from your distribution.
 
 ## Where to ask questions
 
-- **Pool TG**: [@btxdexbot](https://t.me/btxdexbot) (`/help` for commands)
 - **GitHub Issues**: https://github.com/pythonoptic-sketch/minebtx-start/issues
 - **Network info**: [btxprice.com](https://btxprice.com)

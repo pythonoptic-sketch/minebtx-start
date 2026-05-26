@@ -54,8 +54,10 @@ had already begun. BTX Start should answer them before installation.
 - Added `scripts/create-platform-fee-wallet.sh` for creating the dedicated
   platform fee address with `btx-cli` on the backend custody machine.
 - Added a personal tracker section with copyable commands for worker id, local
-  miner logs, GPU utilization, Telegram balance, Telegram block credit, and
-  aggregate pool stats.
+  miner logs, GPU utilization, expected-yield math, wallet-balance guidance,
+  and aggregate pool stats.
+- Added a searchable GPU ranking with starter profiles, estimated hashrate,
+  efficiency, and expected BTX/hour from the current network snapshot.
 
 ## Next backend work
 
@@ -66,7 +68,7 @@ frontend:
   package source.
 - Deploy a BTX Start stratum endpoint.
 - Deploy a BTX Start stats API and payout index.
-- Deploy a BTX Start Telegram or web balance bot.
+- Deploy a BTX Start per-wallet web dashboard.
 - Set the BTX Start backend pool fee policy to `pool_fee_bps = 0` while
   onboarding remains the priority.
 - Replace the installer default pool host with the BTX Start stratum host.
@@ -74,5 +76,5 @@ frontend:
 
 Until those are deployed, the honest user experience is: BTX Start controls the
 onboarding page, installer entrypoint, docs, and package fork. The mining
-backend, fee destination, Telegram balance bot, per-wallet web dashboard, and
-solver release artifacts are still dependencies.
+backend, fee destination, per-wallet web dashboard, and solver release artifacts
+are still dependencies.

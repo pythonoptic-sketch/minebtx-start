@@ -22,6 +22,7 @@
         <a href="#status">Status</a>
         <a href="#start">Start</a>
         <a href="#compatibility">Compatibility</a>
+        <a href="#gpu-ranking">GPU ranking</a>
         <a href="#track">Track</a>
         <a href="#transparency">Transparency</a>
         <a href="#stats">Live stats</a>
@@ -39,7 +40,7 @@
         <h1>Your BTX mining console.</h1>
         <p class="hero-copy">
           Enter your own BTX address, check the machine before installing,
-          start mining, and follow shares, GPU load, balance commands, and live
+          start mining, and follow shares, GPU load, expected yield, and live
           network signals from one page.
         </p>
         <div class="hero-actions" aria-label="Primary actions">
@@ -87,7 +88,7 @@
             <article class="status-card positive">
               <span class="metric-label">Mining progress</span>
               <strong>Visible</strong>
-              <p>Watch accepted shares, GPU utilization, balance commands, block credit commands, and aggregate network stats.</p>
+              <p>Watch accepted shares, GPU utilization, expected BTX/hour, worker identity, and aggregate network stats.</p>
             </article>
             <article class="status-card warning">
               <span class="metric-label">Web dashboard</span>
@@ -157,7 +158,7 @@
               value="default"
               aria-describedby="worker-help"
             >
-            <small id="worker-help">This labels the rig and is used for dashboard and Telegram balance lookup.</small>
+            <small id="worker-help">This labels the rig in logs and future dashboard views. Use one stable name per machine.</small>
           </label>
           <div class="command-block">
             <div>
@@ -257,6 +258,88 @@
         </div>
       </section>
 
+      <section class="band gpu-ranking-band" id="gpu-ranking" aria-labelledby="gpu-ranking-title">
+        <div class="section-inner">
+          <div class="split-heading">
+            <div>
+              <p class="eyebrow">GPU ranking</p>
+              <h2 id="gpu-ranking-title">Find your card and expected BTX/hour.</h2>
+            </div>
+            <p class="status-text">Estimates use the current network snapshot and a 0.00% BTX Start platform fee.</p>
+          </div>
+
+          <div class="profile-metrics" aria-label="Mining yield assumptions">
+            <article class="profile-metric">
+              <span class="metric-label">Known-good baseline</span>
+              <strong>16 / 8 / 128</strong>
+              <p>Workers, solver threads, and batch size for modern NVIDIA cards unless a measured row says otherwise.</p>
+            </article>
+            <article class="profile-metric">
+              <span class="metric-label">Network reference</span>
+              <strong id="gpu-network-reference">2.34M n/s</strong>
+              <p>Used for expected yield. Higher network hashrate lowers BTX/hour; lower hashrate raises it.</p>
+            </article>
+            <article class="profile-metric">
+              <span class="metric-label">Block reward</span>
+              <strong id="gpu-block-reward">20 BTX</strong>
+              <p>BTX targets 90-second blocks, or about 40 blocks per hour before variance.</p>
+            </article>
+            <article class="profile-metric">
+              <span class="metric-label">5060 Ti reference</span>
+              <strong id="profile-btx-hour">9.58 BTX/h</strong>
+              <p>Expected gross yield for the canonical 28K n/s 5060 Ti reference at the current snapshot.</p>
+            </article>
+          </div>
+
+          <div class="formula-panel compact-formula">
+            <p>
+              Yield formula: <code>BTX/hour = gpu_nps / network_nps * 20 * 40</code>.
+              Measured rows use known-good profile data from local tuning docs; estimated rows are family projections for search and planning.
+              Your real result is the accepted-share rate your rig sustains.
+            </p>
+          </div>
+
+          <div class="gpu-ranking-controls" aria-label="GPU ranking controls">
+            <label for="gpu-search">
+              <span>Search GPU</span>
+              <input id="gpu-search" type="search" placeholder="Search RTX 4090, 3060 Ti, H100, Pascal..." autocomplete="off">
+            </label>
+            <label for="gpu-sort">
+              <span>Sort by</span>
+              <select id="gpu-sort">
+                <option value="yield">BTX/hour</option>
+                <option value="efficiency">Efficiency</option>
+                <option value="speed">Hashrate</option>
+                <option value="name">Name</option>
+              </select>
+            </label>
+            <p id="gpu-ranking-count" class="status-text">Loading GPU rows...</p>
+          </div>
+
+          <div class="table-wrap gpu-table" tabindex="0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>GPU</th>
+                  <th>Profile</th>
+                  <th>Hashrate</th>
+                  <th>BTX/hour</th>
+                  <th>BTX/day</th>
+                  <th>Efficiency</th>
+                  <th>Confidence</th>
+                </tr>
+              </thead>
+              <tbody id="gpu-ranking-body">
+                <tr>
+                  <td colspan="8">Loading GPU ranking...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       <section class="band tracking-band" id="track" aria-labelledby="tracking-title">
         <div class="section-inner">
           <div class="section-heading compact">
@@ -275,13 +358,9 @@
               <a class="text-link" href="#stats">Jump to live stats</a>
             </article>
             <article class="tracking-card">
-              <h3>3. Ask the Telegram bot</h3>
-              <p>Balance lookup currently depends on the existing BTX Telegram bot. We should not present that bot as ours until we ship one.</p>
-              <div class="copy-row">
-                <code id="telegram-command">/mybalance btx1z...your_address.default</code>
-                <button class="mini-copy" type="button" data-copy-target="telegram-command" aria-label="Copy Telegram command">Copy</button>
-              </div>
-              <a class="text-link" href="https://t.me/btxdexbot" target="_blank" rel="noreferrer">Open @btxdexbot</a>
+              <h3>3. Estimate yield</h3>
+              <p>Use the GPU ranking to compare expected BTX/hour against the current network snapshot.</p>
+              <a class="text-link" href="#gpu-ranking">Open GPU ranking</a>
             </article>
             <article class="tracking-card">
               <h3>4. Confirm GPU work</h3>
@@ -317,23 +396,23 @@
                 </div>
               </article>
               <article>
-                <span class="metric-label">Telegram balance</span>
+                <span class="metric-label">Expected yield</span>
                 <div class="copy-row">
-                  <code id="balance-command">/mybalance btx1z...your_address.default</code>
-                  <button class="mini-copy" type="button" data-copy-target="balance-command" aria-label="Copy balance command">Copy</button>
+                  <code id="yield-command">BTX/hour = gpu_nps / network_nps * 800</code>
+                  <button class="mini-copy" type="button" data-copy-target="yield-command" aria-label="Copy yield formula">Copy</button>
                 </div>
               </article>
               <article>
-                <span class="metric-label">Telegram block credit</span>
+                <span class="metric-label">Wallet balance</span>
                 <div class="copy-row">
-                  <code id="block-command">/myblock btx1z...your_address.default</code>
-                  <button class="mini-copy" type="button" data-copy-target="block-command" aria-label="Copy block command">Copy</button>
+                  <code id="wallet-balance-command">Check the wallet that owns your BTX address</code>
+                  <button class="mini-copy" type="button" data-copy-target="wallet-balance-command" aria-label="Copy wallet balance note">Copy</button>
                 </div>
               </article>
               <article>
                 <span class="metric-label">Aggregate pool stats</span>
                 <div class="copy-row">
-                  <code id="stats-command">/stats</code>
+                  <code id="stats-command">Network stats update on this page</code>
                   <button class="mini-copy" type="button" data-copy-target="stats-command" aria-label="Copy stats command">Copy</button>
                 </div>
               </article>
@@ -356,7 +435,7 @@
               <h3>This page does</h3>
               <ul>
                 <li>Generate an install command from the visitor's BTX address and worker name.</li>
-                <li>Generate the matching Telegram balance command.</li>
+                <li>Show searchable GPU profiles, expected BTX/hour, and visible yield assumptions.</li>
                 <li>Keep installer and source links inside our hosted funnel.</li>
                 <li>Show public pool data, payout policy, fee destinations, and remaining backend dependencies.</li>
               </ul>
@@ -364,7 +443,7 @@
             <article class="transparency-card">
               <h3>This page does not</h3>
               <ul>
-                <li>Run an independent stratum pool, Telegram bot, payout wallet, or BTX node yet.</li>
+                <li>Run an independent stratum pool, payout wallet, per-wallet dashboard, or BTX node yet.</li>
                 <li>Custody funds, collect addresses, or store visitor input.</li>
                 <li>Guarantee a user's GPU, driver, network, or external service uptime.</li>
               </ul>
@@ -392,7 +471,7 @@
                 <li><a href="install.sh">Installer</a><span>Our GitHub Pages</span></li>
                 <li><a href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">Miner source</a><span>Our fork</span></li>
                 <li><span>Stratum endpoint</span><span>Existing BTX backend</span></li>
-                <li><a href="https://t.me/btxdexbot" target="_blank" rel="noreferrer">Telegram balance bot</a><span>Existing bot</span></li>
+                <li><span>Per-wallet dashboard</span><span>BTX Start backend needed</span></li>
               </ul>
             </article>
           </div>
@@ -487,8 +566,8 @@
             <p>
               Current BTX Start policy: <code>platform_fee_bps = 0</code>.
               New miners should be able to evaluate the process without fee
-              confusion: their address, their worker, their shares, their balance
-              commands, and visible GPU activity.
+              confusion: their address, their worker, their shares, expected
+              BTX/hour, and visible GPU activity.
             </p>
             <div class="elasticity-row" aria-label="Elasticity fee recommendations">
               <span>Start → 0.00%</span>
@@ -630,61 +709,6 @@
               <h3>Open source tooling</h3>
               <p>The client, installer, docs, and release tooling are published in our fork. Binary artifacts still need independent releases.</p>
             </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="band tuning-band" aria-labelledby="tuning-title">
-        <div class="section-inner">
-          <div class="split-heading">
-            <div>
-              <p class="eyebrow">Miner tuning</p>
-              <h2 id="tuning-title">Known-good GPU profiles.</h2>
-            </div>
-            <a class="text-link" href="docs/TUNING.md">Read tuning docs</a>
-          </div>
-          <div class="table-wrap" tabindex="0">
-            <table>
-              <thead>
-                <tr>
-                  <th>GPU</th>
-                  <th>Workers</th>
-                  <th>Threads</th>
-                  <th>Batch</th>
-                  <th>Measured util / power</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>GTX 1070</td>
-                  <td>16</td>
-                  <td>8</td>
-                  <td>128</td>
-                  <td>83% / 113W</td>
-                </tr>
-                <tr>
-                  <td>RTX 3060 Ti</td>
-                  <td>12</td>
-                  <td>8</td>
-                  <td>128</td>
-                  <td>100% / 190W</td>
-                </tr>
-                <tr>
-                  <td>RTX 4060 Ti</td>
-                  <td>12</td>
-                  <td>8</td>
-                  <td>128</td>
-                  <td>100% / 164W</td>
-                </tr>
-                <tr>
-                  <td>RTX 5070</td>
-                  <td>16</td>
-                  <td>8</td>
-                  <td>128</td>
-                  <td>100% / 223W</td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </section>

@@ -519,6 +519,12 @@ main {
     #0c1218;
 }
 
+.gpu-ranking-band {
+  background:
+    linear-gradient(90deg, rgba(52, 211, 200, 0.045), transparent 44%),
+    #0a0f15;
+}
+
 .tracking-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -527,15 +533,22 @@ main {
 
 .status-grid,
 .treasury-grid,
-.tracker-grid {
+.tracker-grid,
+.profile-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
+.profile-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 14px;
+}
+
 .status-card,
 .treasury-card,
-.tracker-grid article {
+.tracker-grid article,
+.profile-metric {
   min-width: 0;
   padding: 22px;
   background: var(--bg-panel);
@@ -581,9 +594,18 @@ main {
 
 .status-card p,
 .treasury-card p,
-.tracker-grid p {
+.tracker-grid p,
+.profile-metric p {
   margin-bottom: 0;
   color: var(--muted);
+}
+
+.profile-metric strong {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--cyan);
+  font-size: 28px;
+  line-height: 1;
 }
 
 .treasury-card p + p {
@@ -869,6 +891,10 @@ main {
   border-radius: 8px;
 }
 
+.compact-formula {
+  margin-bottom: 16px;
+}
+
 .formula-panel p {
   color: var(--muted);
 }
@@ -901,6 +927,80 @@ main {
   color: var(--cyan);
   font: 700 12px/1.2 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   text-align: center;
+}
+
+.gpu-ranking-controls {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(170px, 220px) auto;
+  gap: 14px;
+  align-items: end;
+  margin: 18px 0 14px;
+}
+
+.gpu-ranking-controls label {
+  display: grid;
+  gap: 8px;
+}
+
+.gpu-ranking-controls label span {
+  color: var(--quiet);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gpu-ranking-controls input,
+.gpu-ranking-controls select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: #090d12;
+  color: var(--fg);
+  font: inherit;
+  outline: none;
+}
+
+.gpu-ranking-controls input:focus,
+.gpu-ranking-controls select:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(52, 211, 200, 0.12);
+}
+
+.gpu-table table {
+  min-width: 1040px;
+}
+
+.gpu-table td strong,
+.gpu-table td span,
+.gpu-table td small {
+  display: block;
+}
+
+.gpu-table td strong {
+  margin-bottom: 4px;
+  color: var(--fg);
+}
+
+.gpu-table td span {
+  color: var(--quiet);
+}
+
+.gpu-table td small {
+  margin-top: 4px;
+  color: var(--quiet);
+}
+
+.confidence {
+  width: fit-content;
+  padding: 4px 7px;
+  border: 1px solid rgba(52, 211, 200, 0.28);
+  border-radius: 999px;
+  color: var(--cyan) !important;
+  font: 700 11px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  text-transform: uppercase;
 }
 
 .agent-loop {
@@ -1144,6 +1244,7 @@ tr:last-child td {
   .status-grid,
   .treasury-grid,
   .tracker-grid,
+  .profile-metrics,
   .flow-grid,
   .fee-model-grid,
   .release-grid,
@@ -1152,7 +1253,8 @@ tr:last-child td {
   }
 
   .two-column,
-  .reason-grid {
+  .reason-grid,
+  .gpu-ranking-controls {
     grid-template-columns: 1fr;
   }
 
@@ -1249,6 +1351,7 @@ tr:last-child td {
   .status-grid,
   .treasury-grid,
   .tracker-grid,
+  .profile-metrics,
   .flow-grid,
   .transparency-grid,
   .fee-model-grid,

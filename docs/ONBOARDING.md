@@ -64,7 +64,7 @@ You have a Linux machine with an NVIDIA GPU (Pascal GTX 1070 through Blackwell R
 ### Install (one command)
 
 ```bash
-curl -fsSL https://minebtx.com/install.sh | bash -s -- --address 'btx1z…YOUR_BTX_ADDRESS…'
+curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z…YOUR_BTX_ADDRESS…'
 ```
 
 That's it. The script:
@@ -89,7 +89,7 @@ tmux new -d -s dexbtx 'dexbtx-miner --config ~/.dexbtx-miner/config.yaml 2>&1 | 
 tmux attach -t dexbtx
 ```
 
-You should see `share OK` lines in the log within a minute. Now [pick a worker name + link Telegram](#worker-naming-and-telegram-notifications).
+You should see `share OK` lines in the log within a minute. Now [pick a stable worker name](#worker-naming-and-mining-visibility).
 
 ---
 
@@ -187,15 +187,17 @@ The list is filtered to peers on the current consensus subver, on the pool's tip
 If you don't have a BTX address yet, you need a wallet. Options:
 
 - **Run your own btxd:** clone the BTX repo, build, `btx-cli getnewaddress` returns a transparent `btx1z…` address
-- **Ask in the Telegram group:** [@btxdexbot](https://t.me/btxdexbot) — community members will help bootstrap
+- **Use the wallet guide:** the BTX Start page links the current wallet setup
+  notes and keeps address generation separate from mining setup.
 
 A valid pool payout address looks like `btx1z` followed by ~58 alphanumeric characters. It's a witness-v2 (P2MR) address that uses the post-quantum signature scheme — that's why it's longer than a Bitcoin address.
 
 ---
 
-## Worker naming and Telegram notifications
+## Worker naming and mining visibility
 
-The `worker_name` field in your config controls how your rig appears on the dashboard + how it's identified for Telegram DMs.
+The `worker_name` field in your config controls how your rig appears in logs
+and future dashboard views.
 
 ### Naming convention
 
@@ -206,47 +208,31 @@ The `worker_name` field in your config controls how your rig appears on the dash
   - `<country2>` — ISO 3166-1 alpha-2 country code: `us`, `de`, `ca`, `gb`, `jp`, …
   - `<color>` — a short, unique-to-you suffix to disambiguate multiple identical rigs
   - **Examples:** `kappa-5060ti-us-blue`, `bravo-1070-de-red`, `tango-4060ti-ca-green`
-- **Why the country + color tail?** Two miners both running 5060 Tis in the US would otherwise collide on `home-5060ti`. The country + color keeps every worker row globally unique on the dashboard and `/link`-routable from the bot without ambiguity.
+- **Why the country + color tail?** Two miners both running 5060 Tis in the US would otherwise collide on `home-5060ti`. The country + color keeps worker rows easier to read and filter.
 - **Uniqueness scope:** the pool keys workers on `(payout_address, worker_name)`, so your `kappa-5060ti-us-blue` doesn't collide with someone else's *payout address*. The convention exists for the **dashboard** view, which lists workers across all addresses.
 - **Stable identity:** changing the name creates a new worker row in the pool DB. Earned shares stay with the old name (PPLNS doesn't migrate). Pick one and stick with it.
 
-### Telegram DM hookup
-
-The pool's bot lets you link your TG chat to a worker so the weekly payout transaction DMs you directly. All commands:
-
-| Command | What it does |
-|---|---|
-| `/stats` | Pool aggregate: hashrate, workers active, blocks found today, etc. |
-| `/mybalance <worker_name>` | Accrued balance (sat + BTX) + last payout date for that worker |
-| `/blocks_today` | List of blocks found since 00:00 UTC, with maturity status |
-| `/link <worker_name>` | Bind your TG chat to a worker — payout broadcast DMs you the receipt |
-| `/unlink <worker_name>` | Undo `/link` for that worker |
-| `/myblock <worker_name>` | Your contribution (credit_sat) to each recent block found |
-| `/help` | Print the full command list |
-
-### Setup flow (3 steps)
+### Visibility flow
 
 1. **Pick a worker_name** and add it to your `~/.dexbtx-miner/config.yaml`
 2. **Start mining** — `dexbtx-miner --config ~/.dexbtx-miner/config.yaml`. The pool creates a worker row the first time you submit a share
-3. **DM the bot** to claim the worker:
-   ```
-   /link kappa-5060ti-us-blue
-   ```
-   You'll get back `🔗 Linked. Worker <name> will now DM you here on payout broadcasts.`
-
-Now every Friday 18:00 UTC payout, you get a DM with the payout transaction details (amount, txid, block height). No need to refresh the dashboard.
+3. **Watch local proof of work** with `tail -f ~/.dexbtx-miner/miner.log` and
+   `watch -n 2 nvidia-smi`
+4. **Compare expected yield** on the BTX Start GPU ranking table. Your real
+   payout tracks accepted shares, pool luck, and the backend payout cycle.
 
 ### What if I have multiple workers?
 
-`/link` is per-worker. Link each one separately:
+Keep each worker name stable and distinct:
 
-```
-/link kappa-1070-us-blue
-/link kappa-5070-us-red
-/link kappa-4060ti-us-green
+```text
+kappa-1070-us-blue
+kappa-5070-us-red
+kappa-4060ti-us-green
 ```
 
-Each gets DM'd independently on payouts. The bot doesn't merge balances across your workers — `/mybalance` shows one worker at a time. But the dashboard's "by address" rollup view (under construction) will eventually sum across all your workers for a single address.
+The future dashboard should roll workers up by payout address so a single
+wallet can show all rigs together.
 
 ---
 
@@ -279,7 +265,9 @@ grep -E 'share REJECTED|daemon I/O failed|unexpected daemon' ~/.dexbtx-miner/min
 #   bottom of this doc.
 ```
 
-Then on Telegram: `/mybalance <your_worker_name>`. If the bot shows a non-zero balance, you're contributing to the pool and earning shares.
+If accepted shares continue and your GPU remains engaged, you are contributing
+to the pool. Wallet balance visibility depends on the payout backend and your
+own BTX wallet until BTX Start ships a first-party per-wallet dashboard.
 
 ---
 
@@ -292,7 +280,9 @@ Then on Telegram: `/mybalance <your_worker_name>`. If the bot shows a non-zero b
 Every Friday 18:00 UTC. Single batched multi-output transaction (low on-chain fee per recipient). No minimum threshold — only the network dust floor (10K sats ≈ 0.0001 BTX). Below dust, your balance rolls over to the next week.
 
 ### Variance
-At small pool share, expect drought windows of 1–3 days between block finds. Pool share grows with the miner count — see `/stats` in the TG bot for current totals.
+At small pool share, expect drought windows of 1–3 days between block finds.
+Pool share grows with the miner count; use the BTX Start network snapshot for
+current aggregate signals.
 
 ### Security: plaintext stratum & payout-address rewriting (v1 caveat)
 The v1 stratum endpoint at `stratum.minebtx.com:3333` is **plaintext TCP** — there is no TLS yet. On a hostile network (open Wi-Fi, untrusted ISP, MITM-able LAN), an on-path attacker could rewrite the `mining.authorize` message and substitute their own `btx1z…` payout address for yours — your hashrate would credit them, not you. TLS is on the immediate roadmap (Caddy TCP-proxy + cert). Until then, treat the network path between your miner and the pool as something you need to actually trust. If you're on a residential ISP or datacenter rental on a known network, this is fine in practice; if you're on a coffee-shop Wi-Fi, mine somewhere else.
@@ -314,9 +304,7 @@ to a local `btxd` and skips stratum entirely.
 
 ## Support
 
-- **Telegram bot**: [@btxdexbot](https://t.me/btxdexbot) — `/help` for the command list
-- **Issues**: https://github.com/dexbtx/minebtx/issues
-- **Pool dashboard**: https://pool.minebtx.com
+- **Issues**: https://github.com/pythonoptic-sketch/minebtx-start/issues
 - **Network data**: [btxprice.com](https://btxprice.com)
 
 ---

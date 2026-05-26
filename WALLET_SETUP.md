@@ -32,16 +32,8 @@ configuration under `~/.dexbtx-miner/` and starts from your payout address.
 
 ## 4. Track work and balances
 
-The page gives you the matching Telegram lookup command:
-
-```text
-/mybalance btx1z...YOUR_BTX_ADDRESS.default
-```
-
-Balance lookup currently depends on the existing BTX Telegram bot. That is a
-backend dependency, not infrastructure owned by this frontend.
-
-You can visually follow the mining process today through three signals:
+You can visually follow the mining process today through local miner signals
+and the public network snapshot:
 
 ```sh
 tail -f ~/.dexbtx-miner/miner.log
@@ -49,14 +41,18 @@ watch -n 2 nvidia-smi
 ```
 
 The miner log should show accepted shares. `nvidia-smi` should show sustained
-GPU utilization and power draw. Telegram can show balance and block-credit
-lookups for the worker id generated on the page.
+GPU utilization and power draw. The site shows the worker id, searchable GPU
+profile estimates, expected BTX/hour, active workers, recent blocks, network
+hashrate, and backend fee state.
+
+Wallet balance should be checked in the BTX wallet that owns your payout
+address until BTX Start ships a first-party per-wallet dashboard.
 
 ## 5. Current infrastructure status
 
 BTX Start now owns the public onboarding page and installer entry URL. It does
-not yet own an independent stratum pool, payout backend, stats API, Telegram
-bot, or binary release pipeline.
+not yet own an independent stratum pool, payout backend, stats API, per-wallet
+dashboard, or binary release pipeline.
 
 The current backend reports its fee policy through the stats snapshot. As of the
 latest checked snapshot, `pool_fee_bps` is `250`, meaning 2.50%. That fee goes
@@ -70,5 +66,6 @@ wallet, and it should not imply miner ownership, dividends, or profit-sharing.
 
 Until those are deployed, mining still depends on the existing BTX backend
 configured by the installer. To become a fully independent competitor, the next
-step is to deploy our own stratum endpoint, stats API, payout wallet, bot, and
-release artifacts, then point the installer at those services.
+step is to deploy our own stratum endpoint, stats API, payout wallet,
+per-wallet dashboard, and release artifacts, then point the installer at those
+services.

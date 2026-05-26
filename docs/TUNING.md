@@ -107,7 +107,7 @@ on first launch, then steady):
 If your GPU isn't covered (e.g. a very new arch not yet in the
 binary), `install.sh`'s Phase 0.3b smoke test will fail loudly during
 install rather than silently mining on CPU. File an issue at
-github.com/dexbtx/minebtx/issues with your `nvidia-smi -q` output
+github.com/pythonoptic-sketch/minebtx-start/issues with your `nvidia-smi -q` output
 and we'll ship a build that supports your hardware.
 
 ---
@@ -257,6 +257,5 @@ Common causes:
    want to push harder. Cards behave differently as the network's
    epsilon_bits parameter shifts over chain history.
 
-Share what works in the Telegram chat ([@btxdexbot](https://t.me/btxdexbot))
-— empirical data from real miners is the best way for everyone to find
-their sweet spot faster.
+Share working profiles through the BTX Start issue tracker. Empirical data from
+real miners is the best way for everyone to find their sweet spot faster.
