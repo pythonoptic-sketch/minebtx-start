@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="A community PPLNS mining pool landing page for BTX with live pool stats, setup commands, and miner onboarding links."
+      content="BTX Start is a low-fee BTX mining onboarding page with transparent setup commands, fee modeling, and live pool signals."
     >
-    <title>minebtx | Community BTX Mining Pool</title>
+    <title>BTX Start | Low-fee BTX Mining</title>
     <link rel="stylesheet" href="assets/styles.css">
     <script src="assets/site.js" defer></script>
   </head>
   <body>
     <nav class="topnav" aria-label="Primary navigation">
-      <a class="brand" href="index.html" aria-label="minebtx home">
+      <a class="brand" href="index.html" aria-label="BTX Start home">
         <span class="brand-mark" aria-hidden="true"></span>
-        <span>minebtx</span>
+        <span>BTX Start</span>
       </a>
       <div class="nav-links">
         <a href="index.html" aria-current="page">Home</a>
@@ -23,23 +23,23 @@
         <a href="#track">Track</a>
         <a href="#fee-model">Fee model</a>
         <a href="#transparency">Transparency</a>
-        <a href="https://pool.minebtx.com/">Live dashboard</a>
+        <a href="#stats">Live stats</a>
       </div>
       <div class="nav-actions">
-        <a href="https://stats.minebtx.com/stats" target="_blank" rel="noreferrer">Stats API</a>
-        <a href="https://github.com/dexbtx/minebtx" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="FEE_MODEL.md">Fee model</a>
+        <a href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">Our GitHub</a>
       </div>
     </nav>
 
     <header class="hero">
       <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
       <div class="hero-shell">
-        <p class="eyebrow">Community PPLNS pool for BTX</p>
-        <h1>Mine BTX without running a node.</h1>
+        <p class="eyebrow">Low-fee BTX mining launcher</p>
+        <h1>A better BTX mining start point.</h1>
         <p class="hero-copy">
-          Point a GPU miner at the pool and skip the full-node work: no initial
-          block download, no peer wrangling, no local wallet daemon, and no
-          manual block propagation.
+          Generate a setup command from your own BTX address, see the fee offer,
+          and track the live mining signals without sending visitors back to the
+          reference site.
         </p>
         <div class="hero-actions" aria-label="Primary actions">
           <a class="button primary" href="#start">Start mining</a>
@@ -56,7 +56,7 @@
           <strong id="blocks-24h">2</strong>
         </div>
         <div>
-          <span class="metric-label">Pool fee</span>
+          <span class="metric-label">Live fee</span>
           <strong id="pool-fee">2.50%</strong>
         </div>
       </div>
@@ -67,7 +67,7 @@
         <div class="section-inner">
           <div class="section-heading">
             <p class="eyebrow">Quick start</p>
-            <h2 id="quickstart-title">One command on a Linux GPU box.</h2>
+            <h2 id="quickstart-title">Start with our hosted installer.</h2>
             <p>
               Paste your own BTX payout address, copy the generated command,
               and run it on a Linux machine with an NVIDIA GPU. The installer
@@ -89,7 +89,7 @@
             <article>
               <span>03</span>
               <strong>Submit shares</strong>
-              <p>Your worker connects to the minebtx stratum pool.</p>
+              <p>Your worker connects to the BTX stratum backend configured by the installer.</p>
             </article>
             <article>
               <span>04</span>
@@ -125,14 +125,14 @@
             <small id="worker-help">This labels the rig and is used for dashboard and Telegram balance lookup.</small>
           </label>
           <div class="command-panel">
-            <code id="install-command">curl -fsSL https://minebtx.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
+            <code id="install-command">curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
             <button class="icon-button" type="button" data-copy-target="install-command" aria-label="Copy install command">
               <span aria-hidden="true">Copy</span>
             </button>
           </div>
           <div class="link-row">
-            <a href="https://github.com/dexbtx/minebtx" target="_blank" rel="noreferrer">View installer source</a>
-            <a href="https://stratum.minebtx.com/" target="_blank" rel="noreferrer">Wallet and setup guide</a>
+            <a href="https://github.com/pythonoptic-sketch/minebtx-start/blob/main/install.sh" target="_blank" rel="noreferrer">View our installer source</a>
+            <a href="WALLET_SETUP.md">Wallet and setup guide</a>
           </div>
         </div>
       </section>
@@ -150,13 +150,13 @@
               <code>share OK ...</code>
             </article>
             <article class="tracking-card">
-              <h3>2. Check the dashboard</h3>
-              <p>The public dashboard shows active miners, accepted shares, recent blocks, and this week's pending payout pool.</p>
-              <a class="text-link" href="https://pool.minebtx.com/" target="_blank" rel="noreferrer">Open live dashboard</a>
+              <h3>2. Check live stats here</h3>
+              <p>This page shows active workers, recent blocks, network hash, node peers, and the fee currently reported by the backend.</p>
+              <a class="text-link" href="#stats">Jump to live stats</a>
             </article>
             <article class="tracking-card">
               <h3>3. Ask the Telegram bot</h3>
-              <p>This site opens the existing bot; balances are served by minebtx's Telegram bot, not by GitHub Pages.</p>
+              <p>Balance lookup currently depends on the existing BTX Telegram bot. We should not present that bot as ours until we ship one.</p>
               <div class="copy-row">
                 <code id="telegram-command">/mybalance btx1z...your_address.default</code>
                 <button class="mini-copy" type="button" data-copy-target="telegram-command" aria-label="Copy Telegram command">Copy</button>
@@ -179,7 +179,7 @@
               <p class="eyebrow">Transparency</p>
               <h2 id="transparency-title">What is visible, what is external.</h2>
             </div>
-            <a class="text-link" href="https://stats.minebtx.com/stats" target="_blank" rel="noreferrer">Open raw stats JSON</a>
+            <a class="text-link" href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">View our source</a>
           </div>
           <div class="transparency-grid">
             <article class="transparency-card">
@@ -187,13 +187,14 @@
               <ul>
                 <li>Generate an install command from the visitor's BTX address and worker name.</li>
                 <li>Generate the matching Telegram balance command.</li>
-                <li>Show public pool links, payout policy, fee destinations, and source links.</li>
+                <li>Keep installer and source links inside our hosted funnel.</li>
+                <li>Show public pool data, payout policy, fee destinations, and remaining backend dependencies.</li>
               </ul>
             </article>
             <article class="transparency-card">
               <h3>This page does not</h3>
               <ul>
-                <li>Run the mining pool, Telegram bot, installer, or BTX node.</li>
+                <li>Run an independent stratum pool, Telegram bot, payout wallet, or BTX node yet.</li>
                 <li>Custody funds, collect addresses, or store visitor input.</li>
                 <li>Guarantee a user's GPU, driver, network, or external service uptime.</li>
               </ul>
@@ -216,12 +217,12 @@
               </dl>
             </article>
             <article class="transparency-card">
-              <h3>External services</h3>
+              <h3>Current backend dependencies</h3>
               <ul class="service-list">
-                <li><a href="https://minebtx.com/install.sh" target="_blank" rel="noreferrer">Installer</a><span>minebtx.com</span></li>
-                <li><a href="https://pool.minebtx.com/" target="_blank" rel="noreferrer">Dashboard</a><span>pool.minebtx.com</span></li>
-                <li><a href="https://t.me/btxdexbot" target="_blank" rel="noreferrer">Telegram bot</a><span>@btxdexbot</span></li>
-                <li><a href="https://github.com/dexbtx/minebtx" target="_blank" rel="noreferrer">Miner source</a><span>GitHub</span></li>
+                <li><a href="install.sh">Installer</a><span>Our GitHub Pages</span></li>
+                <li><a href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">Miner source</a><span>Our fork</span></li>
+                <li><span>Stratum endpoint</span><span>Existing BTX backend</span></li>
+                <li><a href="https://t.me/btxdexbot" target="_blank" rel="noreferrer">Telegram balance bot</a><span>Existing bot</span></li>
               </ul>
             </article>
           </div>
@@ -246,7 +247,7 @@
             <article class="fee-model-card">
               <span class="metric-label">Current live pool fee</span>
               <strong>2.50%</strong>
-              <p>The live pool currently reports this through the public stats API. This static page does not change the backend fee.</p>
+              <p>The backend currently reports this through its public stats API. This static page does not change the backend fee.</p>
             </article>
             <article class="fee-model-card">
               <span class="metric-label">Post-promo target</span>
@@ -321,8 +322,8 @@
         <div class="section-inner">
           <div class="split-heading">
             <div>
-              <p class="eyebrow">Pool at a glance</p>
-              <h2 id="stats-title">Live pool signals.</h2>
+              <p class="eyebrow">Network at a glance</p>
+              <h2 id="stats-title">Live mining signals.</h2>
             </div>
             <p id="stats-status" class="status-text">Loading live stats...</p>
           </div>
@@ -388,7 +389,7 @@
           <div class="reason-grid">
             <article class="reason-card">
               <h3>No daemon to run</h3>
-              <p>The pool runs btxd continuously. You run the miner and point it at stratum.</p>
+              <p>The backend runs btxd continuously. You run the miner and point it at stratum.</p>
             </article>
             <article class="reason-card">
               <h3>No chain to sync</h3>
@@ -396,11 +397,11 @@
             </article>
             <article class="reason-card">
               <h3>Peer mesh maintained</h3>
-              <p>The service monitors peers, handles stalls, and routes new blocks quickly through the network.</p>
+              <p>The backend monitors peers, handles stalls, and routes new blocks quickly through the network.</p>
             </article>
             <article class="reason-card">
               <h3>Open source tooling</h3>
-              <p>The client, installer, docs, and release tooling are published in the dexbtx/minebtx repository.</p>
+              <p>The client, installer, docs, and release tooling are published in our fork. Binary artifacts still need independent releases.</p>
             </article>
           </div>
         </div>
@@ -475,12 +476,12 @@
 
     <footer class="footer">
       <div class="footer-links">
-        <a href="https://github.com/dexbtx" target="_blank" rel="noreferrer">github.com/dexbtx</a>
+        <a href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">Our GitHub</a>
         <a href="https://btxprice.com" target="_blank" rel="noreferrer">btxprice.com</a>
-        <a href="https://stats.minebtx.com/stats" target="_blank" rel="noreferrer">JSON stats</a>
-        <a href="https://pool.minebtx.com/" target="_blank" rel="noreferrer">Live dashboard</a>
+        <a href="FEE_MODEL.md">Fee model</a>
+        <a href="WALLET_SETUP.md">Wallet setup</a>
       </div>
-      <p>Open-source mining client and public pool links for BTX.</p>
+      <p>Competitive BTX mining onboarding, fee modeling, and transparent backend status.</p>
     </footer>
   </body>
 </html>

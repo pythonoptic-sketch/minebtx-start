@@ -1,17 +1,17 @@
-# dexbtx-miner
+# BTX Start miner fork
 
-The reference mining client for the [DEXBTX](https://minebtx.com) pool — a
-PPLNS pool for [BTX](https://btxprice.com), the post-quantum Bitcoin Knots
-fork with matmul proof-of-work.
+BTX Start is a competitive onboarding frontend and installer fork for
+[BTX](https://btxprice.com), the post-quantum Bitcoin Knots fork with matmul
+proof-of-work.
 
-- **Pool stratum**: `stratum+tcp://stratum.minebtx.com:3333`
-- **Live dashboard**: https://pool.minebtx.com
-- **Telegram bot**: [@btxdexbot](https://t.me/btxdexbot) — `/stats`, `/mybalance`, `/blocks_today`
-- **Pool fee**: 2.5%, weekly batched payouts, no minimum threshold
+- **BTX Start site**: https://pythonoptic-sketch.github.io/minebtx-start/
+- **Installer URL**: https://pythonoptic-sketch.github.io/minebtx-start/install.sh
+- **Telegram bot dependency**: [@btxdexbot](https://t.me/btxdexbot) — `/stats`, `/mybalance`, `/blocks_today`
+- **Target launch promo**: 0.50%, pending backend pool-policy change
 
 ---
 
-## Why pool with DEXBTX
+## Why BTX Start
 
 **Smoother earnings vs. solo variance.** At BTX's current network hashrate
 a single 5070-class card finds a block roughly every 4-7 days *on average*
@@ -30,7 +30,7 @@ You inherit that propagation just by pointing your miner at us.
 **Peer management we already did the legwork on.** Our pool's btxd node
 maintains a curated mesh of regional peers across NA / EU / SEA / AU.
 Solo miners spend the first week hunting for non-stalling peers — we
-hand-tuned ours and route block templates through them automatically.
+hand-tuned routing can make the difference between submitted and orphaned work.
 
 **Built-in fallbacks for the things that actually break.** A year of
 running this fleet uncovered roughly a dozen silent-failure modes —
@@ -42,13 +42,12 @@ installer. You won't silently mine on CPU for three weeks like we did.
 
 **Simplicity.** Solo mining requires running your own `btxd` (full node,
 600 GB chainstate, manual peer wrangling, manual restart after every
-reorg storm). DEXBTX mining is `curl | bash | mine`. One binary, one
-YAML, one tmux session. No node admin.
+reorg storm). BTX Start keeps the miner path to `curl | bash | mine`.
+One binary, one YAML, one tmux session. No node admin.
 
-**Pool-side transparency.** 2.5% fee, batched payouts every Friday
-18:00 UTC, full payout transactions DM'd to you via Telegram. No
-minimum-payout threshold — you get paid for every share that lands in
-the 10K-share PPLNS window regardless of size.
+**Fee transparency.** The public site shows the target 0.50% launch promo, the
+current backend-reported fee, and the backend dependencies that still need to
+move under BTX Start control.
 
 ---
 
@@ -57,7 +56,7 @@ the 10K-share PPLNS window regardless of size.
 Linux + any NVIDIA GPU from Pascal (GTX 10-series) through Blackwell (RTX 50-series):
 
 ```bash
-curl -fsSL https://minebtx.com/install.sh | bash -s -- --address 'btx1z…YOUR_BTX_ADDRESS…'
+curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...'
 ```
 
 What this does:
@@ -84,8 +83,8 @@ dexbtx-miner --config ~/.dexbtx-miner/config.yaml
 tmux new -d -s dexbtx 'dexbtx-miner --config ~/.dexbtx-miner/config.yaml 2>&1 | tee -a ~/.dexbtx-miner/miner.log'
 ```
 
-Within a minute you should see `share OK` lines in the log and your
-worker should appear on the [live dashboard](https://pool.minebtx.com).
+Within a minute you should see `share OK` lines in the log. Use the BTX Start
+site and Telegram balance command to track work and payouts.
 
 ### Get DM'd on weekly payouts
 
@@ -272,8 +271,8 @@ is more work than most miners want to take on.
 ## Contributing / building from source
 
 ```bash
-git clone https://github.com/dexbtx/minebtx
-cd dexbtx-miner
+git clone https://github.com/pythonoptic-sketch/minebtx-start
+cd minebtx-start
 
 # Run the Python wrapper directly:
 pip install --user -e .
@@ -301,5 +300,5 @@ you don't strip the copyright notice from your distribution.
 ## Where to ask questions
 
 - **Pool TG**: [@btxdexbot](https://t.me/btxdexbot) (`/help` for commands)
-- **GitHub Issues**: https://github.com/dexbtx/minebtx/issues
+- **GitHub Issues**: https://github.com/pythonoptic-sketch/minebtx-start/issues
 - **Network info**: [btxprice.com](https://btxprice.com)

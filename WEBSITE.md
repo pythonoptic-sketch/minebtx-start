@@ -1,7 +1,8 @@
 # Website
 
-This repository now includes a static landing page inspired by the public
-minebtx site.
+This repository now includes the BTX Start static landing page. The page is
+intended to be a competitive onboarding frontend, not a redirect back to the
+reference site.
 
 ## Local preview
 
@@ -24,7 +25,7 @@ http://localhost:8080/
 - `assets/site.js` - live stat hydration, copy button behavior, and hero canvas
 
 The page is static and can be deployed to GitHub Pages, Netlify, Vercel, Caddy,
-Nginx, or any other static host. When served from a `minebtx.com` hostname, the
-stat cards fetch `/stats`. Local previews and unrelated hostnames keep the
-bundled snapshot values visible to avoid cross-origin errors from the public
-stats endpoint.
+Nginx, or any other static host. It reads `stats-snapshot.json` from the same
+site origin. The GitHub Action in `.github/workflows/update-stats.yml` refreshes
+that snapshot from the current BTX backend until an independent BTX Start stats
+backend has been deployed.

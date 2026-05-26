@@ -1,0 +1,46 @@
+name: Update BTX stats snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch stats snapshot
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import urllib.request
+          from datetime import datetime, timezone
+
+          with urllib.request.urlopen("https://stats.minebtx.com/stats", timeout=20) as response:
+              data = json.load(response)
+
+          data["fetched_at"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+          with open("stats-snapshot.json", "w", encoding="utf-8") as handle:
+              json.dump(data, handle, indent=2, sort_keys=False)
+              handle.write("\n")
+          PY
+
+      - name: Commit changed snapshot
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- stats-snapshot.json; then
+            echo "No stats changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add stats-snapshot.json
+          git commit -m "Update BTX stats snapshot"
+          git push

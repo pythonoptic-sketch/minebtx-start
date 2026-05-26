@@ -2,8 +2,8 @@
 # DEXBTX miner — one-line installer.
 #
 # Usage:
-#   curl -fsSL https://minebtx.com/install.sh | bash
-#   curl -fsSL https://minebtx.com/install.sh | bash -s -- --address btx1z...
+#   curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash
+#   curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address btx1z...
 #
 # What this script does:
 #   1. Detect OS + GPU (NVIDIA via nvidia-smi; otherwise CPU-only path)
@@ -33,6 +33,9 @@ set -euo pipefail
 #
 # EXPECTED_SHA256 env var is supported as an override for offline / mirror
 # / fork use; if set, it skips the remote pyproject.toml fetch.
+#
+# Current dependency: this fork still uses upstream binary release artifacts
+# until BTX Start publishes its own signed solver releases.
 PREBUILDS_TAG="${PREBUILDS_TAG:-v4.3-sm89-native}"
 PREBUILDS_BASE="${PREBUILDS_BASE:-https://github.com/dexbtx/minebtx/releases/download/${PREBUILDS_TAG}}"
 SOLVER_URL="${PREBUILDS_BASE}/btx-gbt-solve"
@@ -477,7 +480,7 @@ compatible with your GPU/driver combination. Driver: $(nvidia-smi --query-gpu=dr
 
 This is a binary issue, NOT a driver issue — DO NOT downgrade your driver.
 
-Action: file an issue at github.com/dexbtx/minebtx/issues with:
+Action: file an issue at github.com/pythonoptic-sketch/minebtx-start/issues with:
   - GPU model: ${GPU_NAME}
   - Driver version: $(nvidia-smi --query-gpu=driver_version --format=csv,noheader | head -1)
   - CUDA runtime: $(nvidia-smi --query-gpu=cuda_version --format=csv,noheader 2>/dev/null | head -1)

@@ -12,7 +12,7 @@ pool_tls: false
 # ─── Identity ────────────────────────────────────────────────────────────
 # REQUIRED. Your transparent BTX payout address (btx1z...). Get one via
 # `btx-cli getnewaddress` if you run your own btxd, or follow the wallet
-# quickstart at https://minebtx.com.
+# quickstart at https://pythonoptic-sketch.github.io/minebtx-start/WALLET_SETUP.md.
 payout_address: "btx1z...YOUR_BTX_ADDRESS_HERE..."
 # Short label shown on the dashboard so you can tell rigs apart.
 # Recommended pattern: "<alias>-<gpu>-<country2>-<color>" (four parts,

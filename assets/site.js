@@ -1,4 +1,6 @@
-const statsUrl = window.location.hostname.endsWith("minebtx.com") ? "/stats" : null;
+const siteBaseUrl = "https://pythonoptic-sketch.github.io/minebtx-start";
+const installerUrl = `${siteBaseUrl}/install.sh`;
+const statsUrl = "stats-snapshot.json";
 const placeholderAddress = "btx1z...YOUR_BTX_ADDRESS...";
 
 const formatNumber = new Intl.NumberFormat("en-US");
@@ -20,13 +22,6 @@ function formatHashrate(value) {
 async function hydrateStats() {
   const status = document.getElementById("stats-status");
 
-  if (!statsUrl) {
-    if (status) {
-      status.textContent = "Snapshot values shown locally. Deploy behind /stats to enable live data.";
-    }
-    return;
-  }
-
   try {
     const response = await fetch(statsUrl, { cache: "no-store" });
     if (!response.ok) throw new Error(`Stats request failed: ${response.status}`);
@@ -46,8 +41,8 @@ async function hydrateStats() {
     setText("node-peers", formatNumber.format(btxd.peers));
 
     if (status) {
-      const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-      status.textContent = `Live stats updated ${timestamp}`;
+      const timestamp = data.fetched_at ? new Date(data.fetched_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "recently";
+      status.textContent = `Stats snapshot updated ${timestamp}`;
     }
   } catch (error) {
     if (status) {
@@ -94,7 +89,7 @@ function setupAddressBuilder() {
     const looksValid = /^btx1z[a-z0-9]{20,}$/i.test(address);
     const addressForCommand = looksValid ? address : placeholderAddress;
 
-    command.textContent = `curl -fsSL https://minebtx.com/install.sh | bash -s -- --address '${addressForCommand}' --worker '${worker}'`;
+    command.textContent = `curl -fsSL ${installerUrl} | bash -s -- --address '${addressForCommand}' --worker '${worker}'`;
     if (telegramCommand) {
       const balanceAddress = looksValid ? address : "btx1z...your_address";
       telegramCommand.textContent = `/mybalance ${balanceAddress}.${worker}`;
