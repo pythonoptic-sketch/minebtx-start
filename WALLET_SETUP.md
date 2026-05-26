@@ -8,7 +8,18 @@ Generate or copy a personal BTX payout address that starts with `btx1z`.
 Paste that address into the start form on the site. The command is generated in
 your browser and is not sent to this static site.
 
-## 2. Run the hosted installer
+## 2. Run preflight first
+
+Preflight checks your host without installing packages or writing config:
+
+```sh
+curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --preflight --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'
+```
+
+It checks the operating system, required tools, NVIDIA GPU visibility, release
+artifact reachability, stratum TCP reachability, and payout address format.
+
+## 3. Run the hosted installer
 
 The page generates a command like this:
 
@@ -19,7 +30,7 @@ curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash 
 Run it on a Linux machine with an NVIDIA GPU. The installer writes a miner
 configuration under `~/.dexbtx-miner/` and starts from your payout address.
 
-## 3. Track work and balances
+## 4. Track work and balances
 
 The page gives you the matching Telegram lookup command:
 
@@ -30,7 +41,7 @@ The page gives you the matching Telegram lookup command:
 Balance lookup currently depends on the existing BTX Telegram bot. That is a
 backend dependency, not infrastructure owned by this frontend.
 
-## 4. Current infrastructure status
+## 5. Current infrastructure status
 
 BTX Start now owns the public onboarding page and installer entry URL. It does
 not yet own an independent stratum pool, payout backend, stats API, Telegram

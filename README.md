@@ -55,6 +55,14 @@ move under BTX Start control.
 
 Linux + any NVIDIA GPU from Pascal (GTX 10-series) through Blackwell (RTX 50-series):
 
+Check the host first without installing anything:
+
+```bash
+curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --preflight --address 'btx1z...YOUR_BTX_ADDRESS...'
+```
+
+Then install:
+
 ```bash
 curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...'
 ```

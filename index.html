@@ -20,6 +20,7 @@
       <div class="nav-links">
         <a href="index.html" aria-current="page">Home</a>
         <a href="#start">Start</a>
+        <a href="#compatibility">Compatibility</a>
         <a href="#track">Track</a>
         <a href="#fee-model">Fee model</a>
         <a href="#transparency">Transparency</a>
@@ -124,15 +125,100 @@
             >
             <small id="worker-help">This labels the rig and is used for dashboard and Telegram balance lookup.</small>
           </label>
-          <div class="command-panel">
-            <code id="install-command">curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
-            <button class="icon-button" type="button" data-copy-target="install-command" aria-label="Copy install command">
-              <span aria-hidden="true">Copy</span>
-            </button>
+          <div class="command-block">
+            <div>
+              <h3>Check first, no install</h3>
+              <p>Runs host, GPU, artifact, address, and network checks without writing config or installing packages.</p>
+            </div>
+            <div class="command-panel">
+              <code id="preflight-command">curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --preflight --worker 'default'</code>
+              <button class="icon-button" type="button" data-copy-target="preflight-command" aria-label="Copy preflight command">
+                <span aria-hidden="true">Copy</span>
+              </button>
+            </div>
+          </div>
+          <div class="command-block">
+            <div>
+              <h3>Install when preflight passes</h3>
+              <p>Downloads the miner package, verifies the solver hash, writes config, and runs the CUDA engagement smoke test.</p>
+            </div>
+            <div class="command-panel">
+              <code id="install-command">curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
+              <button class="icon-button" type="button" data-copy-target="install-command" aria-label="Copy install command">
+                <span aria-hidden="true">Copy</span>
+              </button>
+            </div>
           </div>
           <div class="link-row">
             <a href="https://github.com/pythonoptic-sketch/minebtx-start/blob/main/install.sh" target="_blank" rel="noreferrer">View our installer source</a>
             <a href="WALLET_SETUP.md">Wallet and setup guide</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="band release-band" id="compatibility" aria-labelledby="release-title">
+        <div class="section-inner">
+          <div class="split-heading">
+            <div>
+              <p class="eyebrow">Release-ready setup</p>
+              <h2 id="release-title">No source build, explicit GPU path.</h2>
+            </div>
+            <a class="text-link" href="START_IMPROVEMENTS.md">Open implementation notes</a>
+          </div>
+          <div class="release-grid">
+            <article class="release-card">
+              <span class="metric-label">Install friction</span>
+              <strong>Prebuilt</strong>
+              <p>The installer pulls a patched solver binary instead of asking miners to compile BTX source.</p>
+            </article>
+            <article class="release-card">
+              <span class="metric-label">Trust check</span>
+              <strong>SHA256</strong>
+              <p>The binary hash is pinned and verified before the solver is installed locally.</p>
+            </article>
+            <article class="release-card">
+              <span class="metric-label">Runtime check</span>
+              <strong>CUDA</strong>
+              <p>The installer validates that the GPU is actually doing work instead of silently falling back to CPU.</p>
+            </article>
+          </div>
+          <div class="table-wrap compatibility-table" tabindex="0">
+            <table>
+              <thead>
+                <tr>
+                  <th>GPU class</th>
+                  <th>Expected release path</th>
+                  <th>What the user needs to know</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Pascal, GTX 9/10-series</td>
+                  <td>Native sm_61 cubin</td>
+                  <td>Older cards can run the matmul kernel without building locally.</td>
+                </tr>
+                <tr>
+                  <td>Turing / Ampere, sm_70-sm_86</td>
+                  <td>sm_61 PTX JIT</td>
+                  <td>First launch may compile the kernel for the installed driver.</td>
+                </tr>
+                <tr>
+                  <td>Ada, RTX 40-series</td>
+                  <td>Native sm_89 cubin</td>
+                  <td>Use the current release for the native Ada binary path.</td>
+                </tr>
+                <tr>
+                  <td>Hopper, H100/H200</td>
+                  <td>Native sm_90 cubin</td>
+                  <td>Datacenter cards are supported by the prebuilt solver path.</td>
+                </tr>
+                <tr>
+                  <td>Blackwell, RTX 50-series</td>
+                  <td>Native sm_120 cubin</td>
+                  <td>The installer chooses higher worker/thread defaults for faster cards.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

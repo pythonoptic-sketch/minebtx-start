@@ -78,6 +78,7 @@ function setupAddressBuilder() {
   const input = document.getElementById("btx-address-input");
   const workerInput = document.getElementById("worker-name-input");
   const command = document.getElementById("install-command");
+  const preflightCommand = document.getElementById("preflight-command");
   const telegramCommand = document.getElementById("telegram-command");
   const wrapper = document.querySelector(".address-builder");
   const help = document.getElementById("address-help");
@@ -90,6 +91,10 @@ function setupAddressBuilder() {
     const addressForCommand = looksValid ? address : placeholderAddress;
 
     command.textContent = `curl -fsSL ${installerUrl} | bash -s -- --address '${addressForCommand}' --worker '${worker}'`;
+    if (preflightCommand) {
+      const addressFlag = looksValid ? ` --address '${address}'` : "";
+      preflightCommand.textContent = `curl -fsSL ${installerUrl} | bash -s -- --preflight${addressFlag} --worker '${worker}'`;
+    }
     if (telegramCommand) {
       const balanceAddress = looksValid ? address : "btx1z...your_address";
       telegramCommand.textContent = `/mybalance ${balanceAddress}.${worker}`;

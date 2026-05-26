@@ -23,6 +23,9 @@ http://localhost:8080/
 - `index.html` - page structure and links
 - `assets/styles.css` - responsive layout and visual design
 - `assets/site.js` - live stat hydration, copy button behavior, and hero canvas
+- `START_IMPROVEMENTS.md` - release-based onboarding analysis
+- `WALLET_SETUP.md` - miner-facing setup guide
+- `stats-snapshot.json` - same-origin stats payload for the static page
 
 The page is static and can be deployed to GitHub Pages, Netlify, Vercel, Caddy,
 Nginx, or any other static host. It reads `stats-snapshot.json` from the same

@@ -3,6 +3,7 @@
 #
 # Usage:
 #   curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash
+#   curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --preflight
 #   curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address btx1z...
 #
 # What this script does:
@@ -19,6 +20,7 @@
 # version. Existing config is preserved.
 
 set -euo pipefail
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PATH:-}"
 
 # ─── Configurables ──────────────────────────────────────────────────────────
 # Pin the release tag. install.sh always pulls this version of the solver
@@ -37,9 +39,10 @@ set -euo pipefail
 # Current dependency: this fork still uses upstream binary release artifacts
 # until BTX Start publishes its own signed solver releases.
 PREBUILDS_TAG="${PREBUILDS_TAG:-v4.3-sm89-native}"
+BTX_START_REPO_URL="${BTX_START_REPO_URL:-https://github.com/pythonoptic-sketch/minebtx-start}"
 PREBUILDS_BASE="${PREBUILDS_BASE:-https://github.com/dexbtx/minebtx/releases/download/${PREBUILDS_TAG}}"
 SOLVER_URL="${PREBUILDS_BASE}/btx-gbt-solve"
-PYPROJECT_URL="${PYPROJECT_URL:-https://raw.githubusercontent.com/dexbtx/minebtx/${PREBUILDS_TAG}/pyproject.toml}"
+PYPROJECT_URL="${PYPROJECT_URL:-https://raw.githubusercontent.com/pythonoptic-sketch/minebtx-start/main/pyproject.toml}"
 
 # Default pool — override with --pool flag or DEXBTX_POOL env var.
 DEFAULT_POOL="${DEXBTX_POOL:-minebtx.com:3333}"
@@ -57,6 +60,7 @@ ASSUME_YES=0
 SKIP_PROMPT=0
 LOCAL_SOLVER=""   # if set: copy from this local path instead of downloading
 SKIP_PIP=0        # if 1: don't pip install dexbtx-miner (useful when running from a source checkout)
+PREFLIGHT=0       # if 1: check host readiness without installing anything
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -67,8 +71,25 @@ while [[ $# -gt 0 ]]; do
         --skip-prompt) SKIP_PROMPT=1; shift ;;
         --local-solver) LOCAL_SOLVER="$2"; shift 2 ;;
         --skip-pip)    SKIP_PIP=1; shift ;;
+        --preflight)   PREFLIGHT=1; SKIP_PROMPT=1; shift ;;
         --help|-h)
-            sed -n '2,17p' "$0"
+            printf '%s\n' \
+                "BTX Start miner installer" \
+                "" \
+                "Usage:" \
+                "  curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash" \
+                "  curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --preflight" \
+                "  curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address btx1z..." \
+                "" \
+                "Options:" \
+                "  --preflight       Check host readiness without installing anything" \
+                "  --address VALUE   BTX payout address" \
+                "  --worker VALUE    Worker name for dashboard/balance lookup" \
+                "  --pool HOST:PORT  Override stratum pool endpoint" \
+                "  --yes, -y         Regenerate config without prompting" \
+                "  --skip-prompt     Do not prompt for missing address" \
+                "  --skip-pip        Skip Python package install" \
+                "  --local-solver    Use a local btx-gbt-solve binary"
             exit 0
             ;;
         *) echo "unknown arg: $1"; exit 1 ;;
@@ -89,6 +110,137 @@ confirm() {
     read -rp "$1 [y/N] " ans
     [[ "$ans" =~ ^[Yy]$ ]]
 }
+
+run_preflight() {
+    local failures=0
+    local warnings=0
+    local os_name
+    local arch_name
+    os_name="$(uname -s 2>/dev/null || echo unknown)"
+    arch_name="$(uname -m 2>/dev/null || echo unknown)"
+
+    log "BTX Start preflight — release ${PREBUILDS_TAG}"
+    echo "  OS:       ${os_name}"
+    echo "  Arch:     ${arch_name}"
+    echo "  Pool:     ${POOL}"
+    echo "  Solver:   ${SOLVER_URL}"
+    echo
+
+    case "$os_name" in
+        Linux) log "OS check: Linux supported" ;;
+        Darwin)
+            warn "macOS detected. The public one-line path is intended for Linux + NVIDIA hosts."
+            warnings=$((warnings + 1))
+            ;;
+        *)
+            warn "unsupported OS for the one-line miner path: ${os_name}"
+            failures=$((failures + 1))
+            ;;
+    esac
+
+    for tool in curl python3; do
+        if command -v "$tool" >/dev/null 2>&1; then
+            log "tool check: ${tool} found"
+        else
+            warn "tool check: ${tool} missing"
+            failures=$((failures + 1))
+        fi
+    done
+
+    if command -v sha256sum >/dev/null 2>&1; then
+        log "tool check: sha256sum found"
+    else
+        warn "tool check: sha256sum missing; install coreutils before mining"
+        failures=$((failures + 1))
+    fi
+
+    if command -v nvidia-smi >/dev/null 2>&1; then
+        local gpu_query
+        gpu_query="$(nvidia-smi --query-gpu=name,compute_cap,driver_version --format=csv,noheader 2>/dev/null | head -1 || true)"
+        if [[ -z "$gpu_query" ]]; then
+            gpu_query="$(nvidia-smi --query-gpu=name,driver_version --format=csv,noheader 2>/dev/null | head -1 || true)"
+        fi
+        if [[ -n "$gpu_query" ]]; then
+            log "GPU check: ${gpu_query}"
+            case "$gpu_query" in
+                *"GTX 9"*|*"GTX 10"*) echo "  Release path: native sm_61 cubin" ;;
+                *"GTX 16"*|*"RTX 20"*|*"RTX 30"*|*"A100"*|*"A40"*|*"A4000"*|*"A5000"*|*"A6000"*) echo "  Release path: sm_61 PTX JIT to this architecture" ;;
+                *"RTX 40"*) echo "  Release path: native sm_89 cubin" ;;
+                *"H100"*|*"H200"*) echo "  Release path: native sm_90 cubin" ;;
+                *"RTX 50"*) echo "  Release path: native sm_120 cubin" ;;
+                *) echo "  Release path: unknown from name; installer smoke test is authoritative" ;;
+            esac
+        else
+            warn "nvidia-smi is present but no GPU was returned"
+            failures=$((failures + 1))
+        fi
+    else
+        warn "nvidia-smi missing. Install NVIDIA drivers or use a CUDA image before running the miner."
+        failures=$((failures + 1))
+    fi
+
+    if command -v curl >/dev/null 2>&1; then
+        if curl -fsIL --max-time 15 "$SOLVER_URL" >/dev/null 2>&1; then
+            log "artifact check: solver release is reachable"
+        else
+            warn "artifact check: solver release is not reachable from this host"
+            failures=$((failures + 1))
+        fi
+
+        if curl -fsIL --max-time 15 "$PYPROJECT_URL" >/dev/null 2>&1; then
+            log "artifact check: SHA256 pin source is reachable"
+        else
+            warn "artifact check: SHA256 pin source is not reachable from this host"
+            failures=$((failures + 1))
+        fi
+    fi
+
+    if command -v python3 >/dev/null 2>&1; then
+        if python3 - "$POOL" <<'PY'
+import socket
+import sys
+
+pool = sys.argv[1]
+host, port = pool.rsplit(":", 1) if ":" in pool else (pool, "3333")
+with socket.create_connection((host, int(port)), timeout=5):
+    pass
+PY
+        then
+            log "network check: stratum TCP ${POOL} reachable"
+        else
+            warn "network check: stratum TCP ${POOL} is not reachable from this host"
+            failures=$((failures + 1))
+        fi
+    fi
+
+    if [[ -n "$ADDRESS" ]]; then
+        if [[ "$ADDRESS" =~ ^btx1z[0-9a-zA-Z]{50,}$ ]]; then
+            log "address check: payout address format looks valid"
+        else
+            warn "address check: payout address does not match the expected btx1z... format"
+            warnings=$((warnings + 1))
+        fi
+    else
+        warn "address check: no payout address supplied; pass --address before installing"
+        warnings=$((warnings + 1))
+    fi
+
+    echo
+    if [[ "$failures" -eq 0 ]]; then
+        log "preflight complete: no install blockers found (${warnings} warning(s))."
+        echo "Next:"
+        echo "  curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker '${WORKER:-default}'"
+        return 0
+    fi
+
+    warn "preflight found ${failures} blocker(s) and ${warnings} warning(s). Fix blockers before installing."
+    return 2
+}
+
+if [[ "$PREFLIGHT" -eq 1 ]]; then
+    run_preflight
+    exit $?
+fi
 
 # ─── Detection ──────────────────────────────────────────────────────────────
 log "DEXBTX miner installer — release ${PREBUILDS_TAG}"
@@ -167,7 +319,7 @@ else
     # git binary on the host AND avoids PyPI as a single point of
     # failure. Override DEXBTX_MINER_PKG_URL to install from a fork
     # / local checkout / private mirror.
-    DEXBTX_MINER_PKG_URL="${DEXBTX_MINER_PKG_URL:-https://github.com/dexbtx/minebtx/archive/refs/tags/${PREBUILDS_TAG}.tar.gz}"
+    DEXBTX_MINER_PKG_URL="${DEXBTX_MINER_PKG_URL:-${BTX_START_REPO_URL}/archive/refs/heads/main.tar.gz}"
     log "installing dexbtx-miner from ${DEXBTX_MINER_PKG_URL} (pip --user)..."
     "$PYTHON" -m pip install --user --upgrade "$DEXBTX_MINER_PKG_URL"
 
