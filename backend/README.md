@@ -63,6 +63,17 @@ btxstart-payouts --execute
 Execution calls `btx-cli` functionality through backend JSON-RPC. Only run it
 on the locked backend machine after reviewing the dry-run output.
 
+### Network Agent
+
+```bash
+btxstart-network-agent --once
+```
+
+The network agent watches the public BTX peer-list endpoint used by the peer
+dashboard, reads local `btxd` health, writes a snapshot, and records a backend
+event. It is observe-only by default. Keep `NETWORK_AGENT_APPLY_PEERS=false`
+unless you explicitly want it to call `addnode` on the local node.
+
 ## Required Production Environment
 
 Copy `backend/.env.example` to a private env file on the server and fill:

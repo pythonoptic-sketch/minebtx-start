@@ -35,6 +35,11 @@ class BackendSettings:
     pro_success_url: str = "https://drinknile.com/#track"
     pro_cancel_url: str = "https://drinknile.com/#operating-model"
     allow_unverified_share_acceptance: bool = False
+    network_agent_peer_url: str = "https://peers.minebtx.com/api/peer_list?relaxed=true&n=50"
+    network_agent_interval_s: int = 60
+    network_agent_snapshot_path: str = "backend/network-agent.local.json"
+    network_agent_min_score: float = 0.70
+    network_agent_apply_peers: bool = False
 
     @classmethod
     def from_env(cls) -> "BackendSettings":
@@ -58,6 +63,26 @@ class BackendSettings:
             pro_success_url=os.environ.get("PRO_SUCCESS_URL", cls.pro_success_url),
             pro_cancel_url=os.environ.get("PRO_CANCEL_URL", cls.pro_cancel_url),
             allow_unverified_share_acceptance=_bool_env("ALLOW_UNVERIFIED_SHARE_ACCEPTANCE", False),
+            network_agent_peer_url=os.environ.get(
+                "NETWORK_AGENT_PEER_URL",
+                cls.network_agent_peer_url,
+            ),
+            network_agent_interval_s=int(os.environ.get(
+                "NETWORK_AGENT_INTERVAL_S",
+                cls.network_agent_interval_s,
+            )),
+            network_agent_snapshot_path=os.environ.get(
+                "NETWORK_AGENT_SNAPSHOT_PATH",
+                cls.network_agent_snapshot_path,
+            ),
+            network_agent_min_score=float(os.environ.get(
+                "NETWORK_AGENT_MIN_SCORE",
+                cls.network_agent_min_score,
+            )),
+            network_agent_apply_peers=_bool_env(
+                "NETWORK_AGENT_APPLY_PEERS",
+                cls.network_agent_apply_peers,
+            ),
         )
 
     def ensure_database_parent(self) -> None:

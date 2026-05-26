@@ -43,13 +43,15 @@ install -m 0644 "$APP_DIR/deploy/systemd/btx-start-api.service" /etc/systemd/sys
 install -m 0644 "$APP_DIR/deploy/systemd/btx-start-stratum.service" /etc/systemd/system/btx-start-stratum.service
 install -m 0644 "$APP_DIR/deploy/systemd/btx-start-payouts.service" /etc/systemd/system/btx-start-payouts.service
 install -m 0644 "$APP_DIR/deploy/systemd/btx-start-payouts.timer" /etc/systemd/system/btx-start-payouts.timer
+install -m 0644 "$APP_DIR/deploy/systemd/btx-start-network-agent.service" /etc/systemd/system/btx-start-network-agent.service
 install -m 0644 "$APP_DIR/deploy/caddy/Caddyfile" /etc/caddy/Caddyfile
 
 systemctl daemon-reload
-systemctl enable caddy btx-start-api btx-start-stratum btx-start-payouts.timer
-systemctl restart caddy btx-start-api btx-start-stratum
+systemctl enable caddy btx-start-api btx-start-stratum btx-start-network-agent btx-start-payouts.timer
+systemctl restart caddy btx-start-api btx-start-stratum btx-start-network-agent
 systemctl start btx-start-payouts.timer
 
 log "backend services installed"
 log "check API: curl -fsS http://127.0.0.1:8000/health"
 log "check stratum: nc -vz 127.0.0.1 3333"
+log "check network agent: systemctl status btx-start-network-agent"

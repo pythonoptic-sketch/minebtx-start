@@ -52,6 +52,15 @@ class BtxRpcClient:
     def getnetworkhashps(self) -> int | float | None:
         return self.call("getnetworkhashps")
 
+    def getconnectioncount(self) -> int:
+        return int(self.call("getconnectioncount"))
+
+    def getpeerinfo(self) -> list[dict[str, Any]]:
+        return list(self.call("getpeerinfo"))
+
+    def addnode(self, address: str, command: str = "onetry") -> Any:
+        return self.call("addnode", [address, command])
+
     def getblocktemplate(self) -> dict[str, Any]:
         return dict(self.call("getblocktemplate", [{"rules": ["segwit"]}]))
 

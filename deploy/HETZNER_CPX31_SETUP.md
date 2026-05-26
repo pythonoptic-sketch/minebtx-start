@@ -114,6 +114,7 @@ Check:
 curl -fsS http://127.0.0.1:8000/health
 curl -fsS https://api.drinknile.com/health
 nc -vz stratum.drinknile.com 3333
+systemctl status btx-start-network-agent
 ```
 
 ## Launch Gate
