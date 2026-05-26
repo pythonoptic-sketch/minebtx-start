@@ -7,7 +7,7 @@ proof-of-work.
 - **BTX Start site**: https://pythonoptic-sketch.github.io/minebtx-start/
 - **Installer URL**: https://pythonoptic-sketch.github.io/minebtx-start/install.sh
 - **Telegram bot dependency**: [@btxdexbot](https://t.me/btxdexbot) — `/stats`, `/mybalance`, `/blocks_today`
-- **Target launch promo**: 0.50%, pending backend pool-policy change
+- **BTX Start platform fee**: 0.00%, pending backend pool-policy ownership
 
 ---
 
@@ -45,9 +45,9 @@ installer. You won't silently mine on CPU for three weeks like we did.
 reorg storm). BTX Start keeps the miner path to `curl | bash | mine`.
 One binary, one YAML, one tmux session. No node admin.
 
-**Fee transparency.** The public site shows the target 0.50% launch promo, the
-current backend-reported fee, and the backend dependencies that still need to
-move under BTX Start control.
+**Fee transparency.** The public site shows BTX Start's 0.00% platform-fee
+policy, the current backend-reported fee, and the backend dependencies that
+still need to move under BTX Start control.
 
 ---
 

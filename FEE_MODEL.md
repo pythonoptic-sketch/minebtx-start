@@ -115,67 +115,44 @@ Fee revenue comparison at current share:
 | 2.0% | $10.56 | $341.03 |
 | 2.5% | $13.19 | $426.29 |
 
-The absolute dollar difference between `0.50%` and `2.50%` is currently about
-`$10.56/day` at current model price and current pool share. That is not enough
-to justify being fee-average during launch. If the 12-month forward price path
-materializes, fee revenue grows mainly through price and pool-share growth, so
-the better near-term objective is maximizing miner adoption and retained
-hashrate.
+The absolute fee revenue at small pool share is not enough to justify adding a
+BTX Start platform fee during onboarding. If the 12-month forward price path
+materializes, any future fee revenue grows mainly through price and pool-share
+growth, so the better near-term objective is maximizing miner adoption and
+retained hashrate.
 
 ## Recommendation
 
-Recommended launch fee:
+Current BTX Start platform fee:
 
 ```text
-0.50% = 50 bps
-```
-
-Recommended launch schedule:
-
-```text
-Pool share below 1.0%:      0.50%  (50 bps)
-Pool share 1.0% to 2.0%:    1.00%  (100 bps)
-Pool share 2.0% to 5.0%:    1.50%  (150 bps)
-Stable retained pool:       2.00%  (200 bps)
-```
-
-Upper bound while still growing:
-
-```text
-2.50% = 250 bps
-```
-
-Avoid for now:
-
-```text
-> 2.50%
+0.00% = 0 bps
 ```
 
 Reasoning:
 
-- BTX is early and pool share is under 1% of network hashrate.
-- Miner switching cost is low, so fee elasticity is likely high.
-- The 12-month price model implies revenue upside comes more from network and
-  pool-share growth than from extracting another 50 bps today.
-- A lower fee improves the visible value proposition for new miners.
-- Public mining-pool fee references commonly sit around `0.25%` to `2%`.
-  To be clearly more attractive, the launch offer should be near the low end,
-  not merely average.
+- The immediate product goal is miner activation, not fee extraction.
+- New miners need a clear path: add address, run preflight, install, confirm
+  shares, confirm GPU work, and check balance commands.
+- A zero BTX Start platform fee is easier to understand than a promotional fee
+  ladder.
+- Fee policy should not be revisited until BTX Start owns the backend, fee
+  routing, and first-party per-wallet dashboard.
 
 ## Competitive Positioning
 
 The offer should be simple:
 
 ```text
-0.50% launch fee while the pool is below 1% network share.
-Weekly payouts.
-No minimum beyond dust.
-Published fee and treasury addresses.
+0.00% BTX Start platform fee during onboarding.
+Customer mines to their own BTX address.
+Preflight before install.
+Visible share, GPU, balance, block-credit, and aggregate stats signals.
 Open-source miner.
 ```
 
-This is more compelling than competing on claims like "fast" or "community"
-alone because it directly improves the miner's expected net payout.
+This is more compelling than competing on fee math because it removes friction:
+miners can focus on starting and observing the mining process.
 
 ## Implementation Note
 
@@ -190,15 +167,16 @@ The fee is paid to the backend-configured `policy.fee_address` and related
 treasury address, not to BTX Start unless those backend settings are moved
 under BTX Start control.
 
-BTX Start should route fees to a dedicated public platform treasury wallet,
-not a personal day-to-day wallet. The intended use is infrastructure, security,
-miner tooling, and collectively selected new BTX projects. This treasury does
-not create miner ownership, dividends, or profit-sharing claims.
+BTX Start platform fee is currently 0.00%. If a platform fee is later enabled,
+it should route to a dedicated public platform treasury wallet, not a personal
+day-to-day wallet. The intended use would be infrastructure, security, miner
+tooling, and collectively selected new BTX projects. This treasury would not
+create miner ownership, dividends, or profit-sharing claims.
 
 To actually change the live pool fee, update the pool backend policy/config to:
 
 ```text
-pool_fee_bps = 50
+pool_fee_bps = 0
 ```
 
 Then confirm the change with:

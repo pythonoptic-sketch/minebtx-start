@@ -67,7 +67,8 @@ frontend:
 - Deploy a BTX Start stratum endpoint.
 - Deploy a BTX Start stats API and payout index.
 - Deploy a BTX Start Telegram or web balance bot.
-- Set the backend pool fee policy to the launch target, `pool_fee_bps = 50`.
+- Set the BTX Start backend pool fee policy to `pool_fee_bps = 0` while
+  onboarding remains the priority.
 - Replace the installer default pool host with the BTX Start stratum host.
 - Build a first-party per-wallet dashboard backed by our own share/payout index.
 

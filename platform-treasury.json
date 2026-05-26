@@ -2,11 +2,11 @@
   "name": "BTX Start Platform Treasury",
   "status": "pending_wallet_creation",
   "active": false,
-  "target_pool_fee_bps": 50,
+  "target_pool_fee_bps": 0,
   "platform_fee_address": null,
   "platform_treasury_address": null,
   "platform_fee_balance_btx": null,
   "balance_source": "Pending first-party BTX Start backend and wallet index",
-  "use_of_funds": "Platform fees are intended to fund BTX Start infrastructure, security, miner tooling, and collectively selected new BTX projects.",
+  "use_of_funds": "BTX Start platform fee is currently 0.00%. If fees are later enabled, they are intended to fund BTX Start infrastructure, security, miner tooling, and collectively selected new BTX projects.",
   "notice": "Treasury spending does not create miner ownership, dividends, or profit-sharing claims."
 }

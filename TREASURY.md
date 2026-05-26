@@ -1,8 +1,9 @@
 # BTX Start Platform Treasury
 
-BTX Start should use a dedicated public fee wallet, not a personal day-to-day
-wallet. The fee wallet is for platform revenue, infrastructure, security,
-miner tooling, and collectively selected new BTX projects.
+BTX Start platform fee is currently 0.00%. If fees are later enabled, BTX Start
+should use a dedicated public fee wallet, not a personal day-to-day wallet. The
+fee wallet would fund infrastructure, security, miner tooling, and collectively
+selected new BTX projects.
 
 Treasury spending must be publicly explained. It does not create miner
 ownership, dividends, or profit-sharing claims.
@@ -10,7 +11,7 @@ ownership, dividends, or profit-sharing claims.
 ## Current Status
 
 - Platform fee wallet: pending creation
-- Target platform fee: `0.50%` / `50 bps`
+- Target platform fee: `0.00%` / `0 bps`
 - Active backend fee: still controlled by the current backend
 - Active backend fee address: read from `stats-snapshot.json`
 - Active backend pending fee: read from `pool.pending_fee_sat`
@@ -39,7 +40,7 @@ private keys.
 After the public fee address is created, configure the pool backend:
 
 ```text
-pool_fee_bps = 50
+pool_fee_bps = 0
 fee_address = "<BTX_START_PLATFORM_FEE_ADDRESS>"
 treasury_address = "<BTX_START_PLATFORM_TREASURY_ADDRESS>"
 ```
