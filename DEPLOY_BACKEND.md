@@ -8,16 +8,21 @@ actual backend server and at the DNS provider.
 
 ## 1. Create a Backend Server
 
-Use a Linux VM with:
+Use the economical launch server first:
 
-- Ubuntu 22.04 or 24.04
+- Hetzner CPX31 or equivalent
+- Ubuntu 24.04
 - public IPv4
-- 4+ vCPU
-- 16+ GB RAM
-- 1 TB SSD minimum for chainstate headroom
-- inbound TCP 443 and 3333 open
+- 4 vCPU
+- 8 GB RAM
+- 160 GB local NVMe
+- inbound TCP 22, 443, and 3333 open
 - outbound peer connectivity for `btxd`; inbound TCP 19335 is recommended for a healthier public node
 - SSH access
+
+Do not buy a large block volume at launch. BTX chain storage is currently small
+enough that CPX31 local disk is the sensible starting point. Resize later only
+after real usage justifies it.
 
 Set DNS once the server IP exists:
 
@@ -27,6 +32,9 @@ Set DNS once the server IP exists:
 | A | `stratum` | backend server IPv4 |
 
 Keep the root `drinknile.com` records pointed at GitHub Pages.
+
+For the Hetzner-specific click path, see
+[`deploy/HETZNER_CPX31_SETUP.md`](deploy/HETZNER_CPX31_SETUP.md).
 
 ## 2. Create the Dedicated Fee Wallet
 
