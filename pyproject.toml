@@ -19,6 +19,7 @@ dev = ["pytest", "pytest-asyncio", "ruff"]
 
 [project.scripts]
 dexbtx-miner = "dexbtx_miner.__main__:main"
+btxstart = "dexbtx_miner.site_cli:main"
 
 # Pin the expected btx-gbt-solve binary SHA256. The installer downloads
 # the binary, verifies this hash, refuses to run on mismatch. Bump this

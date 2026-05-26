@@ -118,6 +118,24 @@ The current pinned release artifact is still the Linux/NVIDIA solver. Mac
 users need a local Apple Silicon `btx-gbt-solve` binary until a Mac artifact is
 published and hash-pinned. See [MAC_SETUP.md](MAC_SETUP.md).
 
+## BTX Start helper CLI
+
+The package also installs `btxstart`, a website helper CLI. It is not a
+replacement for the real BTX node `btx-cli`; it never creates wallets, signs
+transactions, exports keys, or talks to private node RPC. Use it for BTX Start
+commands and public status:
+
+```bash
+btxstart preflight-command --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'
+btxstart install-command --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'
+btxstart status
+btxstart fee-preview --first-share-at 2026-05-26T09:15:00Z --gross-sat 100000000
+```
+
+Use the real `btx-cli` only on a backend or personal wallet machine that runs
+`btxd`. The website-specific helper exists so users can inspect BTX Start
+commands without touching wallet custody.
+
 ### Worker naming
 
 **Recommended naming pattern:** `<alias>-<gpu>-<country2>-<color>`
