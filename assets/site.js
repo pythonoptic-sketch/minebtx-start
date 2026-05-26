@@ -61,17 +61,19 @@ function setupCopyButtons() {
     button.addEventListener("click", async () => {
       const target = document.getElementById(button.dataset.copyTarget);
       if (!target) return;
+      const label = button.querySelector("span") || button;
+      const originalText = label.textContent;
 
       try {
         await navigator.clipboard.writeText(target.textContent.trim());
         button.dataset.copied = "true";
-        button.querySelector("span").textContent = "Copied";
+        label.textContent = "Copied";
         window.setTimeout(() => {
           button.dataset.copied = "false";
-          button.querySelector("span").textContent = "Copy";
+          label.textContent = originalText || "Copy";
         }, 1800);
       } catch (error) {
-        button.querySelector("span").textContent = "Select";
+        label.textContent = "Select";
       }
     });
   });

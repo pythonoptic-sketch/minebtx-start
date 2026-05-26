@@ -19,9 +19,10 @@
       </a>
       <div class="nav-links">
         <a href="index.html" aria-current="page">Home</a>
+        <a href="#start">Start</a>
+        <a href="#track">Track</a>
+        <a href="#transparency">Transparency</a>
         <a href="https://pool.minebtx.com/">Live dashboard</a>
-        <a href="https://stratum.minebtx.com/">Setup guide</a>
-        <a href="https://peers.minebtx.com/">Peers</a>
       </div>
       <div class="nav-actions">
         <a href="https://stats.minebtx.com/stats" target="_blank" rel="noreferrer">Stats API</a>
@@ -40,8 +41,8 @@
           manual block propagation.
         </p>
         <div class="hero-actions" aria-label="Primary actions">
-          <a class="button primary" href="https://stratum.minebtx.com/">Start mining</a>
-          <a class="button secondary" href="https://pool.minebtx.com/">Open dashboard</a>
+          <a class="button primary" href="#start">Start mining</a>
+          <a class="button secondary" href="#track">Track progress</a>
         </div>
       </div>
       <div class="hero-telemetry" aria-label="Pool status summary">
@@ -61,7 +62,7 @@
     </header>
 
     <main>
-      <section class="band quickstart" aria-labelledby="quickstart-title">
+      <section class="band quickstart" id="start" aria-labelledby="quickstart-title">
         <div class="section-inner">
           <div class="section-heading">
             <p class="eyebrow">Quick start</p>
@@ -72,6 +73,28 @@
               detects the GPU, downloads the solver, verifies the binary, writes
               a tuned config, and runs a CUDA engagement smoke test.
             </p>
+          </div>
+          <div class="flow-grid" aria-label="How mining works">
+            <article>
+              <span>01</span>
+              <strong>Enter address</strong>
+              <p>Your payout address is inserted into the command in your browser.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <strong>Run installer</strong>
+              <p>The script installs the miner client and writes your config.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <strong>Submit shares</strong>
+              <p>Your worker connects to the minebtx stratum pool.</p>
+            </article>
+            <article>
+              <span>04</span>
+              <strong>Get paid</strong>
+              <p>Pool payouts are batched weekly for non-zero balances.</p>
+            </article>
           </div>
           <label class="address-builder" for="btx-address-input">
             <span>BTX payout address</span>
@@ -101,7 +124,7 @@
             <small id="worker-help">This labels the rig and is used for dashboard and Telegram balance lookup.</small>
           </label>
           <div class="command-panel">
-            <code id="install-command">curl -fsSL https://minebtx.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...'</code>
+            <code id="install-command">curl -fsSL https://minebtx.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
             <button class="icon-button" type="button" data-copy-target="install-command" aria-label="Copy install command">
               <span aria-hidden="true">Copy</span>
             </button>
@@ -113,7 +136,7 @@
         </div>
       </section>
 
-      <section class="band tracking-band" aria-labelledby="tracking-title">
+      <section class="band tracking-band" id="track" aria-labelledby="tracking-title">
         <div class="section-inner">
           <div class="section-heading compact">
             <p class="eyebrow">Track your miner</p>
@@ -133,13 +156,72 @@
             <article class="tracking-card">
               <h3>3. Ask the Telegram bot</h3>
               <p>This site opens the existing bot; balances are served by minebtx's Telegram bot, not by GitHub Pages.</p>
-              <code id="telegram-command">/mybalance btx1z...your_address.default</code>
+              <div class="copy-row">
+                <code id="telegram-command">/mybalance btx1z...your_address.default</code>
+                <button class="mini-copy" type="button" data-copy-target="telegram-command" aria-label="Copy Telegram command">Copy</button>
+              </div>
               <a class="text-link" href="https://t.me/btxdexbot" target="_blank" rel="noreferrer">Open @btxdexbot</a>
             </article>
             <article class="tracking-card">
               <h3>4. Confirm GPU work</h3>
               <p>Your GPU should show sustained load while mining. Low or zero utilization means the solver is not really using CUDA.</p>
               <code>nvidia-smi</code>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="band transparency-band" id="transparency" aria-labelledby="transparency-title">
+        <div class="section-inner">
+          <div class="split-heading">
+            <div>
+              <p class="eyebrow">Transparency</p>
+              <h2 id="transparency-title">What is visible, what is external.</h2>
+            </div>
+            <a class="text-link" href="https://stats.minebtx.com/stats" target="_blank" rel="noreferrer">Open raw stats JSON</a>
+          </div>
+          <div class="transparency-grid">
+            <article class="transparency-card">
+              <h3>This page does</h3>
+              <ul>
+                <li>Generate an install command from the visitor's BTX address and worker name.</li>
+                <li>Generate the matching Telegram balance command.</li>
+                <li>Show public pool links, payout policy, fee destinations, and source links.</li>
+              </ul>
+            </article>
+            <article class="transparency-card">
+              <h3>This page does not</h3>
+              <ul>
+                <li>Run the mining pool, Telegram bot, installer, or BTX node.</li>
+                <li>Custody funds, collect addresses, or store visitor input.</li>
+                <li>Guarantee a user's GPU, driver, network, or external service uptime.</li>
+              </ul>
+            </article>
+            <article class="transparency-card">
+              <h3>Fee and treasury</h3>
+              <dl>
+                <div>
+                  <dt>Pool fee</dt>
+                  <dd>2.50%</dd>
+                </div>
+                <div>
+                  <dt>Fee address</dt>
+                  <dd><code id="fee-address">btx1zqzv4vgyhzyqqrkccxre0r4wgq9awwp6kjsdj6n8tfa0em0lfm22safa89n</code></dd>
+                </div>
+                <div>
+                  <dt>Treasury address</dt>
+                  <dd><code id="treasury-address">btx1zatnjdqpw4cjswjeajst5lkj8mrdsj8mhgzu3emycncuctfrtqmzst94c6s</code></dd>
+                </div>
+              </dl>
+            </article>
+            <article class="transparency-card">
+              <h3>External services</h3>
+              <ul class="service-list">
+                <li><a href="https://minebtx.com/install.sh" target="_blank" rel="noreferrer">Installer</a><span>minebtx.com</span></li>
+                <li><a href="https://pool.minebtx.com/" target="_blank" rel="noreferrer">Dashboard</a><span>pool.minebtx.com</span></li>
+                <li><a href="https://t.me/btxdexbot" target="_blank" rel="noreferrer">Telegram bot</a><span>@btxdexbot</span></li>
+                <li><a href="https://github.com/dexbtx/minebtx" target="_blank" rel="noreferrer">Miner source</a><span>GitHub</span></li>
+              </ul>
             </article>
           </div>
         </div>
