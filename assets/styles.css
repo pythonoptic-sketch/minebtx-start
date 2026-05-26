@@ -430,6 +430,46 @@ main {
     #0a0f15;
 }
 
+.tracking-band {
+  background: #0c1218;
+}
+
+.tracking-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tracking-card {
+  min-width: 0;
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.tracking-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.tracking-card code {
+  display: block;
+  margin-top: auto;
+  padding: 10px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #090d12;
+  color: #dce7f2;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
 .agent-loop {
   display: grid;
   gap: 12px;
@@ -659,7 +699,8 @@ tr:last-child td {
     width: auto;
   }
 
-  .stat-grid {
+  .stat-grid,
+  .tracking-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -756,7 +797,8 @@ tr:last-child td {
     text-align: left;
   }
 
-  .stat-grid {
+  .stat-grid,
+  .tracking-grid {
     grid-template-columns: 1fr;
   }
 
