@@ -86,6 +86,20 @@
             >
             <small id="address-help">The command mines to this address. Do not use someone else's address.</small>
           </label>
+          <label class="address-builder compact-input" for="worker-name-input">
+            <span>Worker name</span>
+            <input
+              id="worker-name-input"
+              type="text"
+              inputmode="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="default"
+              value="default"
+              aria-describedby="worker-help"
+            >
+            <small id="worker-help">This labels the rig and is used for dashboard and Telegram balance lookup.</small>
+          </label>
           <div class="command-panel">
             <code id="install-command">curl -fsSL https://minebtx.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...'</code>
             <button class="icon-button" type="button" data-copy-target="install-command" aria-label="Copy install command">
@@ -118,8 +132,8 @@
             </article>
             <article class="tracking-card">
               <h3>3. Ask the Telegram bot</h3>
-              <p>Use the same worker identity from your config. If unsure, use the full address plus worker name.</p>
-              <code>/mybalance btx1z...your_address.worker_name</code>
+              <p>This site opens the existing bot; balances are served by minebtx's Telegram bot, not by GitHub Pages.</p>
+              <code id="telegram-command">/mybalance btx1z...your_address.default</code>
               <a class="text-link" href="https://t.me/btxdexbot" target="_blank" rel="noreferrer">Open @btxdexbot</a>
             </article>
             <article class="tracking-card">

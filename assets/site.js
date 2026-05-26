@@ -79,17 +79,24 @@ function setupCopyButtons() {
 
 function setupAddressBuilder() {
   const input = document.getElementById("btx-address-input");
+  const workerInput = document.getElementById("worker-name-input");
   const command = document.getElementById("install-command");
+  const telegramCommand = document.getElementById("telegram-command");
   const wrapper = document.querySelector(".address-builder");
   const help = document.getElementById("address-help");
   if (!input || !command || !wrapper || !help) return;
 
   function updateCommand() {
     const address = input.value.trim();
+    const worker = (workerInput?.value.trim() || "default").replace(/[^a-z0-9._-]/gi, "-");
     const looksValid = /^btx1z[a-z0-9]{20,}$/i.test(address);
     const addressForCommand = looksValid ? address : placeholderAddress;
 
-    command.textContent = `curl -fsSL https://minebtx.com/install.sh | bash -s -- --address '${addressForCommand}'`;
+    command.textContent = `curl -fsSL https://minebtx.com/install.sh | bash -s -- --address '${addressForCommand}' --worker '${worker}'`;
+    if (telegramCommand) {
+      const balanceAddress = looksValid ? address : "btx1z...your_address";
+      telegramCommand.textContent = `/mybalance ${balanceAddress}.${worker}`;
+    }
     wrapper.dataset.valid = address ? String(looksValid) : "";
     if (!address) {
       help.textContent = "The command mines to this address. Do not use someone else's address.";
@@ -101,6 +108,7 @@ function setupAddressBuilder() {
   }
 
   input.addEventListener("input", updateCommand);
+  workerInput?.addEventListener("input", updateCommand);
   updateCommand();
 }
 

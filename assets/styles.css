@@ -343,6 +343,10 @@ main {
   margin-bottom: 14px;
 }
 
+.address-builder.compact-input {
+  max-width: 420px;
+}
+
 .address-builder span {
   color: var(--muted);
   font-size: 11px;
