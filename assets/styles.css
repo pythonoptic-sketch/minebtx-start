@@ -326,6 +326,12 @@ main {
   background: var(--bg-soft);
 }
 
+.local-band {
+  background:
+    linear-gradient(90deg, rgba(52, 211, 200, 0.04), transparent 48%),
+    #0b1016;
+}
+
 .operational-band {
   background:
     linear-gradient(90deg, rgba(52, 211, 200, 0.04), transparent 46%),
@@ -559,6 +565,94 @@ main {
   background:
     linear-gradient(90deg, rgba(255, 123, 0, 0.05), transparent 46%),
     #0c1117;
+}
+
+.local-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.local-card {
+  min-width: 0;
+  padding: 22px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.local-card.emphasis {
+  border-color: rgba(91, 216, 120, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(91, 216, 120, 0.12);
+}
+
+.local-card strong {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--cyan);
+  font-size: 30px;
+  line-height: 1;
+}
+
+.local-card.emphasis strong {
+  color: var(--green);
+}
+
+.local-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.local-card code {
+  padding: 2px 5px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #090d12;
+  color: #dce7f2;
+  white-space: nowrap;
+}
+
+.local-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.local-steps article {
+  min-width: 0;
+  padding: 18px;
+  background: rgba(21, 29, 38, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.local-steps span {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--orange);
+  font: 700 12px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.local-steps h3 {
+  margin-bottom: 6px;
+}
+
+.local-steps p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.local-command-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.local-command-grid .command-block {
+  margin-top: 0;
 }
 
 .tracking-grid {
@@ -1344,6 +1438,9 @@ tr:last-child td {
 
   .stat-grid,
   .tracking-grid,
+  .local-grid,
+  .local-steps,
+  .local-command-grid,
   .status-grid,
   .treasury-grid,
   .tracker-grid,
@@ -1454,6 +1551,9 @@ tr:last-child td {
 
   .stat-grid,
   .tracking-grid,
+  .local-grid,
+  .local-steps,
+  .local-command-grid,
   .status-grid,
   .treasury-grid,
   .tracker-grid,

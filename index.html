@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="BTX Start is a zero-platform-fee BTX mining onboarding page with clear setup commands, miner tracking, and live pool signals."
+      content="BTX Start is a zero-platform-fee BTX mining onboarding page with local laptop setup, clear commands, miner tracking, and live pool signals."
     >
     <title>BTX Start | Zero-Fee BTX Mining</title>
     <link rel="stylesheet" href="assets/styles.css">
@@ -21,6 +21,7 @@
         <a href="index.html" aria-current="page">Home</a>
         <a href="#status">Status</a>
         <a href="#start">Start</a>
+        <a href="#local-laptop">Laptop first</a>
         <a href="#compatibility">Compatibility</a>
         <a href="#gpu-ranking">GPU ranking</a>
         <a href="#rent-gpu">Rent GPUs</a>
@@ -47,6 +48,7 @@
         </p>
         <div class="hero-actions" aria-label="Primary actions">
           <a class="button primary" href="#start">Start mining</a>
+          <a class="button secondary" href="#local-laptop">Use your laptop first</a>
           <a class="button secondary" href="#track">Track progress</a>
         </div>
       </div>
@@ -217,6 +219,125 @@
           <div class="link-row">
             <a href="https://github.com/pythonoptic-sketch/minebtx-start/blob/main/install.sh" target="_blank" rel="noreferrer">View our installer source</a>
             <a href="WALLET_SETUP.md">Wallet and setup guide</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="band local-band" id="local-laptop" aria-labelledby="local-laptop-title">
+        <div class="section-inner">
+          <div class="split-heading">
+            <div>
+              <p class="eyebrow">Laptop first</p>
+              <h2 id="local-laptop-title">Start with the machine you already own.</h2>
+            </div>
+            <p class="status-text">No rented GPU is required to learn the flow.</p>
+          </div>
+
+          <div class="local-grid" aria-label="Local laptop setup options">
+            <article class="local-card emphasis">
+              <span class="metric-label">Best local path</span>
+              <strong>Linux + NVIDIA</strong>
+              <p>Run preflight first. If the laptop has working NVIDIA drivers and reaches the BTX Start stratum endpoint, use the same one-line install command as any other rig.</p>
+            </article>
+            <article class="local-card">
+              <span class="metric-label">Windows laptop</span>
+              <strong>WSL2</strong>
+              <p>Use Ubuntu under WSL2 with current NVIDIA drivers. The miner path is still Linux-based, so verify <code>nvidia-smi</code> inside WSL before installing.</p>
+            </article>
+            <article class="local-card">
+              <span class="metric-label">MacBook / CPU-only</span>
+              <strong>Learn mode</strong>
+              <p>The public one-line miner path is not a profitable CPU-only or Apple Silicon path yet. Use the laptop to read the repo, run preflight, prepare the wallet, and understand the logs before scaling.</p>
+            </article>
+          </div>
+
+          <div class="local-steps">
+            <article>
+              <span>01</span>
+              <div>
+                <h3>Prepare your payout address</h3>
+                <p>Use the same BTX address field above. The generated local commands mine only to the address you paste; BTX Start does not custody funds.</p>
+              </div>
+            </article>
+            <article>
+              <span>02</span>
+              <div>
+                <h3>Run a readiness check</h3>
+                <p>Preflight tells you whether your laptop can actually mine: operating system, Python, release artifact, NVIDIA visibility, payout address format, and stratum reachability.</p>
+              </div>
+            </article>
+            <article>
+              <span>03</span>
+              <div>
+                <h3>Install only if preflight passes</h3>
+                <p>A laptop that cannot expose CUDA should not be pushed into paid mining. Treat it as a learning machine until a supported GPU path is available.</p>
+              </div>
+            </article>
+            <article>
+              <span>04</span>
+              <div>
+                <h3>Watch the miner locally</h3>
+                <p>Accepted shares in the log and sustained GPU load are the two signals that matter. If GPU load is zero, the machine is not mining productively.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="local-command-grid" aria-label="Local laptop commands">
+            <div class="command-block">
+              <div>
+                <h3>Laptop preflight</h3>
+                <p>Safe to run first. It checks readiness without installing packages or writing miner config.</p>
+              </div>
+              <div class="command-panel">
+                <code id="local-preflight-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --worker 'default'</code>
+                <button class="icon-button" type="button" data-copy-target="local-preflight-command" aria-label="Copy laptop preflight command">
+                  <span aria-hidden="true">Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="command-block">
+              <div>
+                <h3>Install on a supported laptop</h3>
+                <p>Use this only after preflight confirms Linux, NVIDIA/CUDA visibility, and stratum reachability.</p>
+              </div>
+              <div class="command-panel">
+                <code id="local-install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
+                <button class="icon-button" type="button" data-copy-target="local-install-command" aria-label="Copy laptop install command">
+                  <span aria-hidden="true">Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="command-block">
+              <div>
+                <h3>Follow local progress</h3>
+                <p>After starting the miner, watch accepted shares and keep an eye on GPU utilization.</p>
+              </div>
+              <div class="command-panel">
+                <code id="local-watch-command">tail -f ~/.dexbtx-miner/miner.log</code>
+                <button class="icon-button" type="button" data-copy-target="local-watch-command" aria-label="Copy miner log command">
+                  <span aria-hidden="true">Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="command-block">
+              <div>
+                <h3>Check GPU load</h3>
+                <p>For NVIDIA laptops, this should show sustained load while the miner is working.</p>
+              </div>
+              <div class="command-panel">
+                <code id="local-gpu-command">watch -n 2 nvidia-smi</code>
+                <button class="icon-button" type="button" data-copy-target="local-gpu-command" aria-label="Copy GPU monitor command">
+                  <span aria-hidden="true">Copy</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="formula-panel compact-formula">
+            <p>
+              Local-first rule: if your own laptop can pass preflight and show real GPU work, mine locally.
+              If it cannot, use it to learn the wallet, repository, commands, logs, and expected-yield model before spending on rentals or hardware.
+            </p>
           </div>
         </div>
       </section>

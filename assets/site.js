@@ -406,6 +406,8 @@ function setupAddressBuilder() {
   const workerInput = document.getElementById("worker-name-input");
   const command = document.getElementById("install-command");
   const preflightCommand = document.getElementById("preflight-command");
+  const localInstallCommand = document.getElementById("local-install-command");
+  const localPreflightCommand = document.getElementById("local-preflight-command");
   const workerIdCommand = document.getElementById("worker-id-command");
   const walletBalanceCommand = document.getElementById("wallet-balance-command");
   const wrapper = document.querySelector(".address-builder");
@@ -419,9 +421,15 @@ function setupAddressBuilder() {
     const addressForCommand = looksValid ? address : placeholderAddress;
 
     command.textContent = `curl -fsSL ${installerUrl} | bash -s -- --address '${addressForCommand}' --worker '${worker}'`;
+    if (localInstallCommand) {
+      localInstallCommand.textContent = `curl -fsSL ${installerUrl} | bash -s -- --address '${addressForCommand}' --worker '${worker}'`;
+    }
     if (preflightCommand) {
       const addressFlag = looksValid ? ` --address '${address}'` : "";
       preflightCommand.textContent = `curl -fsSL ${installerUrl} | bash -s -- --preflight${addressFlag} --worker '${worker}'`;
+      if (localPreflightCommand) {
+        localPreflightCommand.textContent = preflightCommand.textContent;
+      }
     }
     const balanceAddress = looksValid ? address : "btx1z...your_address";
     const workerId = `${balanceAddress}.${worker}`;
