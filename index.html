@@ -21,6 +21,7 @@
         <a href="index.html" aria-current="page">Home</a>
         <a href="#start">Start</a>
         <a href="#track">Track</a>
+        <a href="#fee-model">Fee model</a>
         <a href="#transparency">Transparency</a>
         <a href="https://pool.minebtx.com/">Live dashboard</a>
       </div>
@@ -223,6 +224,54 @@
                 <li><a href="https://github.com/dexbtx/minebtx" target="_blank" rel="noreferrer">Miner source</a><span>GitHub</span></li>
               </ul>
             </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="band fee-model-band" id="fee-model" aria-labelledby="fee-model-title">
+        <div class="section-inner">
+          <div class="split-heading">
+            <div>
+              <p class="eyebrow">Fee model</p>
+              <h2 id="fee-model-title">Recommended pool fee: 1.5% to 2.5%.</h2>
+            </div>
+            <a class="text-link" href="FEE_MODEL.md">Open full model</a>
+          </div>
+          <div class="fee-model-grid">
+            <article class="fee-model-card emphasis">
+              <span class="metric-label">Suggested default today</span>
+              <strong>2.00%</strong>
+              <p>Use `200 bps` if the goal is fast miner acquisition while still funding pool operations.</p>
+            </article>
+            <article class="fee-model-card">
+              <span class="metric-label">Current live pool fee</span>
+              <strong>2.50%</strong>
+              <p>The live pool currently reports this through the public stats API. This static page does not change the backend fee.</p>
+            </article>
+            <article class="fee-model-card">
+              <span class="metric-label">Growth-first promo</span>
+              <strong>1.50%</strong>
+              <p>Use `150 bps` for a lower-friction launch window while the pool is below 1% of network hashrate.</p>
+            </article>
+          </div>
+          <div class="formula-panel">
+            <p>
+              Model: miner net payout is proportional to <code>(1 - fee) * BTX price</code>.
+              With constant-elasticity miner retention, pool revenue is
+              <code>R(f) ∝ f * (1 - f)^epsilon</code>, so the pure revenue optimum is
+              <code>f* = 1 / (1 + epsilon)</code>.
+            </p>
+            <div class="elasticity-row" aria-label="Elasticity fee recommendations">
+              <span>ε=30 → 3.23%</span>
+              <span>ε=40 → 2.44%</span>
+              <span>ε=50 → 1.96%</span>
+              <span>ε=60 → 1.64%</span>
+            </div>
+            <p>
+              Because BTX is early, switching costs are low, and the BTX 12-month
+              forward model implies growth upside comes from retained hashrate,
+              the practical range is below the high-fee extraction zone.
+            </p>
           </div>
         </div>
       </section>
