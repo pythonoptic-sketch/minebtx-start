@@ -1,4 +1,5 @@
 const statsUrl = window.location.hostname.endsWith("minebtx.com") ? "/stats" : null;
+const placeholderAddress = "btx1z...YOUR_BTX_ADDRESS...";
 
 const formatNumber = new Intl.NumberFormat("en-US");
 
@@ -74,6 +75,33 @@ function setupCopyButtons() {
       }
     });
   });
+}
+
+function setupAddressBuilder() {
+  const input = document.getElementById("btx-address-input");
+  const command = document.getElementById("install-command");
+  const wrapper = document.querySelector(".address-builder");
+  const help = document.getElementById("address-help");
+  if (!input || !command || !wrapper || !help) return;
+
+  function updateCommand() {
+    const address = input.value.trim();
+    const looksValid = /^btx1z[a-z0-9]{20,}$/i.test(address);
+    const addressForCommand = looksValid ? address : placeholderAddress;
+
+    command.textContent = `curl -fsSL https://minebtx.com/install.sh | bash -s -- --address '${addressForCommand}'`;
+    wrapper.dataset.valid = address ? String(looksValid) : "";
+    if (!address) {
+      help.textContent = "The command mines to this address. Do not use someone else's address.";
+    } else if (looksValid) {
+      help.textContent = "Command updated. Shares and payouts will be credited to this address.";
+    } else {
+      help.textContent = "This does not look like a BTX address yet. The command still uses the placeholder.";
+    }
+  }
+
+  input.addEventListener("input", updateCommand);
+  updateCommand();
 }
 
 function setupHeroCanvas() {
@@ -190,4 +218,5 @@ function setupHeroCanvas() {
 
 setupHeroCanvas();
 setupCopyButtons();
+setupAddressBuilder();
 hydrateStats();

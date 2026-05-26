@@ -67,11 +67,25 @@
             <p class="eyebrow">Quick start</p>
             <h2 id="quickstart-title">One command on a Linux GPU box.</h2>
             <p>
-              Replace the placeholder with your own BTX address. The installer
+              Paste your own BTX payout address, copy the generated command,
+              and run it on a Linux machine with an NVIDIA GPU. The installer
               detects the GPU, downloads the solver, verifies the binary, writes
               a tuned config, and runs a CUDA engagement smoke test.
             </p>
           </div>
+          <label class="address-builder" for="btx-address-input">
+            <span>BTX payout address</span>
+            <input
+              id="btx-address-input"
+              type="text"
+              inputmode="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="btx1z...YOUR_BTX_ADDRESS..."
+              aria-describedby="address-help"
+            >
+            <small id="address-help">The command mines to this address. Do not use someone else's address.</small>
+          </label>
           <div class="command-panel">
             <code id="install-command">curl -fsSL https://minebtx.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...'</code>
             <button class="icon-button" type="button" data-copy-target="install-command" aria-label="Copy install command">
