@@ -16,10 +16,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-asyncio", "ruff"]
+backend = ["fastapi>=0.111", "uvicorn[standard]>=0.30", "pydantic>=2.7"]
 
 [project.scripts]
 dexbtx-miner = "dexbtx_miner.__main__:main"
 btxstart = "dexbtx_miner.site_cli:main"
+btxstart-stratum = "backend.stratum_server:main"
+btxstart-payouts = "backend.payout_worker:main"
 
 # Pin the expected btx-gbt-solve binary SHA256. The installer downloads
 # the binary, verifies this hash, refuses to run on mismatch. Bump this
@@ -29,7 +32,12 @@ expected_sha256 = "921c89fba785863f460ab8b23c193e4b8af729569124f45e09b5c29a26a8b
 prebuilds_release = "v4.3-sm89-native"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/dexbtx_miner"]
+packages = ["src/dexbtx_miner", "backend"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"backend/schema.sql" = "backend/schema.sql"
+"backend/requirements.txt" = "backend/requirements.txt"
+"backend/.env.example" = "backend/.env.example"
 
 [tool.ruff]
 line-length = 100

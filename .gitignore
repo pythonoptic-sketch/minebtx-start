@@ -29,8 +29,12 @@ miner.log
 *.bak
 *.local.json
 *.local.env
+.env
+.env.*
+!backend/.env.example
 protected-addresses.txt
 wallet.dat
+*.sqlite3
 
 # Editor / OS
 .idea/

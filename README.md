@@ -12,6 +12,7 @@ proof-of-work.
 - **Revenue model**: [REVENUE_MODEL.md](REVENUE_MODEL.md)
 - **GPU rentals**: [VAST_AI.md](VAST_AI.md)
 - **Apple Silicon setup**: [MAC_SETUP.md](MAC_SETUP.md)
+- **Backend scaffold**: [backend/README.md](backend/README.md)
 
 ---
 
@@ -135,6 +136,25 @@ btxstart fee-preview --first-share-at 2026-05-26T09:15:00Z --gross-sat 100000000
 Use the real `btx-cli` only on a backend or personal wallet machine that runs
 `btxd`. The website-specific helper exists so users can inspect BTX Start
 commands without touching wallet custody.
+
+## Backend services
+
+The repo includes a first-party backend scaffold under [backend](backend):
+
+- `backend/app.py` serves `api.drinknile.com` with health, stats, policy,
+  dashboard, and optional billing endpoints.
+- `backend/stratum_server.py` is the guarded TCP stratum entrypoint for
+  `stratum.drinknile.com:3333`.
+- `backend/repository.py` + `backend/schema.sql` store miners, workers, shares,
+  balances, payouts, fee ledger, accounts, and subscriptions.
+- `backend/payout_worker.py` creates dry-run payout plans and can execute
+  reviewed payouts through private BTX RPC.
+- `backend/billing.py` verifies Stripe webhooks and creates optional Pro
+  membership checkout sessions.
+
+The stratum scaffold deliberately rejects submitted shares until real BTX
+matmul share validation is wired in. Do not set the backend live just because
+the service starts.
 
 ### Worker naming
 

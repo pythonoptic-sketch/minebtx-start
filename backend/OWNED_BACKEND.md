@@ -76,6 +76,19 @@ Minimum production backend:
 - monitoring for stale jobs, rejected shares, block propagation, RPC health,
   payout failures, and wallet balance
 
+This repository now includes a deployable scaffold for those pieces:
+
+- `backend/app.py` for `api.drinknile.com`
+- `backend/stratum_server.py` for the TCP stratum entrypoint
+- `backend/repository.py` and `backend/schema.sql` for accounting state
+- `backend/payout_worker.py` for dry-run payout planning
+- `backend/btx_rpc.py` for private `btxd` JSON-RPC calls
+- `backend/billing.py` for optional Stripe membership hooks
+
+The scaffold intentionally rejects submitted shares unless explicit development
+mode is enabled. Real production launch still needs BTX matmul share validation
+and block submission connected to the current job template.
+
 The BTX docs describe `getblocktemplate` and `submitblock` as the pool-software
 foundation. A production pool still needs coinbase construction, share target
 validation, accepted-share accounting, block submission, maturity tracking, and
