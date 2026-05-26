@@ -1,0 +1,19 @@
+[Unit]
+Description=BTX full node daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=btx
+Group=btx
+ExecStart=/usr/local/bin/btxd -conf=/etc/btx/btx.conf -datadir=/var/lib/btx
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/var/lib/btx
+
+[Install]
+WantedBy=multi-user.target

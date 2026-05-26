@@ -1,0 +1,21 @@
+[Unit]
+Description=BTX Start API backend
+After=network-online.target btxd.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=btxstart
+Group=btxstart
+WorkingDirectory=/opt/btx-start
+EnvironmentFile=/etc/btx-start/backend.env
+ExecStart=/opt/btx-start/.venv/bin/uvicorn backend.app:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/var/lib/btx-start
+
+[Install]
+WantedBy=multi-user.target

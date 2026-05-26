@@ -1,0 +1,9 @@
+[Unit]
+Description=Run BTX Start payout dry-run planner daily
+
+[Timer]
+OnCalendar=*-*-* 18:00:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

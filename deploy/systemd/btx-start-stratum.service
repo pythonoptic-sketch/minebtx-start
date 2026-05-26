@@ -1,0 +1,21 @@
+[Unit]
+Description=BTX Start stratum backend
+After=network-online.target btxd.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=btxstart
+Group=btxstart
+WorkingDirectory=/opt/btx-start
+EnvironmentFile=/etc/btx-start/backend.env
+ExecStart=/opt/btx-start/.venv/bin/btxstart-stratum --port 3333
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/var/lib/btx-start
+
+[Install]
+WantedBy=multi-user.target
