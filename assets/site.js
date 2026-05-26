@@ -6,6 +6,8 @@ const placeholderAddress = "btx1z...YOUR_BTX_ADDRESS...";
 const blockRewardBtx = 20;
 const targetBlockSeconds = 90;
 const blocksPerHour = 3600 / targetBlockSeconds;
+const blocksPerDay = 86400 / targetBlockSeconds;
+const btxModelPriceUsd = 5.707747399717103;
 const referenceNetworkHashNps = 2_338_067;
 let currentNetworkHashNps = referenceNetworkHashNps;
 let currentPlatformFeeBps = 0;
@@ -14,6 +16,17 @@ const formatNumber = new Intl.NumberFormat("en-US");
 const formatBtx = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 8,
   maximumFractionDigits: 8,
+});
+const formatUsd = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+const formatUsdPrice = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
 });
 
 const gpuProfiles = [
@@ -120,6 +133,11 @@ function estimateBtxPerHour(nps) {
   return (nps / currentNetworkHashNps) * blockRewardBtx * blocksPerHour * platformFeeMultiplier;
 }
 
+function estimatePoolShare(addedHashrateNps) {
+  if (!Number.isFinite(addedHashrateNps) || !Number.isFinite(currentNetworkHashNps)) return 0;
+  return addedHashrateNps / (currentNetworkHashNps + addedHashrateNps);
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -160,6 +178,7 @@ async function hydrateStats() {
     setText("network-hash", formatHashrate(pool.network_hash_nps || btxd.network_hash_ps));
     setText("node-peers", formatNumber.format(btxd.peers));
     renderGpuRanking();
+    renderOperatingModel();
 
     if (status) {
       const timestamp = data.fetched_at ? new Date(data.fetched_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "recently";
@@ -191,6 +210,7 @@ async function hydrateTreasuryConfig() {
     setText("platform-funds-use", treasury.use_of_funds);
     setText("platform-notice", treasury.notice);
     renderGpuRanking();
+    renderOperatingModel();
   } catch (error) {
     setText("platform-treasury-status", "Unavailable");
   }
@@ -319,6 +339,46 @@ function setupGpuRanking() {
   renderGpuRanking();
 }
 
+function renderOperatingModel() {
+  const body = document.getElementById("operating-model-body");
+  if (!body) return;
+
+  const scenarioMiners = [100, 300, 500];
+  const referenceGpuNps = 28_000;
+  const dailyEmissionBtx = blockRewardBtx * blocksPerDay;
+
+  body.innerHTML = scenarioMiners.map((miners) => {
+    const addedHashrate = miners * referenceGpuNps;
+    const share = estimatePoolShare(addedHashrate);
+    const grossBtxDay = dailyEmissionBtx * share;
+    const feeCells = [0, 50, 100].map((feeBps) => {
+      const feeBtx = grossBtxDay * (feeBps / 10_000);
+      return `
+        <td>
+          <strong>${formatBtxRate(feeBtx)} BTX</strong>
+          <span>${formatUsd.format(feeBtx * btxModelPriceUsd)} / day</span>
+        </td>
+      `;
+    }).join("");
+
+    return `
+      <tr>
+        <td>
+          <strong>${formatNumber.format(miners)} miners</strong>
+          <span>5060 Ti-class at 28K n/s</span>
+        </td>
+        <td>${formatHashrate(addedHashrate)}</td>
+        <td>${(share * 100).toFixed(1)}%</td>
+        <td>${formatBtxRate(grossBtxDay)} BTX</td>
+        ${feeCells}
+      </tr>
+    `;
+  }).join("");
+
+  setText("operating-price", formatUsdPrice.format(btxModelPriceUsd));
+  setText("operating-network", formatHashrate(currentNetworkHashNps));
+}
+
 function setupHeroCanvas() {
   const canvas = document.getElementById("hero-canvas");
   if (!canvas) return;
@@ -435,5 +495,6 @@ setupHeroCanvas();
 setupCopyButtons();
 setupAddressBuilder();
 setupGpuRanking();
+renderOperatingModel();
 hydrateStats();
 hydrateTreasuryConfig();

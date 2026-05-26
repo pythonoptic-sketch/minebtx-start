@@ -7,6 +7,7 @@ proof-of-work.
 - **BTX Start site**: https://drinknile.com/
 - **Installer URL**: https://drinknile.com/install.sh
 - **BTX Start platform fee**: 0.00%, pending backend pool-policy ownership
+- **Revenue model**: [REVENUE_MODEL.md](REVENUE_MODEL.md)
 
 ---
 
@@ -47,6 +48,10 @@ One binary, one YAML, one tmux session. No node admin.
 **Fee transparency.** The public site shows BTX Start's 0.00% platform-fee
 policy, the current backend-reported fee, and the backend dependencies that
 still need to move under BTX Start control.
+
+**Near-zero friction.** The default path requires no account, no email, no
+chat app, no wallet connection, and no custody. A miner pastes a payout address,
+copies one command, and mines to their own wallet.
 
 ---
 

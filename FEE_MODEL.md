@@ -129,6 +129,11 @@ Current BTX Start platform fee:
 0.00% = 0 bps
 ```
 
+Future fee activation should follow `REVENUE_MODEL.md` and
+`backend/platform-revenue-policy.example.json`. In short: keep the platform fee
+at `0 bps` until BTX Start controls stratum, payout policy, fee routing, the
+public fee address, and a per-wallet dashboard with payout history.
+
 Reasoning:
 
 - The immediate product goal is miner activation, not fee extraction.
@@ -138,6 +143,9 @@ Reasoning:
   ladder.
 - Fee policy should not be revisited until BTX Start owns the backend, fee
   routing, and first-party per-wallet dashboard.
+- Optional premium tools should be monetized separately from mining payouts
+  where possible: fleet alerts, rig analytics, CSV exports, and managed setup
+  support.
 
 ## Competitive Positioning
 

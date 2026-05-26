@@ -1,0 +1,41 @@
+{
+  "current_platform_fee_bps": 0,
+  "current_platform_fee_reason": "Launch onboarding remains zero-fee until BTX Start controls the backend and per-wallet visibility.",
+  "fee_activation_gates": [
+    "BTX Start stratum endpoint is live",
+    "BTX Start payout policy and fee routing are deployed",
+    "Dedicated public platform fee address is created and published",
+    "Per-wallet dashboard shows worker state, shares, balances, and payouts",
+    "At least one payout cycle has public history"
+  ],
+  "future_fee_schedule": [
+    {
+      "stage": "launch",
+      "fee_bps": 0,
+      "condition": "Before backend ownership and first-party dashboard"
+    },
+    {
+      "stage": "owned_backend",
+      "fee_bps": 50,
+      "condition": "After activation gates are complete"
+    },
+    {
+      "stage": "retained_pool",
+      "fee_bps": 100,
+      "condition": "After retained hashrate, public payout history, and stable operating costs"
+    }
+  ],
+  "premium_tools": [
+    "Fleet uptime monitoring",
+    "GPU efficiency reports",
+    "Payout and tax CSV exports",
+    "Rig offline alerts",
+    "Managed setup support"
+  ],
+  "non_goals": [
+    "Hidden fees",
+    "Custody of miner funds",
+    "Charging before fee routing is public",
+    "Profit-sharing, dividends, or miner ownership claims"
+  ]
+}

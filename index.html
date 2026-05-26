@@ -25,6 +25,7 @@
         <a href="#gpu-ranking">GPU ranking</a>
         <a href="#track">Track</a>
         <a href="#transparency">Transparency</a>
+        <a href="#operating-model">Model</a>
         <a href="#stats">Live stats</a>
       </div>
       <div class="nav-actions">
@@ -86,6 +87,11 @@
               <p>BTX Start is not adding a platform fee while the priority is simple customer onboarding and miner visibility.</p>
             </article>
             <article class="status-card positive">
+              <span class="metric-label">Friction</span>
+              <strong>No signup</strong>
+              <p>No account, email, custody, or bot is required to generate the miner command. The page does not store visitor input.</p>
+            </article>
+            <article class="status-card positive">
               <span class="metric-label">Mining progress</span>
               <strong>Visible</strong>
               <p>Watch accepted shares, GPU utilization, expected BTX/hour, worker identity, and aggregate network stats.</p>
@@ -103,7 +109,7 @@
         <div class="section-inner">
           <div class="section-heading">
             <p class="eyebrow">Quick start</p>
-            <h2 id="quickstart-title">Start with our hosted installer.</h2>
+            <h2 id="quickstart-title">One address. One command. No account.</h2>
             <p>
               Paste your own BTX payout address, copy the generated command,
               and run it on a Linux machine with an NVIDIA GPU. The installer
@@ -114,23 +120,41 @@
           <div class="flow-grid" aria-label="How mining works">
             <article>
               <span>01</span>
-              <strong>Enter address</strong>
-              <p>Your payout address is inserted into the command in your browser.</p>
+              <strong>Paste address</strong>
+              <p>Your payout address is inserted into the command locally in your browser.</p>
             </article>
             <article>
               <span>02</span>
-              <strong>Run installer</strong>
-              <p>The script installs the miner client and writes your config.</p>
+              <strong>Copy install</strong>
+              <p>Run one command. Worker name is optional and defaults to a stable label.</p>
             </article>
             <article>
               <span>03</span>
-              <strong>Submit shares</strong>
-              <p>Your worker connects to the BTX stratum backend configured by the installer.</p>
+              <strong>Watch shares</strong>
+              <p>The miner log and GPU view show whether the rig is actually working.</p>
             </article>
             <article>
               <span>04</span>
               <strong>Get paid</strong>
               <p>Pool payouts are batched weekly for non-zero balances.</p>
+            </article>
+          </div>
+          <div class="friction-grid" aria-label="Friction removed">
+            <article>
+              <strong>No signup</strong>
+              <p>No account, email, chat app, wallet connection, or sales call.</p>
+            </article>
+            <article>
+              <strong>No custody</strong>
+              <p>The command mines to the BTX address you paste. BTX Start does not hold user funds.</p>
+            </article>
+            <article>
+              <strong>No source build</strong>
+              <p>The installer uses the prebuilt solver path and verifies the binary hash.</p>
+            </article>
+            <article>
+              <strong>No hidden fee</strong>
+              <p>BTX Start platform fee stays at 0.00% until backend ownership and dashboard visibility exist.</p>
             </article>
           </div>
           <label class="address-builder" for="btx-address-input">
@@ -147,7 +171,7 @@
             <small id="address-help">The command mines to this address. Do not use someone else's address.</small>
           </label>
           <label class="address-builder compact-input" for="worker-name-input">
-            <span>Worker name</span>
+            <span>Worker name, optional</span>
             <input
               id="worker-name-input"
               type="text"
@@ -162,24 +186,24 @@
           </label>
           <div class="command-block">
             <div>
-              <h3>Check first, no install</h3>
-              <p>Runs host, GPU, artifact, address, and network checks without writing config or installing packages.</p>
+              <h3>Install and start mining</h3>
+              <p>Downloads the miner package, verifies the solver hash, writes config, and runs the CUDA engagement smoke test.</p>
             </div>
             <div class="command-panel">
-              <code id="preflight-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --worker 'default'</code>
-              <button class="icon-button" type="button" data-copy-target="preflight-command" aria-label="Copy preflight command">
+              <code id="install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
+              <button class="icon-button" type="button" data-copy-target="install-command" aria-label="Copy install command">
                 <span aria-hidden="true">Copy</span>
               </button>
             </div>
           </div>
           <div class="command-block">
             <div>
-              <h3>Install when preflight passes</h3>
-              <p>Downloads the miner package, verifies the solver hash, writes config, and runs the CUDA engagement smoke test.</p>
+              <h3>Optional dry run</h3>
+              <p>Runs host, GPU, artifact, address, and network checks without writing config or installing packages.</p>
             </div>
             <div class="command-panel">
-              <code id="install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
-              <button class="icon-button" type="button" data-copy-target="install-command" aria-label="Copy install command">
+              <code id="preflight-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --worker 'default'</code>
+              <button class="icon-button" type="button" data-copy-target="preflight-command" aria-label="Copy preflight command">
                 <span aria-hidden="true">Copy</span>
               </button>
             </div>
@@ -443,6 +467,7 @@
             <article class="transparency-card">
               <h3>This page does not</h3>
               <ul>
+                <li>Charge a BTX Start platform fee today.</li>
                 <li>Run an independent stratum pool, payout wallet, per-wallet dashboard, or BTX node yet.</li>
                 <li>Custody funds, collect addresses, or store visitor input.</li>
                 <li>Guarantee a user's GPU, driver, network, or external service uptime.</li>
@@ -580,6 +605,67 @@
               the customer dashboard, backend fee routing, and public treasury
               reporting are fully operational.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="band operating-model-band" id="operating-model" aria-labelledby="operating-model-title">
+        <div class="section-inner">
+          <div class="split-heading">
+            <div>
+              <p class="eyebrow">Operating model</p>
+              <h2 id="operating-model-title">Profit later, only after trust is visible.</h2>
+            </div>
+            <p class="status-text">Model price reference: <strong id="operating-price">$5.71</strong> / BTX</p>
+          </div>
+          <div class="operating-grid">
+            <article class="operating-card emphasis">
+              <span class="metric-label">Now</span>
+              <strong>0.00%</strong>
+              <p>Keep onboarding free while we prove installs, shares, GPU use, and payout visibility.</p>
+            </article>
+            <article class="operating-card">
+              <span class="metric-label">Activation gate</span>
+              <strong>Backend</strong>
+              <p>Do not charge until BTX Start controls stratum, payout policy, fee routing, and wallet indexing.</p>
+            </article>
+            <article class="operating-card">
+              <span class="metric-label">First fee</span>
+              <strong>0.50%</strong>
+              <p>Only after public fee address, dashboard, and payout history are live. Stay below the existing 2.50% backend fee.</p>
+            </article>
+            <article class="operating-card">
+              <span class="metric-label">Premium tools</span>
+              <strong>Optional</strong>
+              <p>Fleet alerts, uptime monitoring, CSV exports, and rig analytics should be paid add-ons, not hidden miner fees.</p>
+            </article>
+          </div>
+          <div class="formula-panel">
+            <p>
+              Revenue formula: <code>19,200 BTX/day * pool_share * platform_fee * BTX_price</code>.
+              Scenarios below assume 5060 Ti-class miners at <code>28K n/s</code> each and current network hashrate
+              <code id="operating-network">2.34M n/s</code>. These are planning estimates, not promised liquidity.
+            </p>
+          </div>
+          <div class="table-wrap operating-table" tabindex="0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Scenario</th>
+                  <th>Added hashrate</th>
+                  <th>Modeled share</th>
+                  <th>Gross BTX/day</th>
+                  <th>At 0.00%</th>
+                  <th>At 0.50%</th>
+                  <th>At 1.00%</th>
+                </tr>
+              </thead>
+              <tbody id="operating-model-body">
+                <tr>
+                  <td colspan="7">Loading operating model...</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

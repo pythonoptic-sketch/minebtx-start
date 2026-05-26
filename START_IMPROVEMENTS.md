@@ -58,6 +58,12 @@ had already begun. BTX Start should answer them before installation.
   and aggregate pool stats.
 - Added a searchable GPU ranking with starter profiles, estimated hashrate,
   efficiency, and expected BTX/hour from the current network snapshot.
+- Promoted the default start flow to one address plus one install command, with
+  preflight still available as an optional dry run.
+- Added the operating model section: current 0.00% fee, backend ownership
+  gates, future 0.50% / 1.00% fee scenarios, and optional premium tools.
+- Added `backend/platform-revenue-policy.example.json` and `REVENUE_MODEL.md`
+  so fee activation rules are explicit and machine-readable.
 
 ## Next backend work
 
@@ -71,6 +77,8 @@ frontend:
 - Deploy a BTX Start per-wallet web dashboard.
 - Set the BTX Start backend pool fee policy to `pool_fee_bps = 0` while
   onboarding remains the priority.
+- Keep the platform fee at 0 bps until all activation gates in
+  `backend/platform-revenue-policy.example.json` are complete.
 - Replace the installer default pool host with the BTX Start stratum host.
 - Build a first-party per-wallet dashboard backed by our own share/payout index.
 
