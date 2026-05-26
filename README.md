@@ -4,8 +4,8 @@ BTX Start is a competitive onboarding frontend and installer fork for
 [BTX](https://btxprice.com), the post-quantum Bitcoin Knots fork with matmul
 proof-of-work.
 
-- **BTX Start site**: https://pythonoptic-sketch.github.io/minebtx-start/
-- **Installer URL**: https://pythonoptic-sketch.github.io/minebtx-start/install.sh
+- **BTX Start site**: https://drinknile.com/
+- **Installer URL**: https://drinknile.com/install.sh
 - **BTX Start platform fee**: 0.00%, pending backend pool-policy ownership
 
 ---
@@ -57,13 +57,13 @@ Linux + any NVIDIA GPU from Pascal (GTX 10-series) through Blackwell (RTX 50-ser
 Check the host first without installing anything:
 
 ```bash
-curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --preflight --address 'btx1z...YOUR_BTX_ADDRESS...'
+curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --address 'btx1z...YOUR_BTX_ADDRESS...'
 ```
 
 Then install:
 
 ```bash
-curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...'
+curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...'
 ```
 
 What this does:

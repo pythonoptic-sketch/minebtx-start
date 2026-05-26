@@ -1,4 +1,4 @@
-const siteBaseUrl = "https://pythonoptic-sketch.github.io/minebtx-start";
+const siteBaseUrl = "https://drinknile.com";
 const installerUrl = `${siteBaseUrl}/install.sh`;
 const statsUrl = "stats-snapshot.json";
 const treasuryUrl = "platform-treasury.json";

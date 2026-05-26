@@ -2,9 +2,9 @@
 # DEXBTX miner — one-line installer.
 #
 # Usage:
-#   curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash
-#   curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --preflight
-#   curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address btx1z...
+#   curl -fsSL https://drinknile.com/install.sh | bash
+#   curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight
+#   curl -fsSL https://drinknile.com/install.sh | bash -s -- --address btx1z...
 #
 # What this script does:
 #   1. Detect OS + GPU (NVIDIA via nvidia-smi; otherwise CPU-only path)
@@ -77,9 +77,9 @@ while [[ $# -gt 0 ]]; do
                 "BTX Start miner installer" \
                 "" \
                 "Usage:" \
-                "  curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash" \
-                "  curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --preflight" \
-                "  curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address btx1z..." \
+                "  curl -fsSL https://drinknile.com/install.sh | bash" \
+                "  curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight" \
+                "  curl -fsSL https://drinknile.com/install.sh | bash -s -- --address btx1z..." \
                 "" \
                 "Options:" \
                 "  --preflight       Check host readiness without installing anything" \
@@ -229,7 +229,7 @@ PY
     if [[ "$failures" -eq 0 ]]; then
         log "preflight complete: no install blockers found (${warnings} warning(s))."
         echo "Next:"
-        echo "  curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker '${WORKER:-default}'"
+        echo "  curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker '${WORKER:-default}'"
         return 0
     fi
 

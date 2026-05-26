@@ -64,7 +64,7 @@ You have a Linux machine with an NVIDIA GPU (Pascal GTX 1070 through Blackwell R
 ### Install (one command)
 
 ```bash
-curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z…YOUR_BTX_ADDRESS…'
+curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z…YOUR_BTX_ADDRESS…'
 ```
 
 That's it. The script:

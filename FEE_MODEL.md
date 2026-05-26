@@ -2,7 +2,7 @@
 
 Snapshot inputs, fetched May 26, 2026:
 
-- Public page: https://pythonoptic-sketch.github.io/minebtx-start/
+- Public page: https://drinknile.com/
 - Pool stats: https://stats.minebtx.com/stats
 - BTX price model: https://btxprice.com/api/current.json
 - BTX forward model docs: https://btxprice.com/forward-market-price.md
