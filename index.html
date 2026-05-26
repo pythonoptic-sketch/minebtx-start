@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="BTX Start is a simple BTX mining launcher for mining to your own BTX wallet with transparent backend, fee, GPU, and rental information."
+      content="BTX Start is a simple BTX mining launcher for mining to your own BTX wallet without setting up a node."
     >
     <title>BTX Start | Mine BTX to Your Wallet</title>
     <link rel="stylesheet" href="assets/styles.css">
@@ -36,11 +36,11 @@
           <h1 id="hero-title">Mine BTX to your own wallet.</h1>
           <p>
             Paste your BTX address, copy the generated command, and run a preflight before installing.
-            No account, custody, Telegram bot, or rental GPU is required to learn the process.
+            BTX Start handles the network service; you only run the miner on your machine.
           </p>
           <div class="backend-pill warning">
-            <strong>Backend status:</strong>
-            <span>Provisioning. Mining through BTX Start is not live until <code>stratum.drinknile.com:3333</code> and <code>api.drinknile.com</code> resolve.</span>
+            <strong>Service status:</strong>
+            <span>Being connected. Mining through BTX Start is not live yet, but users will not need to set up a node when it opens.</span>
           </div>
         </div>
 
@@ -85,7 +85,7 @@
           <div class="command-block">
             <div>
               <h3>Run preflight first</h3>
-              <p>Checks host, GPU, BTX address, artifacts, and network reachability without installing.</p>
+              <p>Checks your machine, GPU, BTX address, download artifacts, and service reachability without installing.</p>
             </div>
             <div class="command-panel">
               <code id="preflight-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --worker 'default'</code>
@@ -98,7 +98,7 @@
           <div class="command-block">
             <div>
               <h3>Install after preflight passes</h3>
-              <p>Writes the config for the BTX Start pool target and starts the miner on a supported Linux NVIDIA host.</p>
+              <p>Connects your miner to the managed BTX Start service and mines to your own BTX address.</p>
             </div>
             <div class="command-panel">
               <code id="install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
@@ -111,7 +111,7 @@
           <div class="quick-links" aria-label="Helpful links">
             <a href="install.sh">Installer source</a>
             <a href="WALLET_SETUP.md">Wallet setup</a>
-            <a href="DEPLOY_BACKEND.md">Backend deployment</a>
+            <a href="#track-panel">Progress checks</a>
           </div>
         </div>
       </section>
@@ -120,22 +120,22 @@
         <article>
           <span class="metric-label">Can users mine now?</span>
           <strong>Not yet</strong>
-          <p>The page is live. The first-party stratum/API backend is still provisioning.</p>
+          <p>The page is live. The managed mining service is still being connected.</p>
         </article>
         <article>
-          <span class="metric-label">User payout</span>
-          <strong>Own wallet</strong>
-          <p>The generated command uses the visitor's BTX address, not a BTX Start custody wallet.</p>
+          <span class="metric-label">Node setup</span>
+          <strong>Not required</strong>
+          <p>Users only run the miner. BTX Start operates the service side.</p>
         </article>
         <article>
           <span class="metric-label">Fee</span>
           <strong id="backend-live-fee">0% first 7d</strong>
-          <p>Fee logic is documented and scaffolded, but not active until our backend is live.</p>
+          <p>Fee logic remains inactive until mining through BTX Start is live.</p>
         </article>
         <article>
           <span class="metric-label">Live workers</span>
           <strong id="workers-now">0</strong>
-          <p id="stats-status">Owned backend provisioning snapshot.</p>
+          <p id="stats-status">Managed mining service snapshot.</p>
         </article>
       </section>
 
@@ -144,8 +144,8 @@
           <p class="eyebrow">Reference</p>
           <h2 id="reference-title">Everything else stays available when someone asks for it.</h2>
           <p>
-            The setup details, GPU ranking, rental pricing, fee model, and backend notes are still here,
-            but they no longer compete with the mining command.
+            Local setup, Mac setup, GPU ranking, rental pricing, tracking, and fee transparency are available here,
+            but the main action stays simple.
           </p>
         </div>
 
@@ -160,7 +160,7 @@
                 <article class="local-card emphasis">
                   <span class="metric-label">Best path</span>
                   <strong>Linux + NVIDIA</strong>
-                  <p>Run preflight first. If <code>nvidia-smi</code> works and the stratum endpoint is reachable, use the install command above.</p>
+                  <p>Run preflight first. If <code>nvidia-smi</code> works and the BTX Start service is reachable, use the install command above.</p>
                 </article>
                 <article class="local-card">
                   <span class="metric-label">Apple Silicon</span>
@@ -366,20 +366,20 @@
 
           <details class="reference-panel">
             <summary>
-              <span>Fee, treasury, and backend status</span>
-              <small>Transparent, but secondary to customer mining.</small>
+              <span>Fee and public treasury</span>
+              <small>Transparent, but secondary to getting started.</small>
             </summary>
             <div class="reference-content">
               <div class="treasury-grid">
                 <article class="treasury-card">
                   <span class="metric-label">Treasury status</span>
                   <strong id="platform-treasury-status">Provisioning</strong>
-                  <p id="platform-notice">Fee collection remains disabled until the first-party backend and wallet are active.</p>
+                  <p id="platform-notice">Fee collection remains disabled until the managed mining service and fee wallet are active.</p>
                 </article>
                 <article class="treasury-card">
                   <span class="metric-label">Target fee</span>
                   <strong id="platform-target-fee">0% first 7d</strong>
-                  <p>Fee logic is scaffolded in the backend and starts only after activation.</p>
+                  <p>Fee logic starts only after the mining service is active.</p>
                 </article>
                 <article class="treasury-card highlight">
                   <span class="metric-label">Fee wallet</span>
@@ -390,11 +390,6 @@
                   <span class="metric-label">Treasury address</span>
                   <strong>Public</strong>
                   <p><code id="platform-treasury-address">Pending wallet creation</code></p>
-                </article>
-                <article class="treasury-card">
-                  <span class="metric-label">Backend fee address</span>
-                  <strong id="backend-fee-rate">Pending</strong>
-                  <p><code id="backend-fee-address">Pending first-party backend</code></p>
                 </article>
                 <article class="treasury-card">
                   <span class="metric-label">Balance source</span>
@@ -428,45 +423,6 @@
             </div>
           </details>
 
-          <details class="reference-panel">
-            <summary>
-              <span>Owned backend structure</span>
-              <small>Static UI, stats API, synced node, and stratum.</small>
-            </summary>
-            <div class="reference-content">
-              <div class="backend-map">
-                <article>
-                  <span>01</span>
-                  <strong>Static site</strong>
-                  <p>GitHub Pages serves this command builder and reference UI.</p>
-                </article>
-                <article>
-                  <span>02</span>
-                  <strong>Stats API</strong>
-                  <p><code>api.drinknile.com</code> should expose pool, wallet, worker, and peer stats.</p>
-                </article>
-                <article>
-                  <span>03</span>
-                  <strong>Stratum</strong>
-                  <p><code>stratum.drinknile.com:3333</code> accepts miner work and tracks shares.</p>
-                </article>
-                <article>
-                  <span>04</span>
-                  <strong>btxd</strong>
-                  <p>A synced BTX node provides templates, validates blocks, and creates payouts.</p>
-                </article>
-              </div>
-              <div class="backend-pill warning">
-                <strong>Activation gate:</strong>
-                <span>Set <code>OWNED_BACKEND_ACTIVE=true</code> only after DNS, TLS/API, stratum, real RPC credentials, synced <code>btxd</code>, and the fee wallet are live.</span>
-              </div>
-              <div class="quick-links">
-                <a href="DEPLOY_BACKEND.md">Deployment checklist</a>
-                <a href="backend/README.md">Backend README</a>
-                <a href="stats-snapshot.json">Stats snapshot</a>
-              </div>
-            </div>
-          </details>
         </div>
       </section>
 
@@ -484,7 +440,7 @@
           <strong id="network-hash">Pending</strong>
         </article>
         <article>
-          <span class="metric-label">Node peers</span>
+          <span class="metric-label">Service peers</span>
           <strong id="node-peers">Pending</strong>
         </article>
       </section>
@@ -497,11 +453,11 @@
           <span>BTX Start</span>
         </a>
         <div class="footer-links">
-          <a href="DEPLOY_BACKEND.md">Backend deployment</a>
-          <a href="backend/README.md">Backend README</a>
+          <a href="WALLET_SETUP.md">Wallet guide</a>
+          <a href="install.sh">Installer source</a>
           <a href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">GitHub</a>
         </div>
-        <p>Mine to your own wallet. Backend activation remains gated until the first-party node, API, stratum, and fee wallet are live.</p>
+        <p>Mine to your own wallet. BTX Start runs the service side; users only run the miner.</p>
       </div>
     </footer>
   </body>

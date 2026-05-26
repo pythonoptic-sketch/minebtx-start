@@ -315,8 +315,8 @@ async function hydrateStats() {
     const backendFeeBps = Number(policy.post_trial_fee_bps ?? policy.pool_fee_bps ?? 0);
     const backendFee = formatFeePolicy(policy);
     currentNetworkHashNps = Number(pool.network_hash_nps || btxd.network_hash_ps) || currentNetworkHashNps;
-    const feeAddress = policy.fee_address || "Pending first-party backend";
-    const treasuryAddress = policy.treasury_address || "Pending first-party backend";
+    const feeAddress = policy.fee_address || "Pending managed service";
+    const treasuryAddress = policy.treasury_address || "Pending managed service";
     setText("backend-live-fee", backendFee);
     setText("backend-policy-fee", backendFee);
     setText("fee-address", feeAddress);
@@ -335,12 +335,12 @@ async function hydrateStats() {
     if (status) {
       const timestamp = data.fetched_at ? new Date(data.fetched_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "recently";
       status.textContent = result.live
-        ? `First-party stats updated ${timestamp}`
-        : `Owned backend provisioning snapshot updated ${timestamp}`;
+        ? `BTX Start stats updated ${timestamp}`
+        : `Managed mining service snapshot updated ${timestamp}`;
     }
   } catch (error) {
     if (status) {
-      status.textContent = "First-party stats unavailable. Backend is still provisioning.";
+      status.textContent = "BTX Start stats unavailable. Mining service is still being connected.";
     }
   }
 }
@@ -379,7 +379,7 @@ async function hydrateTreasuryConfig() {
       trial_fee_bps: treasury.trial_fee_bps,
       post_trial_fee_bps: targetBps,
     });
-    const status = treasury.active ? "Connected" : "Provisioning";
+    const status = treasury.active ? "Connected" : "Preparing";
 
     currentPlatformFeeBps = targetBps;
     setText("platform-treasury-status", status);
