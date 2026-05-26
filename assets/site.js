@@ -272,6 +272,9 @@ function buildVastLink(offer) {
 
   try {
     const parsed = new URL(url);
+    if (config.referral_configured && config.referral_id && !parsed.searchParams.has("ref_id") && !parsed.searchParams.has("ref")) {
+      parsed.searchParams.set("ref_id", config.referral_id);
+    }
     parsed.searchParams.set("utm_source", "btx_start");
     parsed.searchParams.set("utm_medium", "gpu_rental");
     if (offer.id) parsed.searchParams.set("utm_content", `vast_offer_${offer.id}`);
@@ -516,7 +519,10 @@ async function hydrateVastOffers() {
       ? new Date(offersPayload.fetched_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
       : "recently";
     if (status) status.textContent = `Vast pricing snapshot updated ${timestamp}`;
-    setText("vast-referral-status", vastReferralConfig.referral_configured ? "Active" : "Needs link");
+    const referralStatus = vastReferralConfig.referral_configured
+      ? `Active: ref ${vastReferralConfig.referral_id || "configured"}`
+      : "Needs link";
+    setText("vast-referral-status", referralStatus);
     setText("vast-disclosure", vastReferralConfig.disclosure);
     renderVastOffers();
   } catch (error) {

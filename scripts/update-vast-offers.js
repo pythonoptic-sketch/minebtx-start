@@ -4,6 +4,7 @@ const fs = require("fs");
 
 const outputPath = process.argv[2] || "vast-offers.json";
 const vastApiUrl = "https://console.vast.ai/api/v0/bundles/";
+const vastApiKey = process.env.VAST_API_KEY || process.env.VAST_AI_API_KEY || "";
 
 const requestBody = {
   limit: Number(process.env.VAST_OFFERS_LIMIT || 80),
@@ -59,10 +60,16 @@ function normalizeOffer(offer) {
   };
 }
 
+function buildHeaders() {
+  const headers = { "content-type": "application/json" };
+  if (vastApiKey) headers.authorization = `Bearer ${vastApiKey}`;
+  return headers;
+}
+
 async function main() {
   const response = await fetch(vastApiUrl, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: buildHeaders(),
     body: JSON.stringify(requestBody),
   });
 
@@ -85,6 +92,7 @@ async function main() {
     source: vastApiUrl,
     source_name: "Vast.ai Search Offers API",
     fetched_at: new Date().toISOString(),
+    authenticated_request: Boolean(vastApiKey),
     query: requestBody,
     offers: normalized,
   };

@@ -11,7 +11,8 @@ Set the actual referral URL in `vast-referral.json`:
 ```json
 {
   "referral_configured": true,
-  "referral_url": "https://cloud.vast.ai/?ref=YOUR_REAL_REFERRAL_ID"
+  "referral_id": "556354",
+  "referral_url": "https://cloud.vast.ai/?ref_id=556354"
 }
 ```
 
@@ -21,6 +22,10 @@ template referral URL here instead.
 
 The site displays a disclosure next to the rental table. Referral earnings are
 separate from the BTX mining fee policy. BTX Start platform fee remains 0.00%.
+
+Do not commit a Vast API key. Store it as the GitHub Actions repository secret
+`VAST_API_KEY`; the refresh workflow passes it only to
+`scripts/update-vast-offers.js` while generating `vast-offers.json`.
 
 ## Pricing Refresh
 
