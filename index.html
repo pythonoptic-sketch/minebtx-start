@@ -19,6 +19,7 @@
       </a>
       <div class="nav-links">
         <a href="index.html" aria-current="page">Home</a>
+        <a href="#status">Status</a>
         <a href="#start">Start</a>
         <a href="#compatibility">Compatibility</a>
         <a href="#track">Track</a>
@@ -64,6 +65,35 @@
     </header>
 
     <main>
+      <section class="band operational-band" id="status" aria-labelledby="status-title">
+        <div class="section-inner">
+          <div class="split-heading">
+            <div>
+              <p class="eyebrow">Operating status</p>
+              <h2 id="status-title">What works right now.</h2>
+            </div>
+            <p class="status-text">Backend fee policy is shown separately from our target promo.</p>
+          </div>
+          <div class="status-grid">
+            <article class="status-card positive">
+              <span class="metric-label">Mining to personal wallet</span>
+              <strong>Available</strong>
+              <p>The generated installer command writes the visitor's own BTX payout address into the miner config.</p>
+            </article>
+            <article class="status-card warning">
+              <span class="metric-label">Fee capture</span>
+              <strong>Backend-owned</strong>
+              <p>The live backend currently reports a 2.50% fee. That fee goes to the backend's configured fee and treasury addresses below, not to BTX Start unless we control that backend policy.</p>
+            </article>
+            <article class="status-card warning">
+              <span class="metric-label">Personal dashboard</span>
+              <strong>Partial</strong>
+              <p>Miners can watch local logs, GPU load, aggregate stats, and Telegram balance commands. A full BTX Start web dashboard per wallet is not live yet.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section class="band quickstart" id="start" aria-labelledby="quickstart-title">
         <div class="section-inner">
           <div class="section-heading">
@@ -255,6 +285,56 @@
               <code>nvidia-smi</code>
             </article>
           </div>
+          <div class="personal-tracker" aria-label="Personal mining tracker">
+            <div class="section-heading compact">
+              <p class="eyebrow">Personal view</p>
+              <h3>Signals a miner can watch today.</h3>
+            </div>
+            <div class="tracker-grid">
+              <article>
+                <span class="metric-label">Worker id</span>
+                <div class="copy-row">
+                  <code id="worker-id-command">btx1z...your_address.default</code>
+                  <button class="mini-copy" type="button" data-copy-target="worker-id-command" aria-label="Copy worker id">Copy</button>
+                </div>
+              </article>
+              <article>
+                <span class="metric-label">Accepted shares</span>
+                <div class="copy-row">
+                  <code id="log-command">tail -f ~/.dexbtx-miner/miner.log</code>
+                  <button class="mini-copy" type="button" data-copy-target="log-command" aria-label="Copy log command">Copy</button>
+                </div>
+              </article>
+              <article>
+                <span class="metric-label">GPU utilization</span>
+                <div class="copy-row">
+                  <code id="gpu-command">watch -n 2 nvidia-smi</code>
+                  <button class="mini-copy" type="button" data-copy-target="gpu-command" aria-label="Copy GPU command">Copy</button>
+                </div>
+              </article>
+              <article>
+                <span class="metric-label">Telegram balance</span>
+                <div class="copy-row">
+                  <code id="balance-command">/mybalance btx1z...your_address.default</code>
+                  <button class="mini-copy" type="button" data-copy-target="balance-command" aria-label="Copy balance command">Copy</button>
+                </div>
+              </article>
+              <article>
+                <span class="metric-label">Telegram block credit</span>
+                <div class="copy-row">
+                  <code id="block-command">/myblock btx1z...your_address.default</code>
+                  <button class="mini-copy" type="button" data-copy-target="block-command" aria-label="Copy block command">Copy</button>
+                </div>
+              </article>
+              <article>
+                <span class="metric-label">Aggregate pool stats</span>
+                <div class="copy-row">
+                  <code id="stats-command">/stats</code>
+                  <button class="mini-copy" type="button" data-copy-target="stats-command" aria-label="Copy stats command">Copy</button>
+                </div>
+              </article>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -326,9 +406,9 @@
           </div>
           <div class="fee-model-grid">
             <article class="fee-model-card emphasis">
-              <span class="metric-label">Launch promo now</span>
+              <span class="metric-label">Target launch promo</span>
               <strong>0.50%</strong>
-              <p>Use `50 bps` to be visibly more attractive than typical mining-pool fees during the acquisition window.</p>
+              <p>Use `50 bps` once the backend pool policy and fee destination are under BTX Start control.</p>
             </article>
             <article class="fee-model-card">
               <span class="metric-label">Current live pool fee</span>

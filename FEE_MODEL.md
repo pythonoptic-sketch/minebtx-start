@@ -184,6 +184,12 @@ It does not contain the live pool server configuration. The static site can
 show the recommendation, but the real pool fee remains whatever
 `stats.minebtx.com/stats` reports as `policy.pool_fee_bps`.
 
+The live backend also controls where the fee goes. In the latest checked
+backend response, `policy.pool_fee_bps` is `250`, so the active fee is 2.50%.
+The fee is paid to the backend-configured `policy.fee_address` and related
+treasury address, not to BTX Start unless those backend settings are moved
+under BTX Start control.
+
 To actually change the live pool fee, update the pool backend policy/config to:
 
 ```text

@@ -35,6 +35,8 @@ async function hydrateStats() {
     setText("workers-now", formatNumber.format(pool.workers_active_now));
     setText("blocks-24h", formatNumber.format(pool.blocks_found_24h));
     setText("pool-fee", `${((policy.pool_fee_bps || 250) / 100).toFixed(2)}%`);
+    setText("fee-address", policy.fee_address);
+    setText("treasury-address", policy.treasury_address);
     setText("chain-height", formatNumber.format(btxd.blocks));
     setText("workers-24h", formatNumber.format(pool.workers_active_24h));
     setText("network-hash", formatHashrate(pool.network_hash_nps || btxd.network_hash_ps));
@@ -80,6 +82,9 @@ function setupAddressBuilder() {
   const command = document.getElementById("install-command");
   const preflightCommand = document.getElementById("preflight-command");
   const telegramCommand = document.getElementById("telegram-command");
+  const balanceCommand = document.getElementById("balance-command");
+  const blockCommand = document.getElementById("block-command");
+  const workerIdCommand = document.getElementById("worker-id-command");
   const wrapper = document.querySelector(".address-builder");
   const help = document.getElementById("address-help");
   if (!input || !command || !wrapper || !help) return;
@@ -97,7 +102,11 @@ function setupAddressBuilder() {
     }
     if (telegramCommand) {
       const balanceAddress = looksValid ? address : "btx1z...your_address";
-      telegramCommand.textContent = `/mybalance ${balanceAddress}.${worker}`;
+      const workerId = `${balanceAddress}.${worker}`;
+      telegramCommand.textContent = `/mybalance ${workerId}`;
+      if (balanceCommand) balanceCommand.textContent = `/mybalance ${workerId}`;
+      if (blockCommand) blockCommand.textContent = `/myblock ${workerId}`;
+      if (workerIdCommand) workerIdCommand.textContent = workerId;
     }
     wrapper.dataset.valid = address ? String(looksValid) : "";
     if (!address) {

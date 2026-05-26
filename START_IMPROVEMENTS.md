@@ -27,6 +27,8 @@ five questions:
 3. Will I mine to my own address?
 4. How do I know the binary is the intended binary?
 5. How do I know the GPU is actually doing work?
+6. Where does the pool fee go?
+7. Can I visually follow my own miner after launch?
 
 The original one-line installer mostly answered those questions after install
 had already begun. BTX Start should answer them before installation.
@@ -44,6 +46,11 @@ had already begun. BTX Start should answer them before installation.
 - Added `stats-snapshot.json` plus a GitHub Action so the page reads stats from
   our own origin rather than sending every browser directly to the current
   backend stats API.
+- Added an operating-status section that separates "can mine now" from
+  "BTX Start receives the fee."
+- Added a personal tracker section with copyable commands for worker id, local
+  miner logs, GPU utilization, Telegram balance, Telegram block credit, and
+  aggregate pool stats.
 
 ## Next backend work
 
@@ -57,7 +64,9 @@ frontend:
 - Deploy a BTX Start Telegram or web balance bot.
 - Set the backend pool fee policy to the launch target, `pool_fee_bps = 50`.
 - Replace the installer default pool host with the BTX Start stratum host.
+- Build a first-party per-wallet dashboard backed by our own share/payout index.
 
 Until those are deployed, the honest user experience is: BTX Start controls the
-onboarding page, installer entrypoint, docs, and package fork, while the mining
-backend and solver release artifacts are still dependencies.
+onboarding page, installer entrypoint, docs, and package fork. The mining
+backend, fee destination, Telegram balance bot, per-wallet web dashboard, and
+solver release artifacts are still dependencies.

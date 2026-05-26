@@ -41,11 +41,27 @@ The page gives you the matching Telegram lookup command:
 Balance lookup currently depends on the existing BTX Telegram bot. That is a
 backend dependency, not infrastructure owned by this frontend.
 
+You can visually follow the mining process today through three signals:
+
+```sh
+tail -f ~/.dexbtx-miner/miner.log
+watch -n 2 nvidia-smi
+```
+
+The miner log should show accepted shares. `nvidia-smi` should show sustained
+GPU utilization and power draw. Telegram can show balance and block-credit
+lookups for the worker id generated on the page.
+
 ## 5. Current infrastructure status
 
 BTX Start now owns the public onboarding page and installer entry URL. It does
 not yet own an independent stratum pool, payout backend, stats API, Telegram
 bot, or binary release pipeline.
+
+The current backend reports its fee policy through the stats snapshot. As of the
+latest checked snapshot, `pool_fee_bps` is `250`, meaning 2.50%. That fee goes
+to the backend-configured fee and treasury addresses, not to BTX Start unless
+those backend addresses and policy are moved under BTX Start control.
 
 Until those are deployed, mining still depends on the existing BTX backend
 configured by the installer. To become a fully independent competitor, the next

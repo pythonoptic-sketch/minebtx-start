@@ -326,6 +326,12 @@ main {
   background: var(--bg-soft);
 }
 
+.operational-band {
+  background:
+    linear-gradient(90deg, rgba(52, 211, 200, 0.04), transparent 46%),
+    #0a0f15;
+}
+
 .flow-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -511,6 +517,79 @@ main {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
+}
+
+.status-grid,
+.tracker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.status-card,
+.tracker-grid article {
+  min-width: 0;
+  padding: 22px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.status-card.positive {
+  border-color: rgba(91, 216, 120, 0.42);
+}
+
+.status-card.warning {
+  border-color: rgba(217, 164, 65, 0.42);
+}
+
+.status-card strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.status-card.positive strong {
+  color: var(--green);
+}
+
+.status-card.warning strong {
+  color: var(--amber);
+}
+
+.status-card p,
+.tracker-grid p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.personal-tracker {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.personal-tracker .section-heading {
+  margin-bottom: 14px;
+}
+
+.personal-tracker h3 {
+  margin-bottom: 0;
+  font-size: 24px;
+}
+
+.tracker-grid code {
+  min-width: 0;
+  display: block;
+  padding: 10px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #090d12;
+  color: #dce7f2;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .tracking-card {
@@ -1002,6 +1081,8 @@ tr:last-child td {
 
   .stat-grid,
   .tracking-grid,
+  .status-grid,
+  .tracker-grid,
   .flow-grid,
   .fee-model-grid,
   .release-grid,
@@ -1104,6 +1185,8 @@ tr:last-child td {
 
   .stat-grid,
   .tracking-grid,
+  .status-grid,
+  .tracker-grid,
   .flow-grid,
   .transparency-grid,
   .fee-model-grid,
