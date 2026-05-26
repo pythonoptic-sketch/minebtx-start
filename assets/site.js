@@ -428,6 +428,8 @@ function setupAddressBuilder() {
   const preflightCommand = document.getElementById("preflight-command");
   const localInstallCommand = document.getElementById("local-install-command");
   const localPreflightCommand = document.getElementById("local-preflight-command");
+  const macInstallCommand = document.getElementById("mac-install-command");
+  const macPreflightCommand = document.getElementById("mac-preflight-command");
   const workerIdCommand = document.getElementById("worker-id-command");
   const walletBalanceCommand = document.getElementById("wallet-balance-command");
   const wrapper = document.querySelector(".address-builder");
@@ -437,19 +439,26 @@ function setupAddressBuilder() {
   function updateCommand() {
     const address = input.value.trim();
     const worker = (workerInput?.value.trim() || "default").replace(/[^a-z0-9._-]/gi, "-");
+    const macWorker = worker === "default" ? "mac-ultra" : worker;
     const looksValid = /^btx1z[a-z0-9]{20,}$/i.test(address);
     const addressForCommand = looksValid ? address : placeholderAddress;
+    const addressFlag = looksValid ? ` --address '${address}'` : "";
 
     command.textContent = `curl -fsSL ${installerUrl} | bash -s -- --address '${addressForCommand}' --worker '${worker}'`;
     if (localInstallCommand) {
       localInstallCommand.textContent = `curl -fsSL ${installerUrl} | bash -s -- --address '${addressForCommand}' --worker '${worker}'`;
     }
     if (preflightCommand) {
-      const addressFlag = looksValid ? ` --address '${address}'` : "";
       preflightCommand.textContent = `curl -fsSL ${installerUrl} | bash -s -- --preflight${addressFlag} --worker '${worker}'`;
       if (localPreflightCommand) {
         localPreflightCommand.textContent = preflightCommand.textContent;
       }
+    }
+    if (macInstallCommand) {
+      macInstallCommand.textContent = `curl -fsSL ${installerUrl} | bash -s -- --address '${addressForCommand}' --worker '${macWorker}' --solver-backend metal --local-solver "$HOME/.dexbtx-miner/bin/btx-gbt-solve" --trust-local-solver`;
+    }
+    if (macPreflightCommand) {
+      macPreflightCommand.textContent = `curl -fsSL ${installerUrl} | bash -s -- --preflight${addressFlag} --solver-backend metal --local-solver "$HOME/.dexbtx-miner/bin/btx-gbt-solve" --trust-local-solver --worker '${macWorker}'`;
     }
     const balanceAddress = looksValid ? address : "btx1z...your_address";
     const workerId = `${balanceAddress}.${worker}`;

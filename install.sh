@@ -5,13 +5,14 @@
 #   curl -fsSL https://drinknile.com/install.sh | bash
 #   curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight
 #   curl -fsSL https://drinknile.com/install.sh | bash -s -- --address btx1z...
+#   curl -fsSL https://drinknile.com/install.sh | bash -s -- --solver-backend metal --local-solver ~/btx-gbt-solve --trust-local-solver --address btx1z...
 #
 # What this script does:
-#   1. Detect OS + GPU (NVIDIA via nvidia-smi; otherwise CPU-only path)
+#   1. Detect OS + GPU (NVIDIA via nvidia-smi; Apple Silicon via Metal)
 #   2. Install Python 3.10+ if missing
 #   3. Install dexbtx-miner via pip
-#   4. Download the patched btx-gbt-solve binary, verify SHA256 against
-#      the value pinned in pyproject.toml
+#   4. Download/copy the patched btx-gbt-solve binary, verify SHA256
+#      against the pinned value when using an official artifact
 #   5. Prompt for the user's btx1z... payout address (or accept --address)
 #   6. Save config to ~/.dexbtx-miner/config.yaml
 #   7. Print the launch command (and an optional systemd unit)
@@ -39,7 +40,8 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PATH
 PREBUILDS_TAG="${PREBUILDS_TAG:-v4.3-sm89-native}"
 BTX_START_REPO_URL="${BTX_START_REPO_URL:-https://github.com/pythonoptic-sketch/minebtx-start}"
 PREBUILDS_BASE="${PREBUILDS_BASE:-https://github.com/pythonoptic-sketch/minebtx-start/releases/download/${PREBUILDS_TAG}}"
-SOLVER_URL="${PREBUILDS_BASE}/btx-gbt-solve"
+DEFAULT_SOLVER_URL="${PREBUILDS_BASE}/btx-gbt-solve"
+SOLVER_URL="${SOLVER_URL:-$DEFAULT_SOLVER_URL}"
 PYPROJECT_URL="${PYPROJECT_URL:-https://raw.githubusercontent.com/pythonoptic-sketch/minebtx-start/main/pyproject.toml}"
 
 # Default pool — override with --pool flag or DEXBTX_POOL env var.
@@ -58,8 +60,10 @@ POOL="${DEFAULT_POOL}"
 ASSUME_YES=0
 SKIP_PROMPT=0
 LOCAL_SOLVER=""   # if set: copy from this local path instead of downloading
+TRUST_LOCAL_SOLVER=0 # if 1: install LOCAL_SOLVER without comparing it to the Linux release hash
 SKIP_PIP=0        # if 1: don't pip install dexbtx-miner (useful when running from a source checkout)
 PREFLIGHT=0       # if 1: check host readiness without installing anything
+SOLVER_BACKEND="" # cuda|metal|mlx|cpu. Default: cuda on Linux, metal on Apple Silicon.
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -69,6 +73,9 @@ while [[ $# -gt 0 ]]; do
         --yes|-y)  ASSUME_YES=1; SKIP_PROMPT=1; shift ;;
         --skip-prompt) SKIP_PROMPT=1; shift ;;
         --local-solver) LOCAL_SOLVER="$2"; shift 2 ;;
+        --trust-local-solver) TRUST_LOCAL_SOLVER=1; shift ;;
+        --solver-backend) SOLVER_BACKEND="$2"; shift 2 ;;
+        --mac) SOLVER_BACKEND="metal"; shift ;;
         --skip-pip)    SKIP_PIP=1; shift ;;
         --preflight)   PREFLIGHT=1; SKIP_PROMPT=1; shift ;;
         --help|-h)
@@ -85,10 +92,14 @@ while [[ $# -gt 0 ]]; do
                 "  --address VALUE   BTX payout address" \
                 "  --worker VALUE    Worker name for dashboard/balance lookup" \
                 "  --pool HOST:PORT  Override stratum pool endpoint" \
+                "  --solver-backend  Solver backend: cuda, metal, mlx, or cpu" \
+                "  --mac             Shortcut for --solver-backend metal" \
                 "  --yes, -y         Regenerate config without prompting" \
                 "  --skip-prompt     Do not prompt for missing address" \
                 "  --skip-pip        Skip Python package install" \
-                "  --local-solver    Use a local btx-gbt-solve binary"
+                "  --local-solver    Use a local btx-gbt-solve binary" \
+                "  --trust-local-solver" \
+                "                    Trust --local-solver hash. Required for local Mac builds until an official Mac artifact is pinned."
             exit 0
             ;;
         *) echo "unknown arg: $1"; exit 1 ;;
@@ -104,6 +115,16 @@ need() {
     command -v "$1" >/dev/null 2>&1 || err "missing required tool: $1"
 }
 
+sha256_file() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        sha256sum "$1" | awk '{print $1}'
+    elif command -v shasum >/dev/null 2>&1; then
+        shasum -a 256 "$1" | awk '{print $1}'
+    else
+        err "missing required tool: sha256sum or shasum"
+    fi
+}
+
 confirm() {
     [[ "$ASSUME_YES" -eq 1 ]] && return 0
     read -rp "$1 [y/N] " ans
@@ -115,21 +136,39 @@ run_preflight() {
     local warnings=0
     local os_name
     local arch_name
+    local backend_name
     os_name="$(uname -s 2>/dev/null || echo unknown)"
     arch_name="$(uname -m 2>/dev/null || echo unknown)"
+    backend_name="${SOLVER_BACKEND}"
+    if [[ -z "$backend_name" ]]; then
+        if [[ "$os_name" == "Darwin" ]]; then
+            backend_name="metal"
+        else
+            backend_name="cuda"
+        fi
+    fi
 
     log "BTX Start preflight — release ${PREBUILDS_TAG}"
     echo "  OS:       ${os_name}"
     echo "  Arch:     ${arch_name}"
+    echo "  Backend:  ${backend_name}"
     echo "  Pool:     ${POOL}"
-    echo "  Solver:   ${SOLVER_URL}"
+    if [[ -n "$LOCAL_SOLVER" ]]; then
+        echo "  Solver:   ${LOCAL_SOLVER} (local)"
+    else
+        echo "  Solver:   ${SOLVER_URL}"
+    fi
     echo
 
     case "$os_name" in
         Linux) log "OS check: Linux supported" ;;
         Darwin)
-            warn "macOS detected. The public one-line path is intended for Linux + NVIDIA hosts."
-            warnings=$((warnings + 1))
+            if [[ "$arch_name" == "arm64" && ( "$backend_name" == "metal" || "$backend_name" == "mlx" ) ]]; then
+                log "OS check: Apple Silicon macOS supported through the ${backend_name} backend"
+            else
+                warn "macOS mining requires Apple Silicon plus --solver-backend metal or mlx"
+                failures=$((failures + 1))
+            fi
             ;;
         *)
             warn "unsupported OS for the one-line miner path: ${os_name}"
@@ -146,51 +185,86 @@ run_preflight() {
         fi
     done
 
-    if command -v sha256sum >/dev/null 2>&1; then
-        log "tool check: sha256sum found"
+    if command -v sha256sum >/dev/null 2>&1 || command -v shasum >/dev/null 2>&1; then
+        log "tool check: SHA256 tool found"
     else
-        warn "tool check: sha256sum missing; install coreutils before mining"
+        warn "tool check: sha256sum/shasum missing; install coreutils before mining"
         failures=$((failures + 1))
     fi
 
-    if command -v nvidia-smi >/dev/null 2>&1; then
-        local gpu_query
-        gpu_query="$(nvidia-smi --query-gpu=name,compute_cap,driver_version --format=csv,noheader 2>/dev/null | head -1 || true)"
-        if [[ -z "$gpu_query" ]]; then
-            gpu_query="$(nvidia-smi --query-gpu=name,driver_version --format=csv,noheader 2>/dev/null | head -1 || true)"
-        fi
-        if [[ -n "$gpu_query" ]]; then
-            log "GPU check: ${gpu_query}"
-            case "$gpu_query" in
-                *"GTX 9"*|*"GTX 10"*) echo "  Release path: native sm_61 cubin" ;;
-                *"GTX 16"*|*"RTX 20"*|*"RTX 30"*|*"A100"*|*"A40"*|*"A4000"*|*"A5000"*|*"A6000"*) echo "  Release path: sm_61 PTX JIT to this architecture" ;;
-                *"RTX 40"*) echo "  Release path: native sm_89 cubin" ;;
-                *"H100"*|*"H200"*) echo "  Release path: native sm_90 cubin" ;;
-                *"RTX 50"*) echo "  Release path: native sm_120 cubin" ;;
-                *) echo "  Release path: unknown from name; installer smoke test is authoritative" ;;
-            esac
+    if [[ "$backend_name" == "cuda" ]]; then
+        if command -v nvidia-smi >/dev/null 2>&1; then
+            local gpu_query
+            gpu_query="$(nvidia-smi --query-gpu=name,compute_cap,driver_version --format=csv,noheader 2>/dev/null | head -1 || true)"
+            if [[ -z "$gpu_query" ]]; then
+                gpu_query="$(nvidia-smi --query-gpu=name,driver_version --format=csv,noheader 2>/dev/null | head -1 || true)"
+            fi
+            if [[ -n "$gpu_query" ]]; then
+                log "GPU check: ${gpu_query}"
+                case "$gpu_query" in
+                    *"GTX 9"*|*"GTX 10"*) echo "  Release path: native sm_61 cubin" ;;
+                    *"GTX 16"*|*"RTX 20"*|*"RTX 30"*|*"A100"*|*"A40"*|*"A4000"*|*"A5000"*|*"A6000"*) echo "  Release path: sm_61 PTX JIT to this architecture" ;;
+                    *"RTX 40"*) echo "  Release path: native sm_89 cubin" ;;
+                    *"H100"*|*"H200"*) echo "  Release path: native sm_90 cubin" ;;
+                    *"RTX 50"*) echo "  Release path: native sm_120 cubin" ;;
+                    *) echo "  Release path: unknown from name; installer smoke test is authoritative" ;;
+                esac
+            else
+                warn "nvidia-smi is present but no GPU was returned"
+                failures=$((failures + 1))
+            fi
         else
-            warn "nvidia-smi is present but no GPU was returned"
+            warn "nvidia-smi missing. Install NVIDIA drivers or choose --solver-backend metal on Apple Silicon."
+            failures=$((failures + 1))
+        fi
+    elif [[ "$backend_name" == "metal" || "$backend_name" == "mlx" ]]; then
+        if [[ "$os_name" == "Darwin" && "$arch_name" == "arm64" ]]; then
+            log "GPU check: Apple Silicon unified GPU path (${backend_name})"
+            if command -v system_profiler >/dev/null 2>&1; then
+                system_profiler SPDisplaysDataType 2>/dev/null | awk -F: '/Chipset Model|Total Number of Cores|Metal Support/ {gsub(/^[ \t]+/, "", $2); print "  " $1 ":" $2}' | head -6 || true
+            fi
+        else
+            warn "${backend_name} backend is only supported here for Apple Silicon macOS"
             failures=$((failures + 1))
         fi
     else
-        warn "nvidia-smi missing. Install NVIDIA drivers or use a CUDA image before running the miner."
-        failures=$((failures + 1))
+        warn "backend ${backend_name} is not a productive mining path; use cuda or metal"
+        warnings=$((warnings + 1))
     fi
 
     if command -v curl >/dev/null 2>&1; then
-        if curl -fsIL --max-time 15 "$SOLVER_URL" >/dev/null 2>&1; then
-            log "artifact check: solver release is reachable"
-        else
-            warn "artifact check: solver release is not reachable from this host"
+        if [[ -n "$LOCAL_SOLVER" ]]; then
+            if [[ -f "$LOCAL_SOLVER" && -x "$LOCAL_SOLVER" ]]; then
+                log "artifact check: local solver exists and is executable"
+                log "artifact check: local solver SHA256 $(sha256_file "$LOCAL_SOLVER")"
+            elif [[ -f "$LOCAL_SOLVER" ]]; then
+                warn "artifact check: local solver exists but is not executable; run chmod +x ${LOCAL_SOLVER}"
+                failures=$((failures + 1))
+            else
+                warn "artifact check: local solver does not exist: ${LOCAL_SOLVER}"
+                failures=$((failures + 1))
+            fi
+        elif [[ "$os_name" == "Darwin" ]]; then
+            warn "artifact check: macOS requires --local-solver or a Mac-specific SOLVER_URL until an official Mac release artifact is pinned"
             failures=$((failures + 1))
+        else
+            if curl -fsIL --max-time 15 "$SOLVER_URL" >/dev/null 2>&1; then
+                log "artifact check: solver release is reachable"
+            else
+                warn "artifact check: solver release is not reachable from this host"
+                failures=$((failures + 1))
+            fi
         fi
 
-        if curl -fsIL --max-time 15 "$PYPROJECT_URL" >/dev/null 2>&1; then
-            log "artifact check: SHA256 pin source is reachable"
+        if [[ -n "$LOCAL_SOLVER" && "$TRUST_LOCAL_SOLVER" -eq 1 ]]; then
+            log "artifact check: local solver hash trust was explicitly requested"
         else
-            warn "artifact check: SHA256 pin source is not reachable from this host"
-            failures=$((failures + 1))
+            if curl -fsIL --max-time 15 "$PYPROJECT_URL" >/dev/null 2>&1; then
+                log "artifact check: SHA256 pin source is reachable"
+            else
+                warn "artifact check: SHA256 pin source is not reachable from this host"
+                failures=$((failures + 1))
+            fi
         fi
     fi
 
@@ -201,8 +275,11 @@ import sys
 
 pool = sys.argv[1]
 host, port = pool.rsplit(":", 1) if ":" in pool else (pool, "3333")
-with socket.create_connection((host, int(port)), timeout=5):
-    pass
+try:
+    with socket.create_connection((host, int(port)), timeout=5):
+        pass
+except Exception:
+    sys.exit(1)
 PY
         then
             log "network check: stratum TCP ${POOL} reachable"
@@ -245,9 +322,31 @@ fi
 log "DEXBTX miner installer — release ${PREBUILDS_TAG}"
 
 OS="$(uname -s)"
+ARCH="$(uname -m 2>/dev/null || echo unknown)"
+if [[ -z "$SOLVER_BACKEND" ]]; then
+    if [[ "$OS" == "Darwin" ]]; then
+        SOLVER_BACKEND="metal"
+    else
+        SOLVER_BACKEND="cuda"
+    fi
+fi
 case "$OS" in
-    Linux)  : ;;
-    Darwin) warn "macOS detected. Solver supports Metal backend (M-series only); NVIDIA path will not run." ;;
+    Linux)
+        if [[ "$SOLVER_BACKEND" == "metal" || "$SOLVER_BACKEND" == "mlx" ]]; then
+            err "${SOLVER_BACKEND} backend is for Apple Silicon macOS. Use --solver-backend cuda on Linux."
+        fi
+        ;;
+    Darwin)
+        if [[ "$ARCH" != "arm64" ]]; then
+            err "macOS mining path requires Apple Silicon. Intel Macs are only useful for docs and wallet setup."
+        fi
+        if [[ "$SOLVER_BACKEND" != "metal" && "$SOLVER_BACKEND" != "mlx" ]]; then
+            err "macOS requires --solver-backend metal or --solver-backend mlx"
+        fi
+        if [[ -z "$LOCAL_SOLVER" && "$SOLVER_URL" == "$DEFAULT_SOLVER_URL" ]]; then
+            err "macOS requires --local-solver /path/to/macos/btx-gbt-solve until an official Mac release artifact is pinned. See MAC_SETUP.md."
+        fi
+        ;;
     *)      err "unsupported OS: $OS" ;;
 esac
 
@@ -261,13 +360,21 @@ if command -v nvidia-smi >/dev/null 2>&1; then
         log "detected NVIDIA GPU: ${GPU_NAME}"
     fi
 fi
-if [[ "$HAS_NVIDIA" -eq 0 ]]; then
+if [[ "$HAS_NVIDIA" -eq 0 && "$SOLVER_BACKEND" == "cuda" ]]; then
     warn "no NVIDIA GPU detected — solver will run on CPU only (much slower)"
+elif [[ "$OS" == "Darwin" ]]; then
+    if command -v system_profiler >/dev/null 2>&1; then
+        GPU_NAME="$(system_profiler SPDisplaysDataType 2>/dev/null | awk -F: '/Chipset Model/ {gsub(/^[ \t]+/, "", $2); print $2; exit}' || true)"
+    fi
+    GPU_NAME="${GPU_NAME:-Apple Silicon unified GPU}"
+    log "detected Apple Silicon GPU path: ${GPU_NAME} (${SOLVER_BACKEND})"
 fi
 
 # Python
 need curl
-need sha256sum
+if ! command -v sha256sum >/dev/null 2>&1 && ! command -v shasum >/dev/null 2>&1; then
+    err "missing required tool: sha256sum or shasum"
+fi
 
 PYTHON=""
 for cand in python3.11 python3.10 python3; do
@@ -299,8 +406,11 @@ import sys
 
 pool = sys.argv[1]
 host, port = pool.rsplit(":", 1) if ":" in pool else (pool, "3333")
-with socket.create_connection((host, int(port)), timeout=5):
-    pass
+try:
+    with socket.create_connection((host, int(port)), timeout=5):
+        pass
+except Exception:
+    sys.exit(1)
 PY
 then
     err "stratum pool ${POOL} is not reachable yet. The BTX Start backend is still provisioning; run --preflight again before installing."
@@ -347,7 +457,7 @@ fi
 # Unless the user passed EXPECTED_SHA256 via env var (offline / fork use),
 # fetch the pyproject.toml from the release tag and extract the pinned hash.
 # This keeps install.sh + pyproject.toml + SHA256SUMS from drifting.
-if [[ -z "${EXPECTED_SHA256:-}" ]]; then
+if [[ -z "${EXPECTED_SHA256:-}" && ! ( -n "$LOCAL_SOLVER" && "$TRUST_LOCAL_SOLVER" -eq 1 ) ]]; then
     log "fetching solver SHA256 pin from ${PYPROJECT_URL}..."
     PYPROJECT_TMP="$(mktemp)"
     if ! curl -fsSL "$PYPROJECT_URL" -o "$PYPROJECT_TMP"; then
@@ -360,6 +470,9 @@ if [[ -z "${EXPECTED_SHA256:-}" ]]; then
         err "could not extract a 64-char SHA256 from pyproject.toml; got: ${EXPECTED_SHA256:-<empty>}"
     fi
     log "pinned solver SHA256 (from pyproject.toml): $EXPECTED_SHA256"
+fi
+if [[ -n "$LOCAL_SOLVER" && "$TRUST_LOCAL_SOLVER" -eq 1 ]]; then
+    warn "local solver trust mode enabled; install.sh will print the SHA256 but cannot compare this binary to the pinned Linux release hash."
 fi
 
 # ─── Fetch + verify solver ──────────────────────────────────────────────────
@@ -375,11 +488,14 @@ else
     curl -fsSL "$SOLVER_URL" -o "$TMP"
 fi
 
-ACTUAL_SHA="$(sha256sum "$TMP" | awk '{print $1}')"
-if [[ "$ACTUAL_SHA" != "$EXPECTED_SHA256" ]]; then
+ACTUAL_SHA="$(sha256_file "$TMP")"
+if [[ -n "$LOCAL_SOLVER" && "$TRUST_LOCAL_SOLVER" -eq 1 ]]; then
+    log "local solver SHA256: ${ACTUAL_SHA}"
+elif [[ "$ACTUAL_SHA" != "$EXPECTED_SHA256" ]]; then
     err "solver SHA256 mismatch — expected $EXPECTED_SHA256, got $ACTUAL_SHA. Aborting (refusing to install untrusted binary)."
+else
+    log "solver SHA256 verified ($EXPECTED_SHA256)"
 fi
-log "solver SHA256 verified ($EXPECTED_SHA256)"
 
 install -m 0755 "$TMP" "$SOLVER_PATH"
 log "solver installed → $SOLVER_PATH"
@@ -446,7 +562,24 @@ if [[ ! -f "$CONFIG_PATH" || "$ASSUME_YES" -eq 1 ]]; then
     GPU_PREFETCH=8
     GPU_WORKERS=8
     GPU_THREADS=4
-    if [[ "$GPU_NAME" == *"GTX 10"* || "$GPU_NAME" == *"GTX 9"* ]]; then
+    if [[ "$SOLVER_BACKEND" == "metal" || "$SOLVER_BACKEND" == "mlx" ]]; then
+        CPU_COUNT="$(getconf _NPROCESSORS_ONLN 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 8)"
+        GPU_BATCH=64
+        GPU_PREFETCH=4
+        GPU_WORKERS=6
+        GPU_THREADS=4
+        if [[ "$CPU_COUNT" -ge 28 ]]; then
+            # Mac Studio / Mac Pro Ultra-class machines. Keep
+            # workers+threads <= observed CPU count so developer machines
+            # remain responsive while benchmarking.
+            GPU_WORKERS=24
+            GPU_THREADS=8
+        elif [[ "$CPU_COUNT" -ge 16 ]]; then
+            # Max-class Apple Silicon machines.
+            GPU_WORKERS=12
+            GPU_THREADS=4
+        fi
+    elif [[ "$GPU_NAME" == *"GTX 10"* || "$GPU_NAME" == *"GTX 9"* ]]; then
         # Pascal sm_61 (e.g. GTX 1070): memory-bound. Measured ceiling
         # ~83% util / 113W (75% of 150W TDP) at 16/8/128 — same ceiling
         # as the older 4/4/32 profile in practice; Pascal is bandwidth-
@@ -547,7 +680,7 @@ worker_name: "${WORKER}"
 gbt_solve_path: "${SOLVER_PATH}"
 
 # Solver tuning (per-GPU profile chosen from detected hardware: ${GPU_NAME:-CPU only})
-solver_backend: "cuda"
+solver_backend: "${SOLVER_BACKEND}"
 solver_prepare_workers: ${GPU_WORKERS} # BTX_MATMUL_PREPARE_WORKERS (KEY LEVER — bump together with threads)
 solver_threads: ${GPU_THREADS}         # BTX_MATMUL_SOLVER_THREADS  (KEY LEVER — bump together with workers)
 solver_batch_size: ${GPU_BATCH}        # BTX_MATMUL_SOLVE_BATCH_SIZE
@@ -696,6 +829,37 @@ This install cannot proceed at this throughput."
     log "  throughput: ${THROUGHPUT_N_S} N/s"
 fi
 
+if [[ "$OS" == "Darwin" && ( "$SOLVER_BACKEND" == "metal" || "$SOLVER_BACKEND" == "mlx" ) ]]; then
+    log "running Apple Silicon ${SOLVER_BACKEND} solver smoke test (functional JSON check)..."
+    MAC_SMOKE_OUT="$(BTX_MATMUL_BACKEND="$SOLVER_BACKEND" \
+        BTX_MATMUL_GPU_INPUTS=0 \
+        BTX_MATMUL_SOLVE_BATCH_SIZE="${GPU_BATCH:-64}" \
+        BTX_MATMUL_PREPARE_PREFETCH_DEPTH="${GPU_PREFETCH:-4}" \
+        BTX_MATMUL_PREPARE_WORKERS="${GPU_WORKERS:-6}" \
+        BTX_MATMUL_PIPELINE_ASYNC=1 \
+        "$SOLVER_PATH" \
+        --version 536870912 \
+        --prev-hash 0ab38fdff2ef667dcddac7f50c3696080c26697615f7b6b9af5c3a1ba0a5fb7e \
+        --merkle-root d906f02ed11d8936770423263b56c5ffe1ea1b15c8a2867afb161adb6fd76eb7 \
+        --time 1779672814 --bits 0x1d17c609 \
+        --share-target 00ffffff00000000000000000000000000000000000000000000000000000000 \
+        --seed-a 8460daf3ff446cc55a7115de88ee24c8a2bf182eedde43abb9cf4cc94cc209bf \
+        --seed-b 7f2e377616feb92d2e9857cab390595b7d6b8d24373a2da394f8d97197b5f437 \
+        --block-height 110806 \
+        --matmul-n 512 --matmul-b 16 --matmul-r 8 --epsilon-bits 18 \
+        --nonce-start 1 \
+        --max-tries 100000000 --max-seconds 8 \
+        --backend "$SOLVER_BACKEND" --solver-threads "${GPU_THREADS:-4}" --batch-size "${GPU_BATCH:-64}" 2>&1 || true)"
+    MAC_SMOKE_LAST_LINE="$(echo "$MAC_SMOKE_OUT" | grep -E '^\{.*\}$' | tail -1)"
+    if [[ -z "$MAC_SMOKE_LAST_LINE" ]]; then
+        echo "$MAC_SMOKE_OUT" | tail -12 >&2
+        err "Apple Silicon solver smoke test produced no JSON output. Check that your local btx-gbt-solve binary supports --backend ${SOLVER_BACKEND}."
+    fi
+    log "Apple Silicon solver smoke test PASS:"
+    log "  backend: ${SOLVER_BACKEND}"
+    log "  response: ${MAC_SMOKE_LAST_LINE}"
+fi
+
 # ─── Summary ────────────────────────────────────────────────────────────────
 echo
 log "✓ DEXBTX miner installed."
@@ -704,6 +868,7 @@ echo "  Pool:     ${POOL}"
 echo "  Address:  ${ADDRESS:-<edit ${CONFIG_PATH} and set payout_address>}"
 echo "  Worker:   ${WORKER}"
 echo "  GPU:      ${GPU_NAME:-CPU only}"
+echo "  Backend:  ${SOLVER_BACKEND}"
 echo
 echo "Launch the miner:"
 echo "  dexbtx-miner --config ${CONFIG_PATH}"
@@ -716,7 +881,12 @@ echo "Stats + payouts: https://drinknile.com/#dashboard"
 echo
 echo "Tune for your specific GPU (the defaults are a starting point — every"
 echo "card has a different sweet spot):"
-echo "  dexbtx-miner benchmark                  # 2-min sweep across common batch sizes"
-echo "  dexbtx-miner benchmark --write-config   # write the winning config"
+if [[ "$OS" == "Darwin" ]]; then
+    echo "  dexbtx-miner benchmark --backend ${SOLVER_BACKEND} --threads ${GPU_THREADS:-4} --workers 6,12,24 --batches 32,64,128"
+    echo "  dexbtx-miner benchmark --backend ${SOLVER_BACKEND} --threads ${GPU_THREADS:-4} --workers 6,12,24 --batches 32,64,128 --write-config"
+else
+    echo "  dexbtx-miner benchmark                  # 2-min sweep across common batch sizes"
+    echo "  dexbtx-miner benchmark --write-config   # write the winning config"
+fi
 echo "See TUNING.md for the env-var reference + per-GPU rough guidelines."
 echo

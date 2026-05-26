@@ -17,7 +17,7 @@ this with sweeps over batch=32, 64, 128, 256, 512 on 4060 Ti and 5070).
 
 | Env var | What | Reasonable range | Universal default |
 |---|---|---|---|
-| `BTX_MATMUL_BACKEND` | Backend selection | `cuda` (NVIDIA), `metal` (Apple), `cpu` | `cuda` |
+| `BTX_MATMUL_BACKEND` | Backend selection | `cuda` (NVIDIA), `metal` / `mlx` (Apple Silicon), `cpu` | `cuda` on Linux, `metal` on Mac |
 | `BTX_MATMUL_GPU_INPUTS` | CPU vs GPU generates matmul inputs | `0` or `1` | **`0` (mandatory)** — CPU-gen is the "GPU saturation breakthrough"; without this every modern card caps at 8% util / 33W |
 | `BTX_MATMUL_SOLVE_BATCH_SIZE` | Nonces per kernel launch | 16 → 512 | **`128`** universally. Tested 64–512 on multiple cards; no measurable difference once `workers` is right. Avoid 256+ on 5070 Ti (broke CUDA historically). |
 | `BTX_MATMUL_PREPARE_PREFETCH_DEPTH` | Queue depth for matmul input prep | 4 → 16 | **`8`** is the universal sweet spot |
@@ -54,6 +54,21 @@ Cards not in the table (RTX 30-series consumer, 40-series consumer
 beyond 4060 Ti, 5080, 5090, H100, etc.): start at the **universal
 default** `workers=16 / threads=8 / batch=128 / prefetch=8` and run the
 benchmark. The installer auto-writes this profile for any unknown GPU.
+
+## Apple Silicon starting profiles
+
+Apple Silicon uses `BTX_MATMUL_BACKEND=metal` or `mlx`. These profiles are
+starting points, not measured yield guarantees:
+
+| Mac class | Starting profile |
+|---|---|
+| MacBook Air / base Mac mini | workers=6, threads=4, batch=64, prefetch=4 |
+| MacBook Pro Max / Mac Studio Max | workers=12, threads=4, batch=64, prefetch=4 |
+| Mac Studio Ultra / Mac Pro Ultra | workers=24, threads=8, batch=64, prefetch=4 |
+
+Mac setup requires a local Apple Silicon `btx-gbt-solve` binary until a
+Mac-specific release artifact is published and SHA256-pinned. See
+[MAC_SETUP.md](../MAC_SETUP.md).
 
 **Caveat on the "universal" framing**: on a host whose CPU is *much*
 slower than the GPU class (e.g. a 5070-class GPU paired with a

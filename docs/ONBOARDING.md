@@ -42,6 +42,7 @@ Three paths into the pool, in order of audience size:
 | You are… | Path |
 |---|---|
 | **Fresh starter** — empty Linux box, never mined BTX before | [Start here](#fresh-starter-empty-box) |
+| **Apple Silicon Mac** — MacBook Pro, Mac Studio, Mac Pro, Max, or Ultra | [Start here](../MAC_SETUP.md) |
 | **Converter** — already solo-mining BTX, want to pool instead | [Start here](#converter-already-solo-mining) |
 | **Self-hoster** — running your own btxd, want pool-mining alongside it | [Start here](#self-hoster-pool-mining-alongside-your-own-btxd) |
 
@@ -55,8 +56,9 @@ You have a Linux machine with an NVIDIA GPU (Pascal GTX 1070 through Blackwell R
 
 ### Prerequisites
 
-- Linux (Ubuntu 22.04+ tested; other distros likely work) or macOS, or Windows via WSL2
-- NVIDIA driver ≥ 565 (`nvidia-smi --query-gpu=driver_version --format=csv,noheader`)
+- Linux (Ubuntu 22.04+ tested; other distros likely work) or Windows via WSL2 for the CUDA path
+- NVIDIA driver ≥ 565 (`nvidia-smi --query-gpu=driver_version --format=csv,noheader`) for the CUDA path
+- Apple Silicon macOS for the Metal path, with a local Mac-capable solver; see [MAC_SETUP.md](../MAC_SETUP.md)
 - ~500 MB free disk
 - Stable internet route to `stratum.drinknile.com:3333` (no Tailscale or VPN required)
 - A BTX payout address — see [Getting a BTX address](#getting-a-btx-address) below if you don't have one

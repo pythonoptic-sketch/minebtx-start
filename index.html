@@ -22,6 +22,7 @@
         <a href="#status">Status</a>
         <a href="#start">Start</a>
         <a href="#local-laptop">Laptop first</a>
+        <a href="#mac-setup">Mac setup</a>
         <a href="#compatibility">Compatibility</a>
         <a href="#gpu-ranking">GPU ranking</a>
         <a href="#rent-gpu">Rent GPUs</a>
@@ -123,6 +124,7 @@
               and run the preflight on a Linux machine with an NVIDIA GPU. The
               installer is already wired to the first-party BTX Start stratum
               target and will fail loudly until that backend is reachable.
+              Apple Silicon users should use the dedicated Mac setup below.
             </p>
           </div>
           <div class="flow-grid" aria-label="How mining works">
@@ -246,8 +248,8 @@
             </article>
             <article class="local-card">
               <span class="metric-label">MacBook / CPU-only</span>
-              <strong>Learn mode</strong>
-              <p>The public one-line miner path is not a profitable CPU-only or Apple Silicon path yet. Use the laptop to read the repo, run preflight, prepare the wallet, and understand the logs before scaling.</p>
+              <strong>Metal path</strong>
+              <p>Apple Silicon has a dedicated Metal setup. It requires a Mac-capable local solver until an official Mac release artifact is pinned.</p>
             </article>
           </div>
 
@@ -342,6 +344,148 @@
         </div>
       </section>
 
+      <section class="band mac-band" id="mac-setup" aria-labelledby="mac-setup-title">
+        <div class="section-inner">
+          <div class="split-heading">
+            <div>
+              <p class="eyebrow">Apple Silicon setup</p>
+              <h2 id="mac-setup-title">Dedicated Mac path for M-series and Ultra machines.</h2>
+            </div>
+            <p class="status-text">Metal backend, local solver, same personal BTX payout address.</p>
+          </div>
+
+          <div class="mac-grid" aria-label="Mac mining setup">
+            <article class="mac-card emphasis">
+              <span class="metric-label">Backend</span>
+              <strong>Metal</strong>
+              <p>Use <code>--solver-backend metal</code> on Apple Silicon. The miner writes <code>solver_backend: "metal"</code> into your local config.</p>
+            </article>
+            <article class="mac-card">
+              <span class="metric-label">Mac Ultra profile</span>
+              <strong>24 / 8</strong>
+              <p>Ultra-class machines start with 24 prepare workers and 8 solver threads when enough CPU cores are available, then benchmark locally.</p>
+            </article>
+            <article class="mac-card warning">
+              <span class="metric-label">Release artifact</span>
+              <strong>Local</strong>
+              <p>The public pinned solver is still the Linux/NVIDIA release. Mac users need to place a Mac-capable <code>btx-gbt-solve</code> binary locally first.</p>
+            </article>
+          </div>
+
+          <div class="local-steps mac-steps">
+            <article>
+              <span>01</span>
+              <div>
+                <h3>Install Mac developer tools</h3>
+                <p>Install Xcode command line tools, Homebrew packages, Python, and tmux so the miner can run and stay attached.</p>
+              </div>
+            </article>
+            <article>
+              <span>02</span>
+              <div>
+                <h3>Install the Mac solver</h3>
+                <p>Copy or build a patched Apple Silicon <code>btx-gbt-solve</code> with <code>--share-target</code>, <code>--daemon</code>, and Metal support.</p>
+              </div>
+            </article>
+            <article>
+              <span>03</span>
+              <div>
+                <h3>Run Metal preflight</h3>
+                <p>Preflight checks macOS, Apple Silicon, the local solver, address format, and stratum reachability without installing over your config.</p>
+              </div>
+            </article>
+            <article>
+              <span>04</span>
+              <div>
+                <h3>Benchmark before scaling</h3>
+                <p>Use the benchmark to find your MacBook, Max, or Ultra sweet spot. Real accepted-share rate matters more than model name.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="local-command-grid mac-command-grid" aria-label="Mac setup commands">
+            <div class="command-block">
+              <div>
+                <h3>Mac tools</h3>
+                <p>Run once on a fresh Apple Silicon machine.</p>
+              </div>
+              <div class="command-panel">
+                <code id="mac-tools-command">xcode-select --install; brew install python coreutils tmux</code>
+                <button class="icon-button" type="button" data-copy-target="mac-tools-command" aria-label="Copy Mac tools command">
+                  <span aria-hidden="true">Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="command-block">
+              <div>
+                <h3>Solver location</h3>
+                <p>Place the Mac-capable solver here before running the install command.</p>
+              </div>
+              <div class="command-panel">
+                <code id="mac-solver-command">mkdir -p "$HOME/.dexbtx-miner/bin" && cp /path/to/macos/btx-gbt-solve "$HOME/.dexbtx-miner/bin/btx-gbt-solve" && chmod +x "$HOME/.dexbtx-miner/bin/btx-gbt-solve"</code>
+                <button class="icon-button" type="button" data-copy-target="mac-solver-command" aria-label="Copy Mac solver command">
+                  <span aria-hidden="true">Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="command-block">
+              <div>
+                <h3>Metal preflight</h3>
+                <p>Safe first check for Mac Studio, Mac Pro, MacBook Pro, and Mac mini users.</p>
+              </div>
+              <div class="command-panel">
+                <code id="mac-preflight-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --solver-backend metal --local-solver "$HOME/.dexbtx-miner/bin/btx-gbt-solve" --trust-local-solver --worker 'mac-ultra'</code>
+                <button class="icon-button" type="button" data-copy-target="mac-preflight-command" aria-label="Copy Mac preflight command">
+                  <span aria-hidden="true">Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="command-block">
+              <div>
+                <h3>Install on Apple Silicon</h3>
+                <p>Mines to the BTX address above and writes a Metal config. It does not touch your personal mining wallet.</p>
+              </div>
+              <div class="command-panel">
+                <code id="mac-install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'mac-ultra' --solver-backend metal --local-solver "$HOME/.dexbtx-miner/bin/btx-gbt-solve" --trust-local-solver</code>
+                <button class="icon-button" type="button" data-copy-target="mac-install-command" aria-label="Copy Mac install command">
+                  <span aria-hidden="true">Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="command-block">
+              <div>
+                <h3>Benchmark Metal</h3>
+                <p>Use this before renting or buying more compute.</p>
+              </div>
+              <div class="command-panel">
+                <code id="mac-benchmark-command">dexbtx-miner benchmark --backend metal --threads 8 --workers 6,12,24 --batches 32,64,128 --write-config</code>
+                <button class="icon-button" type="button" data-copy-target="mac-benchmark-command" aria-label="Copy Mac benchmark command">
+                  <span aria-hidden="true">Copy</span>
+                </button>
+              </div>
+            </div>
+            <div class="command-block">
+              <div>
+                <h3>Run and watch</h3>
+                <p>Keep the miner visible in tmux and follow accepted shares.</p>
+              </div>
+              <div class="command-panel">
+                <code id="mac-run-command">tmux new -d -s dexbtx 'dexbtx-miner --config ~/.dexbtx-miner/config.yaml 2>&1 | tee -a ~/.dexbtx-miner/miner.log' && tmux attach -t dexbtx</code>
+                <button class="icon-button" type="button" data-copy-target="mac-run-command" aria-label="Copy Mac run command">
+                  <span aria-hidden="true">Copy</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="formula-panel compact-formula">
+            <p>
+              Mac transparency note: the site now supports a first-class Apple Silicon setup flow, but the official hosted release artifact is still not marked as a verified Mac binary. Until that release exists, the Mac path intentionally requires a local solver and prints its SHA256 during install.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section class="band release-band" id="compatibility" aria-labelledby="release-title">
         <div class="section-inner">
           <div class="split-heading">
@@ -402,6 +546,11 @@
                   <td>Blackwell, RTX 50-series</td>
                   <td>Native sm_120 cubin</td>
                   <td>The installer chooses higher worker/thread defaults for faster cards.</td>
+                </tr>
+                <tr>
+                  <td>Apple Silicon, M-series / Ultra</td>
+                  <td>Metal backend with local Mac solver</td>
+                  <td>Use the dedicated Mac setup until a verified Mac release artifact is pinned.</td>
                 </tr>
               </tbody>
             </table>

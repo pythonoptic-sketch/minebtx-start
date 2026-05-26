@@ -332,6 +332,12 @@ main {
     #0b1016;
 }
 
+.mac-band {
+  background:
+    linear-gradient(90deg, rgba(91, 216, 120, 0.045), transparent 46%),
+    #0c1218;
+}
+
 .operational-band {
   background:
     linear-gradient(90deg, rgba(52, 211, 200, 0.04), transparent 46%),
@@ -567,14 +573,16 @@ main {
     #0c1117;
 }
 
-.local-grid {
+.local-grid,
+.mac-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   margin-bottom: 18px;
 }
 
-.local-card {
+.local-card,
+.mac-card {
   min-width: 0;
   padding: 22px;
   background: var(--bg-panel);
@@ -582,12 +590,18 @@ main {
   border-radius: 8px;
 }
 
-.local-card.emphasis {
+.local-card.emphasis,
+.mac-card.emphasis {
   border-color: rgba(91, 216, 120, 0.5);
   box-shadow: inset 0 0 0 1px rgba(91, 216, 120, 0.12);
 }
 
-.local-card strong {
+.mac-card.warning {
+  border-color: rgba(217, 164, 65, 0.48);
+}
+
+.local-card strong,
+.mac-card strong {
   display: block;
   margin-bottom: 10px;
   color: var(--cyan);
@@ -595,16 +609,23 @@ main {
   line-height: 1;
 }
 
-.local-card.emphasis strong {
+.local-card.emphasis strong,
+.mac-card.emphasis strong {
   color: var(--green);
 }
 
-.local-card p {
+.mac-card.warning strong {
+  color: var(--amber);
+}
+
+.local-card p,
+.mac-card p {
   margin-bottom: 0;
   color: var(--muted);
 }
 
-.local-card code {
+.local-card code,
+.mac-card code {
   padding: 2px 5px;
   border: 1px solid var(--line);
   border-radius: 5px;
@@ -653,6 +674,10 @@ main {
 
 .local-command-grid .command-block {
   margin-top: 0;
+}
+
+.mac-steps {
+  margin-top: 4px;
 }
 
 .tracking-grid {
@@ -1439,6 +1464,7 @@ tr:last-child td {
   .stat-grid,
   .tracking-grid,
   .local-grid,
+  .mac-grid,
   .local-steps,
   .local-command-grid,
   .status-grid,
@@ -1552,6 +1578,7 @@ tr:last-child td {
   .stat-grid,
   .tracking-grid,
   .local-grid,
+  .mac-grid,
   .local-steps,
   .local-command-grid,
   .status-grid,

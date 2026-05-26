@@ -60,6 +60,8 @@ def _build_config(args: argparse.Namespace) -> MinerConfig:
         cfg.worker_name = args.worker
     if args.gbt_solve is not None:
         cfg.gbt_solve_path = args.gbt_solve
+    if args.backend is not None:
+        cfg.solver_backend = args.backend
     if args.threads is not None:
         cfg.solver_threads = args.threads
     if args.batch_size is not None:
@@ -89,6 +91,8 @@ def _make_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--address", help="Your btx1z... payout address")
     ap.add_argument("--worker", help="Worker name (default: 'default')")
     ap.add_argument("--gbt-solve", help="Path to btx-gbt-solve binary")
+    ap.add_argument("--backend", choices=["cuda", "metal", "mlx", "cpu"],
+                    help="BTX_MATMUL_BACKEND; cuda for NVIDIA, metal/mlx for Apple Silicon")
     ap.add_argument("--threads", type=int,
                     help="BTX_MATMUL_SOLVER_THREADS — KEY LEVER (with --prepare-workers); canonical 8")
     ap.add_argument("--prepare-workers", type=int,
@@ -113,9 +117,9 @@ async def _run(cfg: MinerConfig) -> int:
     log.info("dexbtx-miner starting")
     log.info("  pool=%s:%d tls=%s", cfg.pool_host, cfg.pool_port, cfg.pool_tls)
     log.info("  worker=%s.%s", cfg.payout_address, cfg.worker_name)
-    log.info("  solver=%s threads=%s batch=%s gpu_inputs=%s",
-             cfg.gbt_solve_path, cfg.solver_threads,
-             cfg.solver_batch_size, cfg.gpu_inputs)
+    log.info("  solver=%s backend=%s threads=%s batch=%s gpu_inputs=%s",
+             cfg.gbt_solve_path, cfg.solver_backend,
+             cfg.solver_threads, cfg.solver_batch_size, cfg.gpu_inputs)
 
     client = StratumClient(cfg)
     try:

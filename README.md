@@ -11,6 +11,7 @@ proof-of-work.
 - **BTX Start platform fee**: 0.00% for 7 days per payout address, then 0.50% after backend launch
 - **Revenue model**: [REVENUE_MODEL.md](REVENUE_MODEL.md)
 - **GPU rentals**: [VAST_AI.md](VAST_AI.md)
+- **Apple Silicon setup**: [MAC_SETUP.md](MAC_SETUP.md)
 
 ---
 
@@ -97,6 +98,25 @@ tmux new -d -s dexbtx 'dexbtx-miner --config ~/.dexbtx-miner/config.yaml 2>&1 | 
 Within a minute you should see `share OK` lines in the log. Use the BTX Start
 site to track local miner signals, expected GPU yield, and aggregate network
 stats.
+
+## Apple Silicon Macs
+
+MacBook Pro, Mac Studio, Mac Pro, Max, and Ultra machines use the dedicated
+Metal path instead of the Linux/NVIDIA CUDA path:
+
+```bash
+curl -fsSL https://drinknile.com/install.sh | bash -s -- \
+  --preflight \
+  --solver-backend metal \
+  --local-solver "$HOME/.dexbtx-miner/bin/btx-gbt-solve" \
+  --trust-local-solver \
+  --address 'btx1z...YOUR_BTX_ADDRESS...' \
+  --worker 'mac-ultra'
+```
+
+The current pinned release artifact is still the Linux/NVIDIA solver. Mac
+users need a local Apple Silicon `btx-gbt-solve` binary until a Mac artifact is
+published and hash-pinned. See [MAC_SETUP.md](MAC_SETUP.md).
 
 ### Worker naming
 

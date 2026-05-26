@@ -29,7 +29,8 @@ class MinerConfig:
     gbt_solve_path: str = str(Path.home() / ".dexbtx-miner" / "bin" / "btx-gbt-solve")
 
     # Solver tuning. Universal canonical defaults for NVIDIA Pascal through
-    # Blackwell. The two key levers are solver_prepare_workers (CPU input
+    # Blackwell; the Mac installer overrides these for Apple Silicon Metal.
+    # The two key levers are solver_prepare_workers (CPU input
     # generators) and solver_threads (CPU solver workers); bump both first
     # if GPU util sustains below 95%. Batch size has no meaningful effect
     # on steady-state throughput once prep is sized correctly. See
