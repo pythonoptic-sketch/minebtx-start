@@ -12,12 +12,14 @@ ownership, dividends, or profit-sharing claims.
 
 - Platform fee wallet: pending creation
 - Target platform fee: `0.00%` / `0 bps`
-- Active backend fee: still controlled by the current backend
-- Active backend fee address: read from `stats-snapshot.json`
-- Active backend pending fee: read from `pool.pending_fee_sat`
+- Owned backend: provisioning
+- Active backend fee: `0.00%` launch policy
+- Backend fee address: pending dedicated first-party wallet
+- Backend pending fee: `0.00000000 BTX`
 
-The static site cannot redirect fees. Fee routing changes only when the pool
-backend is configured with the BTX Start fee address.
+The static site cannot redirect fees by itself. Fee routing becomes real only
+when the owned pool backend reports the same first-party fee address through
+`https://api.drinknile.com/stats`.
 
 Your personal mining address must stay a miner payout address only. It should
 never be reused as the pool fee address, treasury address, hot wallet, or payout

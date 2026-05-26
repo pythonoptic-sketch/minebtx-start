@@ -43,13 +43,15 @@ fi
 tmp="$(mktemp)"
 trap 'rm -f "$tmp"' EXIT
 
+stats_reachable=0
 if curl -fsSL "$STATS_URL" -o "$tmp"; then
+  stats_reachable=1
   pass "stats API reachable: $STATS_URL"
 else
   fail "stats API not reachable: $STATS_URL"
 fi
 
-if jq empty "$tmp" >/dev/null 2>&1; then
+if [ "$stats_reachable" -eq 1 ] && [ -s "$tmp" ] && jq empty "$tmp" >/dev/null 2>&1; then
   pass "stats API returned valid JSON"
 else
   fail "stats API did not return valid JSON"

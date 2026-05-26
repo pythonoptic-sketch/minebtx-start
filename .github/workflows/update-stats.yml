@@ -1,4 +1,4 @@
-name: Update BTX stats snapshot
+name: Update BTX Start stats snapshot
 
 on:
   workflow_dispatch:
@@ -22,8 +22,13 @@ jobs:
           import urllib.request
           from datetime import datetime, timezone
 
-          with urllib.request.urlopen("https://stats.minebtx.com/stats", timeout=20) as response:
-              data = json.load(response)
+          stats_url = "https://api.drinknile.com/stats"
+          try:
+              with urllib.request.urlopen(stats_url, timeout=20) as response:
+                  data = json.load(response)
+          except Exception as exc:
+              print(f"First-party stats API not ready: {exc}")
+              raise SystemExit(0)
 
           data["fetched_at"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 

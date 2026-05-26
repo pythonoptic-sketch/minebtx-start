@@ -52,11 +52,11 @@
       <div class="hero-telemetry" aria-label="Pool status summary">
         <div>
           <span class="metric-label">Workers now</span>
-          <strong id="workers-now">9</strong>
+          <strong id="workers-now">0</strong>
         </div>
         <div>
           <span class="metric-label">Blocks in 24h</span>
-          <strong id="blocks-24h">2</strong>
+          <strong id="blocks-24h">0</strong>
         </div>
         <div>
           <span class="metric-label">BTX Start fee</span>
@@ -91,6 +91,11 @@
               <strong>No signup</strong>
               <p>No account, email, custody, or bot is required to generate the miner command. The page does not store visitor input.</p>
             </article>
+            <article class="status-card warning">
+              <span class="metric-label">Owned backend</span>
+              <strong>Provisioning</strong>
+              <p>New installs target <code>stratum.drinknile.com:3333</code> so there is no later migration from the old pool.</p>
+            </article>
             <article class="status-card positive">
               <span class="metric-label">Mining progress</span>
               <strong>Visible</strong>
@@ -112,9 +117,9 @@
             <h2 id="quickstart-title">One address. One command. No account.</h2>
             <p>
               Paste your own BTX payout address, copy the generated command,
-              and run it on a Linux machine with an NVIDIA GPU. The installer
-              detects the GPU, downloads the solver, verifies the binary, writes
-              a tuned config, and runs a CUDA engagement smoke test.
+              and run the preflight on a Linux machine with an NVIDIA GPU. The
+              installer is already wired to the first-party BTX Start stratum
+              target and will fail loudly until that backend is reachable.
             </p>
           </div>
           <div class="flow-grid" aria-label="How mining works">
@@ -186,8 +191,8 @@
           </label>
           <div class="command-block">
             <div>
-              <h3>Install and start mining</h3>
-              <p>Downloads the miner package, verifies the solver hash, writes config, and runs the CUDA engagement smoke test.</p>
+              <h3>Install for BTX Start pool</h3>
+              <p>Downloads the miner package, verifies the solver hash, writes config for <code>stratum.drinknile.com:3333</code>, and runs the CUDA engagement smoke test.</p>
             </div>
             <div class="command-panel">
               <code id="install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
@@ -450,7 +455,7 @@
           <div class="split-heading">
             <div>
               <p class="eyebrow">Transparency</p>
-              <h2 id="transparency-title">What is visible, what is external.</h2>
+              <h2 id="transparency-title">What is visible, what is first-party.</h2>
             </div>
             <a class="text-link" href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">View our source</a>
           </div>
@@ -461,42 +466,43 @@
                 <li>Generate an install command from the visitor's BTX address and worker name.</li>
                 <li>Show searchable GPU profiles, expected BTX/hour, and visible yield assumptions.</li>
                 <li>Keep installer and source links inside our hosted funnel.</li>
-                <li>Show public pool data, payout policy, fee destinations, and remaining backend dependencies.</li>
+                <li>Show public pool data, payout policy, fee destinations, and backend readiness.</li>
               </ul>
             </article>
             <article class="transparency-card">
               <h3>This page does not</h3>
               <ul>
                 <li>Charge a BTX Start platform fee today.</li>
-                <li>Run an independent stratum pool, payout wallet, per-wallet dashboard, or BTX node yet.</li>
+                <li>Route new miners through the old pool by default.</li>
                 <li>Custody funds, collect addresses, or store visitor input.</li>
-                <li>Guarantee a user's GPU, driver, network, or external service uptime.</li>
+                <li>Guarantee a user's GPU, driver, network, or backend uptime before the cutover checks pass.</li>
               </ul>
             </article>
             <article class="transparency-card">
               <h3>Fee and treasury</h3>
               <dl>
                 <div>
-                  <dt>Current backend fee</dt>
-                  <dd id="backend-policy-fee">2.50%</dd>
+                  <dt>Owned backend fee</dt>
+                  <dd id="backend-policy-fee">0.00%</dd>
                 </div>
                 <div>
                   <dt>Fee address</dt>
-                  <dd><code id="fee-address">btx1zqzv4vgyhzyqqrkccxre0r4wgq9awwp6kjsdj6n8tfa0em0lfm22safa89n</code></dd>
+                  <dd><code id="fee-address">Pending first-party backend</code></dd>
                 </div>
                 <div>
                   <dt>Treasury address</dt>
-                  <dd><code id="treasury-address">btx1zatnjdqpw4cjswjeajst5lkj8mrdsj8mhgzu3emycncuctfrtqmzst94c6s</code></dd>
+                  <dd><code id="treasury-address">Pending first-party backend</code></dd>
                 </div>
               </dl>
             </article>
             <article class="transparency-card">
-              <h3>Current backend dependencies</h3>
+              <h3>First-party backend targets</h3>
               <ul class="service-list">
                 <li><a href="install.sh">Installer</a><span>Our GitHub Pages</span></li>
                 <li><a href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">Miner source</a><span>Our fork</span></li>
-                <li><span>Stratum endpoint</span><span>Existing BTX backend</span></li>
-                <li><span>Per-wallet dashboard</span><span>BTX Start backend needed</span></li>
+                <li><span>Stratum endpoint</span><span>stratum.drinknile.com:3333</span></li>
+                <li><span>Stats API</span><span>api.drinknile.com/stats</span></li>
+                <li><span>Per-wallet dashboard</span><span>BTX Start backend in progress</span></li>
               </ul>
             </article>
           </div>
@@ -543,17 +549,17 @@
               <p id="platform-notice">Treasury spending does not create miner ownership, dividends, or profit-sharing claims.</p>
             </article>
             <article class="treasury-card">
-              <span class="metric-label">Current backend fee wallet</span>
-              <strong id="backend-fee-rate">2.50%</strong>
-              <p>This is the fee destination currently reported by the backend. It is shown so users can verify whether fee routing has actually moved.</p>
+              <span class="metric-label">First-party backend fee wallet</span>
+              <strong id="backend-fee-rate">0.00%</strong>
+              <p>This will show the fee destination reported by the owned backend once the stats API is live.</p>
               <dl>
                 <div>
                   <dt>Backend fee address</dt>
-                  <dd><code id="backend-fee-address">btx1zqzv4vgyhzyqqrkccxre0r4wgq9awwp6kjsdj6n8tfa0em0lfm22safa89n</code></dd>
+                  <dd><code id="backend-fee-address">Pending first-party backend</code></dd>
                 </div>
                 <div>
                   <dt>Backend pending fee</dt>
-                  <dd><code id="backend-fee-balance">1.50000250 BTX</code></dd>
+                  <dd><code id="backend-fee-balance">0.00000000 BTX</code></dd>
                 </div>
               </dl>
             </article>
@@ -577,9 +583,9 @@
               <p>No BTX Start platform fee while the product focus is making BTX mining easy to start and easy to observe.</p>
             </article>
             <article class="fee-model-card">
-              <span class="metric-label">Current backend fee</span>
-              <strong id="backend-live-fee">2.50%</strong>
-              <p>The existing stratum backend currently reports this separately. It remains backend-controlled until our own pool policy is deployed.</p>
+              <span class="metric-label">Owned backend fee</span>
+              <strong id="backend-live-fee">0.00%</strong>
+              <p>The first-party backend is configured for zero launch fee and must pass the cutover checks before the page marks it live.</p>
             </article>
             <article class="fee-model-card">
               <span class="metric-label">Customer priority</span>
@@ -632,7 +638,7 @@
             <article class="operating-card">
               <span class="metric-label">First fee</span>
               <strong>0.50%</strong>
-              <p>Only after public fee address, dashboard, and payout history are live. Stay below the existing 2.50% backend fee.</p>
+              <p>Only after public fee address, dashboard, and payout history are live. Keep launch at zero until trust is visible.</p>
             </article>
             <article class="operating-card">
               <span class="metric-label">Premium tools</span>

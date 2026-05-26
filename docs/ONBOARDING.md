@@ -28,10 +28,9 @@ by pointing your hashrate at DEXBTX:
 - **Simplicity.** Solo mining = run your own btxd (600 GB chainstate,
   manual peer wrangling, manual restart after reorg storms). Pooled
   mining = `curl | bash | mine`. One binary, one YAML, one tmux.
-- **Transparent pool economics.** 2.5% fee, weekly Friday 18:00 UTC
-  batched payouts, no minimum-payout threshold beyond the network dust
-  floor. Pool treasury + fee receiving addresses published on the
-  dashboard.
+- **Transparent pool economics.** BTX Start launch policy is 0.00% platform
+  fee. Payout policy, treasury, and fee receiving addresses must be published
+  through the first-party dashboard before the pool is marked live.
 
 ---
 
@@ -58,7 +57,7 @@ You have a Linux machine with an NVIDIA GPU (Pascal GTX 1070 through Blackwell R
 - Linux (Ubuntu 22.04+ tested; other distros likely work) or macOS, or Windows via WSL2
 - NVIDIA driver ≥ 565 (`nvidia-smi --query-gpu=driver_version --format=csv,noheader`)
 - ~500 MB free disk
-- Stable internet route to `stratum.minebtx.com:3333` (no Tailscale or VPN required)
+- Stable internet route to `stratum.drinknile.com:3333` (no Tailscale or VPN required)
 - A BTX payout address — see [Getting a BTX address](#getting-a-btx-address) below if you don't have one
 
 ### Install (one command)
@@ -173,7 +172,7 @@ The only conflict point is the GPU itself — if you were ALSO solo-mining (driv
 If your btxd is struggling for peers (the public DNS seeds are spotty), pull the pool's curated list:
 
 ```bash
-curl -s https://stratum.minebtx.com/api/peer_list \
+curl -s https://api.drinknile.com/peer_list \
   | jq -r '.peers[].addr' \
   | xargs -I {} btx-cli addnode {} add
 ```
@@ -274,7 +273,9 @@ own BTX wallet until BTX Start ships a first-party per-wallet dashboard.
 ## Operational notes
 
 ### Pool fee
-2.5% of each block reward goes to the pool treasury (transparently published on the dashboard). The remaining 97.5% distributes via PPLNS over the most recent 10,000 shares.
+BTX Start launch policy is 0.00% platform fee. If a later fee is enabled, it
+must route to a dedicated public platform address, not a personal mining
+address. PPLNS distribution should remain visible in the first-party dashboard.
 
 ### Payouts
 Every Friday 18:00 UTC. Single batched multi-output transaction (low on-chain fee per recipient). No minimum threshold — only the network dust floor (10K sats ≈ 0.0001 BTX). Below dust, your balance rolls over to the next week.
@@ -285,7 +286,11 @@ Pool share grows with the miner count; use the BTX Start network snapshot for
 current aggregate signals.
 
 ### Security: plaintext stratum & payout-address rewriting (v1 caveat)
-The v1 stratum endpoint at `stratum.minebtx.com:3333` is **plaintext TCP** — there is no TLS yet. On a hostile network (open Wi-Fi, untrusted ISP, MITM-able LAN), an on-path attacker could rewrite the `mining.authorize` message and substitute their own `btx1z…` payout address for yours — your hashrate would credit them, not you. TLS is on the immediate roadmap (Caddy TCP-proxy + cert). Until then, treat the network path between your miner and the pool as something you need to actually trust. If you're on a residential ISP or datacenter rental on a known network, this is fine in practice; if you're on a coffee-shop Wi-Fi, mine somewhere else.
+The v1 stratum endpoint at `stratum.drinknile.com:3333` is plaintext TCP unless
+TLS is enabled by the owned backend. On a hostile network, an on-path attacker
+could rewrite the `mining.authorize` message and substitute their own
+`btx1z...` payout address for yours. Treat TLS or a trusted network path as a
+production cutover requirement.
 
 ### How the pool de-conflicts nonce space across miners (technical aside)
 Every miner connects with the same `nonce_start=0` and grinds the same nominal nonce range. Why do they not collide on duplicate work? Because the pool gives each connection a **unique `extranonce1`** at subscribe time, then bakes that extranonce into the per-worker coinbase, then sends each worker a *pre-built* `merkle_root` in the `mining.notify`. Two workers searching `nonce=0..N` are computing matmul digests against *different* `merkle_root` inputs — so they're scanning genuinely different digest spaces despite using the same nonce range.

@@ -56,7 +56,7 @@ folder is only relevant if you're cutting a new release.
 5. **Publish via `publish-release.sh`:**
 
    ```bash
-   ./publish-release.sh dexbtx/minebtx v4.4-yourdescriptor
+   ./publish-release.sh pythonoptic-sketch/minebtx-start v4.4-yourdescriptor
    ```
 
 6. **Bump the pinned hash + tag** in the repo root's `install.sh`

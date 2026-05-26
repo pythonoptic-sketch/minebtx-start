@@ -84,7 +84,7 @@ def _make_argparser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="dexbtx-miner")
     ap.add_argument("--config", "-c", type=Path,
                     help="Optional YAML config (CLI flags override its values)")
-    ap.add_argument("--pool", help="Pool address as host:port, e.g. stratum.minebtx.com:3333")
+    ap.add_argument("--pool", help="Pool address as host:port, e.g. stratum.drinknile.com:3333")
     ap.add_argument("--tls", action="store_true", help="Use TLS to the pool")
     ap.add_argument("--address", help="Your btx1z... payout address")
     ap.add_argument("--worker", help="Worker name (default: 'default')")

@@ -5,7 +5,7 @@
 # this file is just a documented template for hand-editing.
 
 # ─── Pool connection ─────────────────────────────────────────────────────
-pool_host: "minebtx.com"
+pool_host: "stratum.drinknile.com"
 pool_port: 3333
 pool_tls: false
 

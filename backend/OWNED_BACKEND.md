@@ -2,8 +2,10 @@
 
 This project does not currently contain the private DEXBTX pool backend. The
 public `dexbtx/minebtx` repository only ships the miner client and installer.
-Do not switch visitors to `stratum.drinknile.com:3333` until a first-party
-stratum pool, payout engine, stats API, and BTX wallet/node are running.
+The installer is intentionally pointed at `stratum.drinknile.com:3333` before
+public mining launch. Do not mark the backend live, advertise active mining, or
+enable fees until a first-party stratum pool, payout engine, stats API, and BTX
+wallet/node are running.
 
 ## Non-Negotiable Wallet Separation
 
@@ -33,6 +35,8 @@ The owned backend should expose:
 stratum.drinknile.com:3333
 https://api.drinknile.com/stats
 ```
+
+DNS records are documented in `backend/DNS.md`.
 
 The public stats payload must include:
 
@@ -86,12 +90,9 @@ scripts/verify-owned-backend.sh
 
 Only after that passes:
 
-1. Change `DEFAULT_POOL` in `install.sh` to `stratum.drinknile.com:3333`.
-2. Change the live stats source from `stats-snapshot.json` to
-   `https://api.drinknile.com/stats`.
-3. Set `platform-treasury.json` `owned_backend_active` and `active` to `true`.
-4. Run installer preflight against the owned pool.
-5. Run one miner with a new test payout address and verify shares appear in
+1. Set `platform-treasury.json` `owned_backend_active` and `active` to `true`.
+2. Run installer preflight against the owned pool.
+3. Run one miner with a new test payout address and verify shares appear in
    the first-party dashboard.
 
 ## Deployment Blocker In This Workspace

@@ -1,6 +1,7 @@
 const siteBaseUrl = "https://drinknile.com";
 const installerUrl = `${siteBaseUrl}/install.sh`;
-const statsUrl = "stats-snapshot.json";
+const statsUrl = "https://api.drinknile.com/stats";
+const statsFallbackUrl = "stats-snapshot.json";
 const treasuryUrl = "platform-treasury.json";
 const placeholderAddress = "btx1z...YOUR_BTX_ADDRESS...";
 const blockRewardBtx = 20;
@@ -105,6 +106,16 @@ function setText(id, value) {
   }
 }
 
+function formatMaybeNumber(value, fallback = "0") {
+  const number = Number(value);
+  return Number.isFinite(number) ? formatNumber.format(number) : fallback;
+}
+
+function formatMaybeHashrate(value, fallback = "Pending") {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? formatHashrate(number) : fallback;
+}
+
 function formatHashrate(value) {
   if (!Number.isFinite(value)) return "Unknown";
   if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(2)}M n/s`;
@@ -113,8 +124,9 @@ function formatHashrate(value) {
 }
 
 function formatSatToBtx(value) {
-  if (!Number.isFinite(value)) return "Unknown";
-  return `${formatBtx.format(value / 100_000_000)} BTX`;
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "0.00000000 BTX";
+  return `${formatBtx.format(number / 100_000_000)} BTX`;
 }
 
 function formatBtxRate(value) {
@@ -151,44 +163,69 @@ async function hydrateStats() {
   const status = document.getElementById("stats-status");
 
   try {
-    const response = await fetch(statsUrl, { cache: "no-store" });
-    if (!response.ok) throw new Error(`Stats request failed: ${response.status}`);
-
-    const data = await response.json();
+    const result = await fetchStatsWithFallback();
+    const data = result.data;
     const pool = data.pool || {};
     const health = data.health || {};
     const btxd = health.btxd || {};
     const policy = data.policy || {};
 
-    setText("workers-now", formatNumber.format(pool.workers_active_now));
-    setText("blocks-24h", formatNumber.format(pool.blocks_found_24h));
-    const backendFeeBps = Number(policy.pool_fee_bps ?? 250);
+    setText("workers-now", formatMaybeNumber(pool.workers_active_now));
+    setText("blocks-24h", formatMaybeNumber(pool.blocks_found_24h));
+    const backendFeeBps = Number(policy.pool_fee_bps ?? 0);
     const backendFee = `${(backendFeeBps / 100).toFixed(2)}%`;
     currentNetworkHashNps = Number(pool.network_hash_nps || btxd.network_hash_ps) || currentNetworkHashNps;
+    const feeAddress = policy.fee_address || "Pending first-party backend";
+    const treasuryAddress = policy.treasury_address || "Pending first-party backend";
     setText("backend-live-fee", backendFee);
     setText("backend-policy-fee", backendFee);
-    setText("fee-address", policy.fee_address);
-    setText("treasury-address", policy.treasury_address);
-    setText("backend-fee-address", policy.fee_address);
-    setText("backend-treasury-address", policy.treasury_address);
+    setText("fee-address", feeAddress);
+    setText("treasury-address", treasuryAddress);
+    setText("backend-fee-address", feeAddress);
+    setText("backend-treasury-address", treasuryAddress);
     setText("backend-fee-balance", formatSatToBtx(pool.pending_fee_sat));
     setText("backend-fee-rate", backendFee);
-    setText("chain-height", formatNumber.format(btxd.blocks));
-    setText("workers-24h", formatNumber.format(pool.workers_active_24h));
-    setText("network-hash", formatHashrate(pool.network_hash_nps || btxd.network_hash_ps));
-    setText("node-peers", formatNumber.format(btxd.peers));
+    setText("chain-height", formatMaybeNumber(btxd.blocks));
+    setText("workers-24h", formatMaybeNumber(pool.workers_active_24h));
+    setText("network-hash", formatMaybeHashrate(pool.network_hash_nps || btxd.network_hash_ps));
+    setText("node-peers", formatMaybeNumber(btxd.peers));
     renderGpuRanking();
     renderOperatingModel();
 
     if (status) {
       const timestamp = data.fetched_at ? new Date(data.fetched_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "recently";
-      status.textContent = `Stats snapshot updated ${timestamp}`;
+      status.textContent = result.live
+        ? `First-party stats updated ${timestamp}`
+        : `Owned backend provisioning snapshot updated ${timestamp}`;
     }
   } catch (error) {
     if (status) {
-      status.textContent = "Live stats unavailable, showing latest bundled snapshot.";
+      status.textContent = "First-party stats unavailable. Backend is still provisioning.";
     }
   }
+}
+
+async function fetchStatsWithFallback() {
+  const urls = [
+    { url: statsUrl, live: true },
+    { url: statsFallbackUrl, live: false },
+  ];
+  let lastError = null;
+
+  for (const candidate of urls) {
+    try {
+      const response = await fetch(candidate.url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Stats request failed: ${response.status}`);
+      return {
+        data: await response.json(),
+        live: candidate.live,
+      };
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error("Stats unavailable");
 }
 
 async function hydrateTreasuryConfig() {
@@ -197,7 +234,7 @@ async function hydrateTreasuryConfig() {
     if (!response.ok) throw new Error(`Treasury request failed: ${response.status}`);
     const treasury = await response.json();
     const targetBps = Number(treasury.target_pool_fee_bps ?? 0);
-    const status = treasury.active ? "Connected" : "Pending";
+    const status = treasury.active ? "Connected" : "Provisioning";
 
     currentPlatformFeeBps = targetBps;
     setText("platform-treasury-status", status);

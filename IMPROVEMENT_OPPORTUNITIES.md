@@ -113,7 +113,7 @@ but the miner has no decision model.
 Implement:
 
 - `dexbtx-miner economics --json`
-- Pull pool stats from `https://stats.minebtx.com/stats` when available.
+- Pull pool stats from `https://api.drinknile.com/stats` when available.
 - Include network hash, pool share, active workers, blocks found, expected
   payout pool, fee, and tip age.
 - Optional local inputs: power watts, electricity price, GPU hourly opportunity

@@ -1,6 +1,6 @@
 {
   "name": "BTX Start Platform Treasury",
-  "status": "pending_wallet_creation",
+  "status": "backend_provisioning",
   "active": false,
   "owned_backend_active": false,
   "target_stratum_endpoint": "stratum.drinknile.com:3333",

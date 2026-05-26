@@ -3,23 +3,21 @@
 Snapshot inputs, fetched May 26, 2026:
 
 - Public page: https://drinknile.com/
-- Pool stats: https://stats.minebtx.com/stats
+- First-party stats target: https://api.drinknile.com/stats
 - BTX price model: https://btxprice.com/api/current.json
 - BTX forward model docs: https://btxprice.com/forward-market-price.md
 
 ## Current Observed State
 
-From `stats.minebtx.com/stats`:
+BTX Start is now configured for first-party backend cutover:
 
-- Current published pool fee: `250 bps` = `2.50%`
-- Active workers now: `9`
-- Active workers, 24h: `15`
-- Pool share of network: `0.498%`
-- Network hashrate: `2.27M n/s`
-- Current fee address:
-  `btx1zqzv4vgyhzyqqrkccxre0r4wgq9awwp6kjsdj6n8tfa0em0lfm22safa89n`
-- Current treasury address:
-  `btx1zatnjdqpw4cjswjeajst5lkj8mrdsj8mhgzu3emycncuctfrtqmzst94c6s`
+- Installer default pool: `stratum.drinknile.com:3333`
+- Public stats API target: `https://api.drinknile.com/stats`
+- Current launch pool fee: `0 bps` = `0.00%`
+- Active workers now: `0`
+- Active workers, 24h: `0`
+- Fee address: pending dedicated first-party backend wallet
+- Treasury address: pending dedicated first-party backend wallet
 
 From `btxprice.com/api/current.json`:
 
@@ -167,13 +165,13 @@ miners can focus on starting and observing the mining process.
 This repository is a static GitHub Pages starter site plus the miner client.
 It does not contain the live pool server configuration. The static site can
 show the recommendation, but the real pool fee remains whatever
-`stats.minebtx.com/stats` reports as `policy.pool_fee_bps`.
+`https://api.drinknile.com/stats` reports as `policy.pool_fee_bps`.
 
-The live backend also controls where the fee goes. In the latest checked
-backend response, `policy.pool_fee_bps` is `250`, so the active fee is 2.50%.
-The fee is paid to the backend-configured `policy.fee_address` and related
-treasury address, not to BTX Start unless those backend settings are moved
-under BTX Start control.
+The live backend also controls where the fee goes. The first-party launch
+policy is zero fee. The installer has been pointed at
+`stratum.drinknile.com:3333` so there is no migration from the old pool later,
+but public mining should wait until `scripts/verify-owned-backend.sh` passes
+against the production backend.
 
 BTX Start platform fee is currently 0.00%. If a platform fee is later enabled,
 it should route to a dedicated public platform treasury wallet, not a personal
@@ -190,5 +188,5 @@ pool_fee_bps = 0
 Then confirm the change with:
 
 ```bash
-curl -s https://stats.minebtx.com/stats | jq '.policy.pool_fee_bps'
+curl -s https://api.drinknile.com/stats | jq '.policy.pool_fee_bps'
 ```

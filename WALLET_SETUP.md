@@ -51,21 +51,21 @@ address until BTX Start ships a first-party per-wallet dashboard.
 ## 5. Current infrastructure status
 
 BTX Start now owns the public onboarding page and installer entry URL. It does
-not yet own an independent stratum pool, payout backend, stats API, per-wallet
-dashboard, or binary release pipeline.
+not yet mark the backend as live, but the default miner target is already the
+first-party stratum endpoint: `stratum.drinknile.com:3333`. This avoids moving
+miners from an old pool later.
 
-The current backend reports its fee policy through the stats snapshot. As of the
-latest checked snapshot, `pool_fee_bps` is `250`, meaning 2.50%. That fee goes
-to the backend-configured fee and treasury addresses, not to BTX Start unless
-those backend addresses and policy are moved under BTX Start control.
+The first-party stats target is `https://api.drinknile.com/stats`. Until that
+API is live, the site shows a provisioning snapshot with `pool_fee_bps = 0` and
+zero active workers.
 
 BTX Start should use a dedicated public platform treasury address for fees. The
 platform fee is intended to fund infrastructure, security, miner tooling, and
 collectively selected new BTX projects. It should not be a personal day-to-day
 wallet, and it should not imply miner ownership, dividends, or profit-sharing.
 
-Until those are deployed, mining still depends on the existing BTX backend
-configured by the installer. To become a fully independent competitor, the next
-step is to deploy our own stratum endpoint, stats API, payout wallet,
-per-wallet dashboard, and release artifacts, then point the installer at those
-services.
+Before announcing the pool as live, deploy the stratum endpoint, stats API,
+payout wallet, per-wallet dashboard, and release artifacts, then run
+`scripts/verify-owned-backend.sh`. Your personal mining address must stay a
+miner payout address only; never use it as the backend fee wallet, treasury
+wallet, hot wallet, or payout aggregation wallet.

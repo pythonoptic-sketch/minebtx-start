@@ -43,11 +43,11 @@ had already begun. BTX Start should answer them before installation.
   the upstream source tarball.
 - Kept the solver binary as an explicit backend/artifact dependency until BTX
   Start publishes its own signed release artifacts.
-- Added `stats-snapshot.json` plus a GitHub Action so the page reads stats from
-  our own origin rather than sending every browser directly to the current
-  backend stats API.
-- Added an operating-status section that separates "can mine now" from
-  "BTX Start receives the fee."
+- Added `stats-snapshot.json` plus a GitHub Action that targets the
+  first-party stats API and leaves the provisioning snapshot in place until
+  `https://api.drinknile.com/stats` is live.
+- Added an operating-status section that separates first-party backend
+  provisioning from wallet ownership and fee policy.
 - Added `platform-treasury.json` so the public page can show the BTX Start fee
   wallet status, target fee, intended use of funds, and wallet balance once
   connected.
@@ -64,6 +64,11 @@ had already begun. BTX Start should answer them before installation.
   gates, future 0.50% / 1.00% fee scenarios, and optional premium tools.
 - Added `backend/platform-revenue-policy.example.json` and `REVENUE_MODEL.md`
   so fee activation rules are explicit and machine-readable.
+- Pointed the default installer pool at `stratum.drinknile.com:3333` before
+  public launch so future miners do not need to migrate from another backend.
+- Added `backend/OWNED_BACKEND.md` and `scripts/verify-owned-backend.sh` to
+  block cutover unless the first-party stats API, stratum endpoint, zero-fee
+  policy, and protected personal-address checks pass.
 
 ## Next backend work
 
@@ -79,10 +84,9 @@ frontend:
   onboarding remains the priority.
 - Keep the platform fee at 0 bps until all activation gates in
   `backend/platform-revenue-policy.example.json` are complete.
-- Replace the installer default pool host with the BTX Start stratum host.
 - Build a first-party per-wallet dashboard backed by our own share/payout index.
 
 Until those are deployed, the honest user experience is: BTX Start controls the
-onboarding page, installer entrypoint, docs, and package fork. The mining
-backend, fee destination, per-wallet web dashboard, and solver release artifacts
-are still dependencies.
+onboarding page, installer entrypoint, docs, package fork, and first-party
+target hostnames. The stratum process, stats API, payout engine, per-wallet web
+dashboard, and solver release artifacts still need production deployment.

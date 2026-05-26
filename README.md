@@ -6,7 +6,9 @@ proof-of-work.
 
 - **BTX Start site**: https://drinknile.com/
 - **Installer URL**: https://drinknile.com/install.sh
-- **BTX Start platform fee**: 0.00%, pending backend pool-policy ownership
+- **Default stratum target**: `stratum.drinknile.com:3333`
+- **Stats API target**: `https://api.drinknile.com/stats`
+- **BTX Start platform fee**: 0.00%, pending first-party backend launch
 - **Revenue model**: [REVENUE_MODEL.md](REVENUE_MODEL.md)
 
 ---
@@ -19,18 +21,14 @@ solo — but variance is high; you can go 3 weeks without one. PPLNS pays
 you continuously based on the shares you submit, so income tracks your
 actual hashrate rather than your luck. The pool eats the variance.
 
-**Block propagation that actually wins races.** BTX's P2P mesh is small
-and slow — every minute we tested, our orphan rate ran 30-40% on raw
-internet routing. The pool runs a dedicated **block-forwarder** (with
-ancestor push) that pushes wins straight into the highest-connectivity
-peers on the network the instant the solver returns. We dropped fleet
-orphan rate from ~38% to under 5% with this single piece of plumbing.
-You inherit that propagation just by pointing your miner at us.
+**Block propagation as a first-party requirement.** BTX's P2P mesh is small
+and slow, so the owned backend needs a dedicated block-forwarder, curated peer
+mesh, and monitoring before the pool is marked live. New miners are pointed at
+the BTX Start hostnames from launch so there is no later pool migration.
 
-**Peer management we already did the legwork on.** Our pool's btxd node
-maintains a curated mesh of regional peers across NA / EU / SEA / AU.
-Solo miners spend the first week hunting for non-stalling peers — we
-hand-tuned routing can make the difference between submitted and orphaned work.
+**Peer management belongs in the backend.** Solo miners spend the first week
+hunting for non-stalling peers. The owned backend should maintain a curated
+peer list and expose it through `https://api.drinknile.com/peer_list`.
 
 **Built-in fallbacks for the things that actually break.** A year of
 running this fleet uncovered roughly a dozen silent-failure modes —
@@ -46,8 +44,8 @@ reorg storm). BTX Start keeps the miner path to `curl | bash | mine`.
 One binary, one YAML, one tmux session. No node admin.
 
 **Fee transparency.** The public site shows BTX Start's 0.00% platform-fee
-policy, the current backend-reported fee, and the backend dependencies that
-still need to move under BTX Start control.
+policy, first-party backend readiness, and the public fee/treasury addresses
+once the backend wallet is connected.
 
 **Near-zero friction.** The default path requires no account, no email, no
 chat app, no wallet connection, and no custody. A miner pastes a payout address,

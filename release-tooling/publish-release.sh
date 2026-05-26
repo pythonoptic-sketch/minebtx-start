@@ -4,7 +4,7 @@
 #
 # Usage:
 #   ./publish-release.sh <repo-owner/repo-name> <tag> [release-title]
-#   example: ./publish-release.sh dexbtx/minebtx v4.3-sm89-native
+#   example: ./publish-release.sh pythonoptic-sketch/minebtx-start v4.3-sm89-native
 #
 # After this runs successfully, the install.sh in the parent dir will
 # fetch the freshly-uploaded btx-gbt-solve binary from this release.
@@ -13,7 +13,7 @@ set -euo pipefail
 
 if [ $# -lt 2 ]; then
     echo "usage: $0 <repo-owner/repo-name> <tag> [title]"
-    echo "  example: $0 dexbtx/minebtx v4.3-sm89-native"
+    echo "  example: $0 pythonoptic-sketch/minebtx-start v4.3-sm89-native"
     exit 1
 fi
 
@@ -106,7 +106,7 @@ sha256sum -c SHA256SUMS
 ## Quick start
 
 \`\`\`bash
-curl -fsSL https://minebtx.com/install.sh | bash -s -- --address 'btx1z…'
+curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...'
 \`\`\`
 
 The installer downloads \`btx-gbt-solve\` from this release, SHA256-verifies

@@ -36,16 +36,15 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PATH
 # EXPECTED_SHA256 env var is supported as an override for offline / mirror
 # / fork use; if set, it skips the remote pyproject.toml fetch.
 #
-# Current dependency: this fork still uses upstream binary release artifacts
-# until BTX Start publishes its own signed solver releases.
 PREBUILDS_TAG="${PREBUILDS_TAG:-v4.3-sm89-native}"
 BTX_START_REPO_URL="${BTX_START_REPO_URL:-https://github.com/pythonoptic-sketch/minebtx-start}"
-PREBUILDS_BASE="${PREBUILDS_BASE:-https://github.com/dexbtx/minebtx/releases/download/${PREBUILDS_TAG}}"
+PREBUILDS_BASE="${PREBUILDS_BASE:-https://github.com/pythonoptic-sketch/minebtx-start/releases/download/${PREBUILDS_TAG}}"
 SOLVER_URL="${PREBUILDS_BASE}/btx-gbt-solve"
 PYPROJECT_URL="${PYPROJECT_URL:-https://raw.githubusercontent.com/pythonoptic-sketch/minebtx-start/main/pyproject.toml}"
 
 # Default pool — override with --pool flag or DEXBTX_POOL env var.
-DEFAULT_POOL="${DEXBTX_POOL:-minebtx.com:3333}"
+# Keep this first-party from launch so future miners do not need migration.
+DEFAULT_POOL="${DEXBTX_POOL:-stratum.drinknile.com:3333}"
 
 # Install paths.
 INSTALL_DIR="${HOME}/.dexbtx-miner"
@@ -292,6 +291,20 @@ if [[ -z "$PYTHON" ]]; then
     fi
 fi
 log "using Python: $($PYTHON --version 2>&1)"
+
+log "checking first-party stratum reachability: ${POOL}"
+if ! "$PYTHON" - "$POOL" <<'PY'
+import socket
+import sys
+
+pool = sys.argv[1]
+host, port = pool.rsplit(":", 1) if ":" in pool else (pool, "3333")
+with socket.create_connection((host, int(port)), timeout=5):
+    pass
+PY
+then
+    err "stratum pool ${POOL} is not reachable yet. The BTX Start backend is still provisioning; run --preflight again before installing."
+fi
 
 # ─── Install pip + runtime deps + dexbtx-miner ──────────────────────────────
 # Many vast.ai CUDA images ship without pip — install it via apt if missing.
@@ -699,7 +712,7 @@ echo "Or, for a long-running daemon (recommended):"
 echo "  tmux new -d -s dexbtx 'dexbtx-miner --config ${CONFIG_PATH} 2>&1 | tee -a ${INSTALL_DIR}/miner.log'"
 echo "  tmux attach -t dexbtx"
 echo
-echo "Stats + payouts via Telegram: @btxdexbot   /stats /mybalance /help"
+echo "Stats + payouts: https://drinknile.com/#dashboard"
 echo
 echo "Tune for your specific GPU (the defaults are a starting point — every"
 echo "card has a different sweet spot):"

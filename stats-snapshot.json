@@ -1,112 +1,54 @@
 {
   "pool": {
-    "workers_active_24h": 17,
-    "workers_total": 18,
-    "shares_24h": 10599,
-    "blocks_found_24h": 4,
-    "blocks_matured_total": 3,
+    "workers_active_24h": 0,
+    "workers_total": 0,
+    "shares_24h": 0,
+    "blocks_found_24h": 0,
+    "blocks_matured_total": 0,
     "total_btx_paid_sat": 0,
-    "pending_fee_sat": 150000250,
-    "pending_miner_payout_sat": 9750000000,
-    "workers_active_now": 13,
-    "workers_active_pay_period": 18,
-    "blocks_found_pay_period": 5,
-    "shares_accepted_pay_period": 10742,
-    "estimated_pool_hashrate_nps": 3982.9478384002855,
-    "pool_hashrate_live_nps": 4217.006332221687,
-    "network_hash_nps": 2303047.724904004,
-    "pool_share_of_network": 0.0018310546875000002
+    "pending_fee_sat": 0,
+    "pending_miner_payout_sat": 0,
+    "workers_active_now": 0,
+    "workers_active_pay_period": 0,
+    "blocks_found_pay_period": 0,
+    "shares_accepted_pay_period": 0,
+    "estimated_pool_hashrate_nps": 0,
+    "pool_hashrate_live_nps": 0,
+    "network_hash_nps": null,
+    "pool_share_of_network": 0
   },
   "health": {
     "btxd": {
-      "blocks": 112057,
-      "headers": 112057,
-      "peers": 128,
-      "ibd": false,
-      "verification_progress": 0.9999477433632864,
-      "network_hash_ps": 2303047.724904004,
-      "last_probe_unix": 1779785163,
-      "reachable": true
+      "blocks": null,
+      "headers": null,
+      "peers": 0,
+      "ibd": true,
+      "verification_progress": 0,
+      "network_hash_ps": null,
+      "last_probe_unix": null,
+      "reachable": false
     },
     "dispatcher_errors": 0,
-    "shares_accepted": 7122,
-    "shares_rejected": 6788,
-    "rpc_p50_ms": 1.335437,
-    "rpc_p95_ms": 5.923165999999999,
-    "share_validation_p50_ms": 0.000466,
-    "share_validation_p95_ms": 0.000911,
-    "last_probe_age_secs": 18,
-    "hashrate_ema_nps": 4576.3012127871825,
-    "rpc_by_method": {
-      "getblock": {
-        "ok_count": 269,
-        "err_count": 8,
-        "p50_ms": 5.078006,
-        "p95_ms": 10.453033000000001,
-        "p99_ms": 16.169231
-      },
-      "getblocktemplate": {
-        "ok_count": 109,
-        "err_count": 0,
-        "p50_ms": 7.430784,
-        "p95_ms": 12.758781,
-        "p99_ms": 13.545835
-      },
-      "getblockchaininfo": {
-        "ok_count": 343,
-        "err_count": 0,
-        "p50_ms": 1.335437,
-        "p95_ms": 5.923165999999999,
-        "p99_ms": 12.888561999999999
-      },
-      "getconnectioncount": {
-        "ok_count": 343,
-        "err_count": 0,
-        "p50_ms": 1.6841359999999999,
-        "p95_ms": 4.698525999999999,
-        "p99_ms": 9.144351
-      },
-      "getmatmulchallenge": {
-        "ok_count": 2164,
-        "err_count": 0,
-        "p50_ms": 6.079238,
-        "p95_ms": 10.236395,
-        "p99_ms": 17.810827
-      },
-      "getmininginfo": {
-        "ok_count": 343,
-        "err_count": 0,
-        "p50_ms": 4.654662,
-        "p95_ms": 8.379334,
-        "p99_ms": 10.341682
-      }
-    },
-    "share_reject_by_code": {
-      "22": 3304,
-      "21": 1716,
-      "23": 1768
-    },
-    "task_heartbeat_age_secs": {
-      "health_monitor": 18,
-      "block_propagation": 8,
-      "peer_observer": 78,
-      "pool_alerts_phase_c": 18,
-      "pplns_engine": 18,
-      "miner_anomaly": 78,
-      "invariants_checker": 3078,
-      "reorg_attribution": 18,
-      "pool_forwarder": 466,
-      "btxd_zmq_rawblock": 466,
-      "btxd_zmq": 466,
-      "maturation_tracker": 18,
-      "retention": 3078,
-      "work_dispatcher": 3
-    }
+    "shares_accepted": 0,
+    "shares_rejected": 0,
+    "rpc_p50_ms": null,
+    "rpc_p95_ms": null,
+    "share_validation_p50_ms": null,
+    "share_validation_p95_ms": null,
+    "last_probe_age_secs": null,
+    "hashrate_ema_nps": 0,
+    "rpc_by_method": {},
+    "share_reject_by_code": {},
+    "task_heartbeat_age_secs": {}
   },
   "policy": {
-    "pool_fee_bps": 250,
-    "treasury_address": "btx1zatnjdqpw4cjswjeajst5lkj8mrdsj8mhgzu3emycncuctfrtqmzst94c6s",
-    "fee_address": "btx1zqzv4vgyhzyqqrkccxre0r4wgq9awwp6kjsdj6n8tfa0em0lfm22safa89n"
+    "owned_backend_active": false,
+    "status": "provisioning",
+    "pool_fee_bps": 0,
+    "treasury_address": null,
+    "fee_address": null,
+    "stratum_endpoint": "stratum.drinknile.com:3333",
+    "stats_url": "https://api.drinknile.com/stats"
   },
-  "fetched_at": "2026-05-26T08:46:21Z"
+  "fetched_at": "2026-05-26T09:15:00Z"
 }
