@@ -20,7 +20,6 @@
       <div class="nav-links">
         <a href="index.html" aria-current="page">Home</a>
         <a href="#status">Status</a>
-        <a href="#treasury">Treasury</a>
         <a href="#start">Start</a>
         <a href="#compatibility">Compatibility</a>
         <a href="#track">Track</a>
@@ -38,11 +37,11 @@
       <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
       <div class="hero-shell">
         <p class="eyebrow">Low-fee BTX mining launcher</p>
-        <h1>A better BTX mining start point.</h1>
+        <h1>Your BTX mining console.</h1>
         <p class="hero-copy">
-          Generate a setup command from your own BTX address, see the fee offer,
-          and track the live mining signals without sending visitors back to the
-          reference site.
+          Enter your own BTX address, check the machine before installing,
+          start mining, and follow shares, GPU load, balance commands, and live
+          network signals from one page.
         </p>
         <div class="hero-actions" aria-label="Primary actions">
           <a class="button primary" href="#start">Start mining</a>
@@ -70,84 +69,26 @@
         <div class="section-inner">
           <div class="split-heading">
             <div>
-              <p class="eyebrow">Operating status</p>
-              <h2 id="status-title">What works right now.</h2>
+              <p class="eyebrow">Customer mining status</p>
+              <h2 id="status-title">Your mining path is the main workflow.</h2>
             </div>
-            <p class="status-text">Backend fee policy is shown separately from our target promo.</p>
+            <p class="status-text">Treasury details stay public, but below the mining flow.</p>
           </div>
           <div class="status-grid">
             <article class="status-card positive">
-              <span class="metric-label">Mining to personal wallet</span>
+              <span class="metric-label">Your payout wallet</span>
               <strong>Available</strong>
               <p>The generated installer command writes the visitor's own BTX payout address into the miner config.</p>
             </article>
-            <article class="status-card warning">
-              <span class="metric-label">Fee capture</span>
-              <strong>Backend-owned</strong>
-              <p>The live backend currently reports a 2.50% fee. That fee goes to the backend's configured fee and treasury addresses below, not to BTX Start unless we control that backend policy.</p>
+            <article class="status-card positive">
+              <span class="metric-label">Mining progress</span>
+              <strong>Visible</strong>
+              <p>Watch accepted shares, GPU utilization, balance commands, block credit commands, and aggregate network stats.</p>
             </article>
             <article class="status-card warning">
-              <span class="metric-label">Personal dashboard</span>
-              <strong>Partial</strong>
-              <p>Miners can watch local logs, GPU load, aggregate stats, and Telegram balance commands. A full BTX Start web dashboard per wallet is not live yet.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="band treasury-band" id="treasury" aria-labelledby="treasury-title">
-        <div class="section-inner">
-          <div class="split-heading">
-            <div>
-              <p class="eyebrow">Public platform treasury</p>
-              <h2 id="treasury-title">Every platform-fee address is public.</h2>
-            </div>
-            <p class="status-text">Target platform fee: <strong id="platform-target-fee">0.50%</strong></p>
-          </div>
-          <div class="treasury-grid">
-            <article class="treasury-card highlight">
-              <span class="metric-label">BTX Start fee wallet</span>
-              <strong id="platform-treasury-status">Pending</strong>
-              <p>Dedicated backend fee wallet is not connected yet. Once created and deployed, all platform fees should be paid to the public address below.</p>
-              <dl>
-                <div>
-                  <dt>Fee address</dt>
-                  <dd><code id="platform-fee-address">Pending wallet creation</code></dd>
-                </div>
-                <div>
-                  <dt>Treasury address</dt>
-                  <dd><code id="platform-treasury-address">Pending wallet creation</code></dd>
-                </div>
-                <div>
-                  <dt>Total address content</dt>
-                  <dd><code id="platform-fee-balance">0.00000000 BTX</code></dd>
-                </div>
-                <div>
-                  <dt>Balance source</dt>
-                  <dd><code id="platform-balance-source">Pending first-party wallet index</code></dd>
-                </div>
-              </dl>
-            </article>
-            <article class="treasury-card">
-              <span class="metric-label">Use of platform fee</span>
-              <strong>Project treasury</strong>
-              <p id="platform-funds-use">Platform fees are intended to fund BTX Start infrastructure, security, miner tooling, and collectively selected new BTX projects.</p>
-              <p id="platform-notice">Treasury spending does not create miner ownership, dividends, or profit-sharing claims.</p>
-            </article>
-            <article class="treasury-card">
-              <span class="metric-label">Current backend fee wallet</span>
-              <strong id="backend-fee-rate">2.50%</strong>
-              <p>This is the fee destination currently reported by the backend. It is shown so users can verify whether fee routing has actually moved.</p>
-              <dl>
-                <div>
-                  <dt>Backend fee address</dt>
-                  <dd><code id="backend-fee-address">btx1zqzv4vgyhzyqqrkccxre0r4wgq9awwp6kjsdj6n8tfa0em0lfm22safa89n</code></dd>
-                </div>
-                <div>
-                  <dt>Backend pending fee</dt>
-                  <dd><code id="backend-fee-balance">1.50000250 BTX</code></dd>
-                </div>
-              </dl>
+              <span class="metric-label">Web dashboard</span>
+              <strong>Next</strong>
+              <p>A full BTX Start per-wallet web dashboard still needs our own share, payout, and balance index.</p>
             </article>
           </div>
         </div>
@@ -449,6 +390,64 @@
                 <li><span>Stratum endpoint</span><span>Existing BTX backend</span></li>
                 <li><a href="https://t.me/btxdexbot" target="_blank" rel="noreferrer">Telegram balance bot</a><span>Existing bot</span></li>
               </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="band treasury-band" id="treasury" aria-labelledby="treasury-title">
+        <div class="section-inner">
+          <div class="split-heading">
+            <div>
+              <p class="eyebrow">Public platform treasury</p>
+              <h2 id="treasury-title">Every platform-fee address is public.</h2>
+            </div>
+            <p class="status-text">Target platform fee: <strong id="platform-target-fee">0.50%</strong></p>
+          </div>
+          <div class="treasury-grid">
+            <article class="treasury-card highlight">
+              <span class="metric-label">BTX Start fee wallet</span>
+              <strong id="platform-treasury-status">Pending</strong>
+              <p>Dedicated backend fee wallet is not connected yet. Once created and deployed, all platform fees should be paid to the public address below.</p>
+              <dl>
+                <div>
+                  <dt>Fee address</dt>
+                  <dd><code id="platform-fee-address">Pending wallet creation</code></dd>
+                </div>
+                <div>
+                  <dt>Treasury address</dt>
+                  <dd><code id="platform-treasury-address">Pending wallet creation</code></dd>
+                </div>
+                <div>
+                  <dt>Total address content</dt>
+                  <dd><code id="platform-fee-balance">0.00000000 BTX</code></dd>
+                </div>
+                <div>
+                  <dt>Balance source</dt>
+                  <dd><code id="platform-balance-source">Pending first-party wallet index</code></dd>
+                </div>
+              </dl>
+            </article>
+            <article class="treasury-card">
+              <span class="metric-label">Use of platform fee</span>
+              <strong>Project treasury</strong>
+              <p id="platform-funds-use">Platform fees are intended to fund BTX Start infrastructure, security, miner tooling, and collectively selected new BTX projects.</p>
+              <p id="platform-notice">Treasury spending does not create miner ownership, dividends, or profit-sharing claims.</p>
+            </article>
+            <article class="treasury-card">
+              <span class="metric-label">Current backend fee wallet</span>
+              <strong id="backend-fee-rate">2.50%</strong>
+              <p>This is the fee destination currently reported by the backend. It is shown so users can verify whether fee routing has actually moved.</p>
+              <dl>
+                <div>
+                  <dt>Backend fee address</dt>
+                  <dd><code id="backend-fee-address">btx1zqzv4vgyhzyqqrkccxre0r4wgq9awwp6kjsdj6n8tfa0em0lfm22safa89n</code></dd>
+                </div>
+                <div>
+                  <dt>Backend pending fee</dt>
+                  <dd><code id="backend-fee-balance">1.50000250 BTX</code></dd>
+                </div>
+              </dl>
             </article>
           </div>
         </div>
