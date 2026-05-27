@@ -57,6 +57,43 @@ class BackendRepositoryTest(unittest.TestCase):
             self.assertFalse(dashboard["known"])
             self.assertEqual(dashboard["balance"]["payable_sat"], 0)
 
+    def test_pplns_reward_allocates_by_recent_accepted_shares(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = BackendRepository(Path(tmp) / "backend.sqlite3")
+            repo.init_db()
+            when = datetime(2026, 5, 10, tzinfo=timezone.utc)
+            address_a = "btx1z" + "a" * 52
+            address_b = "btx1z" + "b" * 52
+            for index in range(3):
+                repo.record_share(
+                    ShareRecord(
+                        payout_address=address_a,
+                        worker_name="rig",
+                        job_id=f"a-{index}",
+                        accepted=True,
+                        created_at=when,
+                    )
+                )
+            repo.record_share(
+                ShareRecord(
+                    payout_address=address_b,
+                    worker_name="rig",
+                    job_id="b-1",
+                    accepted=True,
+                    created_at=when,
+                )
+            )
+
+            splits = repo.credit_pplns_reward(
+                100,
+                FeePolicy(trial_days=7, trial_fee_bps=0, post_trial_fee_bps=50),
+                when=when,
+            )
+
+            by_address = {split.payout_address: split for split in splits}
+            self.assertEqual(by_address[address_a].gross_sat, 75)
+            self.assertEqual(by_address[address_b].gross_sat, 25)
+
 
 if __name__ == "__main__":
     unittest.main()

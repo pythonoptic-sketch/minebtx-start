@@ -39,12 +39,19 @@ Endpoints:
 btxstart-stratum --port 3333
 ```
 
-The stratum scaffold handles JSON-RPC framing, subscribe, authorize, worker
-tracking, and rejected submit accounting. It intentionally rejects submitted
-shares unless `ALLOW_UNVERIFIED_SHARE_ACCEPTANCE=true`.
+The stratum service handles JSON-RPC framing, subscribe, authorize, live
+`mining.notify` job creation from `btxd getmatmulchallenge`, worker tracking,
+and accepted/rejected share accounting.
+
+Submitted shares are rejected unless either:
+
+- `SHARE_VALIDATION_MODE=solver` points at a patched `btx-gbt-solve` binary
+  that can reproduce the submitted nonce against the pool share target; or
+- `ALLOW_UNVERIFIED_SHARE_ACCEPTANCE=true` is enabled for local development.
 
 Do not enable unverified acceptance in production. Real production launch still
-needs BTX matmul share validation and block submission wiring.
+needs full-block construction and `submitblock` wiring before
+`OWNED_BACKEND_ACTIVE=true`.
 
 ### Payout Worker
 
@@ -96,10 +103,11 @@ Before setting `OWNED_BACKEND_ACTIVE=true`:
 3. `GET /health` reports node reachable and synced.
 4. `GET /stats` reports the exact public policy.
 5. Stratum accepts authorize and rejects invalid submits.
-6. Valid share verification is implemented.
-7. One test miner can submit accepted shares to a test payout address.
-8. Dashboard shows worker, shares, balance, fee state, and payout history.
-9. `scripts/verify-owned-backend.sh` passes against production URLs.
+6. `SHARE_VALIDATION_MODE=solver` is active on the backend host.
+7. Full-block construction and `submitblock` wiring are enabled.
+8. One test miner can submit accepted shares to a test payout address.
+9. Dashboard shows worker, shares, balance, fee state, and payout history.
+10. `scripts/verify-owned-backend.sh` passes against production URLs.
 
 ## Billing Position
 

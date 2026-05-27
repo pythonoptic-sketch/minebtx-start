@@ -19,6 +19,7 @@ from .btx_rpc import BtxRpcClient, BtxRpcError
 from .fee_policy import FeePolicy
 from .repository import BackendRepository
 from .settings import BackendSettings
+from .stratum_jobs import target_to_work
 
 settings = BackendSettings.from_env()
 settings.ensure_database_parent()
@@ -65,6 +66,12 @@ def health() -> dict[str, Any]:
     return {
         "ok": True,
         "owned_backend_active": settings.owned_backend_active,
+        "share_validation_mode": settings.share_validation_mode,
+        "can_accept_real_shares": (
+            settings.share_validation_mode.strip().lower() in {"solver", "external-solver"}
+            or settings.allow_unverified_share_acceptance
+        ),
+        "block_submission_enabled": settings.block_submission_enabled,
         "btxd": node,
     }
 
@@ -109,17 +116,25 @@ def stats() -> dict[str, Any]:
         "policy": {
             "owned_backend_active": settings.owned_backend_active,
             "status": "live" if settings.owned_backend_active else "provisioning",
+            "can_accept_real_shares": (
+                settings.share_validation_mode.strip().lower() in {"solver", "external-solver"}
+                or settings.allow_unverified_share_acceptance
+            ),
+            "share_validation_mode": settings.share_validation_mode,
+            "block_submission_enabled": settings.block_submission_enabled,
             "fee_model": "per_wallet_trial_then_pool_fee",
             "fee_routing": "pool_payout_accounting",
             "account_key_scope": "payout_address",
             "trial_days": policy.trial_days,
             "trial_fee_bps": policy.trial_fee_bps,
             "post_trial_fee_bps": policy.post_trial_fee_bps,
+            "pplns_window_hours": settings.pplns_window_hours,
             "pool_fee_bps": policy.post_trial_fee_bps,
             "treasury_address": policy.treasury_address,
             "fee_address": policy.fee_address,
             "stratum_endpoint": f"{settings.public_stratum_host}:{settings.public_stratum_port}",
             "stats_url": settings.public_stats_url,
+            "share_target_hex": settings.pool_share_target_hex,
         },
     }
 
@@ -128,7 +143,13 @@ def stats() -> dict[str, Any]:
 def dashboard(payout_address: str) -> dict[str, Any]:
     if not payout_address.startswith("btx1z"):
         raise HTTPException(status_code=400, detail="invalid BTX payout address")
-    return repo.miner_dashboard(payout_address)
+    payload = repo.miner_dashboard(payout_address)
+    work_per_share = target_to_work(settings.pool_share_target_hex)
+    accepted_15m = int((payload.get("shares") or {}).get("accepted_15m") or 0)
+    payload["estimated_hashrate_nps"] = accepted_15m * work_per_share / (15 * 60)
+    payload["share_target_hex"] = settings.pool_share_target_hex
+    payload["share_work"] = work_per_share
+    return payload
 
 
 @app.post("/billing/checkout")

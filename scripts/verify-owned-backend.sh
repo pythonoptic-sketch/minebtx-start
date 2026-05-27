@@ -69,6 +69,9 @@ trial_fee_bps="$(jq -r '.policy.trial_fee_bps // empty' "$tmp" 2>/dev/null || tr
 post_trial_fee_bps="$(jq -r '.policy.post_trial_fee_bps // .policy.pool_fee_bps // empty' "$tmp" 2>/dev/null || true)"
 fee_address="$(jq -r '.policy.fee_address // empty' "$tmp" 2>/dev/null || true)"
 treasury_address="$(jq -r '.policy.treasury_address // empty' "$tmp" 2>/dev/null || true)"
+can_accept_real_shares="$(jq -r '.policy.can_accept_real_shares // false' "$tmp" 2>/dev/null || true)"
+share_validation_mode="$(jq -r '.policy.share_validation_mode // empty' "$tmp" 2>/dev/null || true)"
+block_submission_enabled="$(jq -r '.policy.block_submission_enabled // false' "$tmp" 2>/dev/null || true)"
 
 if [ "$fee_model" = "per_wallet_trial_then_pool_fee" ]; then
   pass "fee model is per-wallet trial"
@@ -110,6 +113,18 @@ if [ "$pool_fee_bps" = "$EXPECTED_POOL_FEE_BPS" ]; then
   pass "pool fee policy is ${pool_fee_bps} bps"
 else
   fail "pool fee policy is ${pool_fee_bps:-missing} bps; expected ${EXPECTED_POOL_FEE_BPS}"
+fi
+
+if [ "$can_accept_real_shares" = "true" ] && [ "$share_validation_mode" = "solver" ]; then
+  pass "real share validation is enabled"
+else
+  fail "real share validation is not enabled; mode=${share_validation_mode:-missing}"
+fi
+
+if [ "$block_submission_enabled" = "true" ]; then
+  pass "block submission is enabled"
+else
+  fail "block submission is not enabled"
 fi
 
 if [ -n "$EXPECTED_FEE_ADDRESS" ]; then

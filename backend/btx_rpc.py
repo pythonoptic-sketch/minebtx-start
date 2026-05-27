@@ -64,6 +64,9 @@ class BtxRpcClient:
     def getblocktemplate(self) -> dict[str, Any]:
         return dict(self.call("getblocktemplate", [{"rules": ["segwit"]}]))
 
+    def getmatmulchallenge(self) -> dict[str, Any]:
+        return dict(self.call("getmatmulchallenge"))
+
     def submitblock(self, block_hex: str) -> Any:
         return self.call("submitblock", [block_hex])
 

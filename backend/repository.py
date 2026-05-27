@@ -183,6 +183,77 @@ class BackendRepository:
                 )
         return RewardSplit(payout_address, gross_sat, fee_sat, payable_sat, fee_bps)
 
+    def credit_pplns_reward(
+        self,
+        gross_sat: int,
+        policy: FeePolicy,
+        *,
+        window_hours: int = 24,
+        when: datetime | None = None,
+    ) -> list[RewardSplit]:
+        """Allocate one pool reward across recent accepted shares.
+
+        This intentionally uses accepted-share counts, not terminal-side
+        hashrate estimates. With one pool share target, each accepted share
+        represents the same expected work and keeps the accounting auditable.
+        """
+
+        if gross_sat < 0:
+            raise ValueError("gross_sat cannot be negative")
+        if gross_sat == 0:
+            return []
+        now = when or utc_now()
+        cutoff = iso(now - timedelta(hours=window_hours))
+        with self.connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT payout_address, COUNT(*) AS accepted_shares
+                FROM shares
+                WHERE accepted = 1 AND created_at >= ?
+                GROUP BY payout_address
+                ORDER BY accepted_shares DESC, payout_address ASC
+                """,
+                (cutoff,),
+            ).fetchall()
+        total_shares = sum(int(row["accepted_shares"]) for row in rows)
+        if total_shares <= 0:
+            self.record_event(
+                "pool_reward_unallocated",
+                {"gross_sat": gross_sat, "window_hours": window_hours, "reason": "no accepted shares"},
+            )
+            return []
+        allocations: list[tuple[str, int, int]] = []
+        allocated = 0
+        for row in rows:
+            shares = int(row["accepted_shares"])
+            raw = gross_sat * shares
+            amount = raw // total_shares
+            remainder = raw % total_shares
+            allocations.append((row["payout_address"], amount, remainder))
+            allocated += amount
+        remainder_sat = gross_sat - allocated
+        if remainder_sat:
+            allocations.sort(key=lambda item: (-item[2], item[0]))
+            allocations = [
+                (address, amount + (1 if index < remainder_sat else 0), remainder)
+                for index, (address, amount, remainder) in enumerate(allocations)
+            ]
+        splits = [
+            self.credit_reward(address, amount, policy, when=now)
+            for address, amount, _ in allocations
+            if amount > 0
+        ]
+        self.record_event(
+            "pool_reward_allocated",
+            {
+                "gross_sat": gross_sat,
+                "window_hours": window_hours,
+                "recipients": len(splits),
+                "total_shares": total_shares,
+            },
+        )
+        return splits
+
     def stats(self) -> dict[str, Any]:
         cutoff_24h = iso(utc_now() - timedelta(days=1))
         cutoff_15m = iso(utc_now() - timedelta(minutes=15))
@@ -228,6 +299,7 @@ class BackendRepository:
 
     def miner_dashboard(self, payout_address: str) -> dict[str, Any]:
         cutoff_24h = iso(utc_now() - timedelta(days=1))
+        cutoff_15m = iso(utc_now() - timedelta(minutes=15))
         with self.connect() as conn:
             miner = conn.execute(
                 "SELECT payout_address, first_share_at, created_at FROM miners WHERE payout_address = ?",
@@ -258,11 +330,12 @@ class BackendRepository:
                 SELECT
                   SUM(CASE WHEN accepted = 1 THEN 1 ELSE 0 END) AS accepted,
                   SUM(CASE WHEN accepted = 0 THEN 1 ELSE 0 END) AS rejected,
+                  SUM(CASE WHEN accepted = 1 AND created_at >= ? THEN 1 ELSE 0 END) AS accepted_15m,
                   SUM(CASE WHEN accepted = 1 AND created_at >= ? THEN 1 ELSE 0 END) AS accepted_24h
                 FROM shares
                 WHERE payout_address = ?
                 """,
-                (cutoff_24h, payout_address),
+                (cutoff_15m, cutoff_24h, payout_address),
             ).fetchone()
         return {
             "payout_address": payout_address,

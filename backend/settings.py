@@ -25,10 +25,22 @@ class BackendSettings:
     trial_days: int = 7
     trial_fee_bps: int = 0
     post_trial_fee_bps: int = 50
+    pplns_window_hours: int = 24
     owned_backend_active: bool = False
     btx_rpc_url: str = "http://127.0.0.1:8332"
     btx_rpc_user: str | None = None
     btx_rpc_password: str | None = None
+    pool_share_target_hex: str = "00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    stratum_job_refresh_s: int = 20
+    stratum_notify_interval_s: int = 10
+    share_validation_mode: str = "disabled"
+    share_validation_solver_path: str = "~/.dexbtx-miner/bin/btx-gbt-solve"
+    share_validation_backend: str = "cpu"
+    share_validation_solver_threads: int = 2
+    share_validation_batch_size: int = 2
+    share_validation_max_tries: int = 8
+    share_validation_max_seconds: float = 10.0
+    block_submission_enabled: bool = False
     stripe_secret_key: str | None = None
     stripe_webhook_secret: str | None = None
     stripe_price_id: str | None = None
@@ -53,10 +65,49 @@ class BackendSettings:
             trial_days=int(os.environ.get("TRIAL_DAYS", cls.trial_days)),
             trial_fee_bps=int(os.environ.get("TRIAL_FEE_BPS", cls.trial_fee_bps)),
             post_trial_fee_bps=int(os.environ.get("POST_TRIAL_FEE_BPS", cls.post_trial_fee_bps)),
+            pplns_window_hours=int(os.environ.get("PPLNS_WINDOW_HOURS", cls.pplns_window_hours)),
             owned_backend_active=_bool_env("OWNED_BACKEND_ACTIVE", cls.owned_backend_active),
             btx_rpc_url=os.environ.get("BTX_RPC_URL", cls.btx_rpc_url),
             btx_rpc_user=os.environ.get("BTX_RPC_USER") or None,
             btx_rpc_password=os.environ.get("BTX_RPC_PASSWORD") or None,
+            pool_share_target_hex=os.environ.get("POOL_SHARE_TARGET_HEX", cls.pool_share_target_hex),
+            stratum_job_refresh_s=int(os.environ.get("STRATUM_JOB_REFRESH_S", cls.stratum_job_refresh_s)),
+            stratum_notify_interval_s=int(os.environ.get(
+                "STRATUM_NOTIFY_INTERVAL_S",
+                cls.stratum_notify_interval_s,
+            )),
+            share_validation_mode=os.environ.get(
+                "SHARE_VALIDATION_MODE",
+                cls.share_validation_mode,
+            ),
+            share_validation_solver_path=os.path.expanduser(os.environ.get(
+                "SHARE_VALIDATION_SOLVER_PATH",
+                cls.share_validation_solver_path,
+            )),
+            share_validation_backend=os.environ.get(
+                "SHARE_VALIDATION_BACKEND",
+                cls.share_validation_backend,
+            ),
+            share_validation_solver_threads=int(os.environ.get(
+                "SHARE_VALIDATION_SOLVER_THREADS",
+                cls.share_validation_solver_threads,
+            )),
+            share_validation_batch_size=int(os.environ.get(
+                "SHARE_VALIDATION_BATCH_SIZE",
+                cls.share_validation_batch_size,
+            )),
+            share_validation_max_tries=int(os.environ.get(
+                "SHARE_VALIDATION_MAX_TRIES",
+                cls.share_validation_max_tries,
+            )),
+            share_validation_max_seconds=float(os.environ.get(
+                "SHARE_VALIDATION_MAX_SECONDS",
+                cls.share_validation_max_seconds,
+            )),
+            block_submission_enabled=_bool_env(
+                "BLOCK_SUBMISSION_ENABLED",
+                cls.block_submission_enabled,
+            ),
             stripe_secret_key=os.environ.get("STRIPE_SECRET_KEY") or None,
             stripe_webhook_secret=os.environ.get("STRIPE_WEBHOOK_SECRET") or None,
             stripe_price_id=os.environ.get("STRIPE_PRICE_ID") or None,
