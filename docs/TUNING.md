@@ -122,7 +122,7 @@ on first launch, then steady):
 If your GPU isn't covered (e.g. a very new arch not yet in the
 binary), `install.sh`'s Phase 0.3b smoke test will fail loudly during
 install rather than silently mining on CPU. File an issue at
-github.com/pythonoptic-sketch/drinknile/issues with your `nvidia-smi -q` output
+github.com/pythonoptic-sketch/minebtx-start/issues with your `nvidia-smi -q` output
 and we'll ship a build that supports your hardware.
 
 ---

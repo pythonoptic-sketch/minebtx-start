@@ -23,6 +23,11 @@ http://localhost:8080/
 - `index.html` - page structure and links
 - `assets/styles.css` - responsive layout and visual design
 - `assets/site.js` - live stat hydration, copy button behavior, and hero canvas
+- `assets/og-image.png` - search/social preview image
+- `assets/favicon.svg` - browser icon
+- `assets/apple-touch-icon.png` - mobile home-screen icon
+- `robots.txt` and `sitemap.xml` - crawler discovery files
+- `llms.txt` - concise AI/search assistant context
 - `START_IMPROVEMENTS.md` - release-based onboarding analysis
 - `TREASURY.md` - platform fee wallet and backend policy procedure
 - `WALLET_SETUP.md` - miner-facing setup guide

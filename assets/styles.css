@@ -1103,11 +1103,33 @@ main {
 .status-grid,
 .treasury-grid,
 .tracker-grid,
+.seo-faq-grid,
 .profile-metrics,
 .vast-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
+}
+
+.seo-faq-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.seo-faq-grid article {
+  min-width: 0;
+  padding: 22px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.seo-faq-grid h3 {
+  margin-bottom: 8px;
+}
+
+.seo-faq-grid p {
+  margin-bottom: 0;
+  color: var(--muted);
 }
 
 .profile-metrics,
@@ -1886,6 +1908,7 @@ tr:last-child td {
   .status-grid,
   .treasury-grid,
   .tracker-grid,
+  .seo-faq-grid,
   .profile-metrics,
   .vast-summary,
   .flow-grid,
@@ -2002,6 +2025,7 @@ tr:last-child td {
   .status-grid,
   .treasury-grid,
   .tracker-grid,
+  .seo-faq-grid,
   .profile-metrics,
   .vast-summary,
   .flow-grid,
@@ -2273,6 +2297,7 @@ h3 {
 .local-card p,
 .mac-card p,
 .setup-list,
+.seo-faq-grid p,
 .treasury-card p,
 .tracker-grid p,
 .profile-metric p,
@@ -2346,6 +2371,7 @@ h3 {
 .local-card,
 .mac-card,
 .setup-os-panel,
+.seo-faq-grid article,
 .status-card,
 .treasury-card,
 .tracker-grid article,

@@ -1,0 +1,25 @@
+# BTX Start
+
+BTX Start is a wallet-first setup page for people who want to get involved
+with BTX / Bitcore mining.
+
+Primary URL: https://drinknile.com/
+
+Useful pages:
+
+- Home and command builder: https://drinknile.com/
+- Wallet setup: https://drinknile.com/WALLET_SETUP.md
+- Apple Silicon Mac setup: https://drinknile.com/MAC_SETUP.md
+- Windows WSL2 setup: https://drinknile.com/WINDOWS_SETUP.md
+- Vast.ai rental GPU notes: https://drinknile.com/VAST_AI.md
+- Installer source: https://drinknile.com/install.sh
+- Public repository: https://github.com/pythonoptic-sketch/minebtx-start
+
+Current public status:
+
+- BTX Start is live as an onboarding and setup website.
+- Managed mining through BTX Start is marked as not live until the backend
+  stratum share validation, block submission, and payout accounting are ready.
+- Users keep their own BTX payout address and private keys.
+- The page includes Mac, Windows, NVIDIA GPU, rental GPU, wallet, fee, and
+  public service-status guidance.

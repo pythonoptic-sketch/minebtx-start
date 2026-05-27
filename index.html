@@ -5,14 +5,131 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="BTX Start is a simple BTX mining launcher for mining to your own BTX wallet without setting up a node."
+      content="BTX Start helps new miners get involved with BTX / Bitcore mining: wallet-first setup, Mac and Windows guides, GPU rankings, rental pricing, and transparent service status."
     >
-    <title>BTX Start | Mine BTX to Your Wallet</title>
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="theme-color" content="#050505">
+    <meta name="application-name" content="BTX Start">
+    <link rel="canonical" href="https://drinknile.com/">
+    <link rel="sitemap" type="application/xml" href="https://drinknile.com/sitemap.xml">
+    <title>Mine BTX / Bitcore With Your GPU | BTX Start</title>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://drinknile.com/">
+    <meta property="og:site_name" content="BTX Start">
+    <meta property="og:title" content="Mine BTX / Bitcore With Your GPU">
+    <meta
+      property="og:description"
+      content="A wallet-first BTX mining setup page for Mac, Windows, NVIDIA GPUs, rental GPU pricing, and public service status."
+    >
+    <meta property="og:image" content="https://drinknile.com/assets/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="BTX Start mining setup for BTX and Bitcore miners">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mine BTX / Bitcore With Your GPU">
+    <meta
+      name="twitter:description"
+      content="BTX Start gives new miners a clear path into BTX / Bitcore mining with wallet-first setup, Mac and Windows guides, and GPU economics."
+    >
+    <meta name="twitter:image" content="https://drinknile.com/assets/og-image.png">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/styles.css">
     <script src="assets/site.js" defer></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://drinknile.com/#website",
+            "name": "BTX Start",
+            "url": "https://drinknile.com/",
+            "description": "BTX Start is a wallet-first setup page for BTX / Bitcore miners.",
+            "inLanguage": "en-US"
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://drinknile.com/#webpage",
+            "url": "https://drinknile.com/",
+            "name": "Mine BTX / Bitcore With Your GPU | BTX Start",
+            "description": "BTX Start helps new miners get involved with BTX / Bitcore mining through Mac, Windows, NVIDIA GPU, rental GPU, wallet, and service-status guidance.",
+            "isPartOf": { "@id": "https://drinknile.com/#website" },
+            "about": [
+              "BTX mining",
+              "Bitcore BTX",
+              "MatMul proof-of-work",
+              "GPU mining",
+              "Mac mining setup",
+              "Windows WSL2 mining setup"
+            ],
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://drinknile.com/assets/og-image.png",
+              "width": 1200,
+              "height": 630
+            },
+            "dateModified": "2026-05-27",
+            "inLanguage": "en-US"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://drinknile.com/#software",
+            "name": "BTX Start Miner Installer",
+            "url": "https://drinknile.com/install.sh",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Linux, macOS, Windows WSL2",
+            "description": "Installer and setup guide for BTX / Bitcore miners who want to mine to their own wallet.",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://drinknile.com/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is BTX / Bitcore mining?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "BTX mining secures the BTX network with MatMul proof-of-work. BTX Start explains how miners can prepare a wallet, choose a machine, and connect when the managed service is live."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do I need to run a BTX node?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The BTX Start service is designed so users only run the miner. The backend node and service-side infrastructure are operated separately and the page shows whether mining through BTX Start is live."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I mine BTX from a Mac or Windows PC?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The page includes a dedicated Apple Silicon Mac path and a Windows WSL2 path. Windows users run the installer inside Ubuntu under WSL2 after confirming NVIDIA GPU passthrough."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Where do BTX rewards go?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Users enter their own BTX payout address. BTX Start does not ask for wallet private keys and does not custody a user's personal wallet."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <nav class="topnav" aria-label="Primary navigation">
@@ -28,7 +145,7 @@
       </div>
       <div class="nav-actions">
         <a href="WALLET_SETUP.md">Wallet guide</a>
-        <a href="https://github.com/pythonoptic-sketch/drinknile" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">GitHub</a>
       </div>
     </nav>
 
@@ -39,7 +156,8 @@
           <h1 id="hero-title">Mine BTX to your own wallet.</h1>
           <p>
             Paste your BTX address, copy the generated command, and run a preflight before installing.
-            BTX Start handles the network service; you only run the miner on your machine.
+            BTX Start is a wallet-first path into BTX / Bitcore MatMul proof-of-work mining:
+            you keep your address, and only run the miner on your machine.
           </p>
           <div class="backend-pill warning">
             <strong>Service status:</strong>
@@ -153,6 +271,45 @@
         </div>
 
         <div class="reference-list">
+          <details class="reference-panel">
+            <summary>
+              <span>BTX / Bitcore mining FAQ</span>
+              <small>Quick answers for new miners.</small>
+            </summary>
+            <div class="reference-content">
+              <div class="seo-faq-grid">
+                <article>
+                  <h3>What is BTX / Bitcore mining?</h3>
+                  <p>
+                    BTX mining secures the BTX network with MatMul proof-of-work. The goal of this page is to make
+                    wallet setup, Mac and Windows setup, GPU selection, and service status understandable in one place.
+                  </p>
+                </article>
+                <article>
+                  <h3>Do I need to run a BTX node?</h3>
+                  <p>
+                    BTX Start is being built so users only run the miner while the service side handles the backend.
+                    The status area shows whether managed mining through BTX Start is live.
+                  </p>
+                </article>
+                <article>
+                  <h3>Can I use a Mac or Windows PC?</h3>
+                  <p>
+                    Yes. Apple Silicon Macs use the Mac path with a local Metal-capable solver. Windows NVIDIA PCs use
+                    Ubuntu under WSL2 and should verify <code>nvidia-smi</code> before installing.
+                  </p>
+                </article>
+                <article>
+                  <h3>Where do rewards go?</h3>
+                  <p>
+                    Users enter their own BTX payout address. BTX Start does not ask for wallet private keys and does
+                    not custody a user's personal wallet.
+                  </p>
+                </article>
+              </div>
+            </div>
+          </details>
+
           <details class="reference-panel" id="track-panel">
             <summary>
               <span>Mac and Windows local setup</span>
@@ -514,7 +671,7 @@
         <div class="footer-links">
           <a href="WALLET_SETUP.md">Wallet guide</a>
           <a href="install.sh">Installer source</a>
-          <a href="https://github.com/pythonoptic-sketch/drinknile" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">GitHub</a>
         </div>
         <p>Mine to your own wallet. BTX Start runs the service side; users only run the miner.</p>
       </div>

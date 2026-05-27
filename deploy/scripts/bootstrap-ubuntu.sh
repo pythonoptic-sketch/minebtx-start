@@ -8,7 +8,7 @@ APP_USER="${APP_USER:-btxstart}"
 APP_DIR="${APP_DIR:-/opt/btx-start}"
 DATA_DIR="${DATA_DIR:-/var/lib/btx-start}"
 ENV_FILE="${ENV_FILE:-/etc/btx-start/backend.env}"
-REPO_URL="${REPO_URL:-https://github.com/pythonoptic-sketch/drinknile.git}"
+REPO_URL="${REPO_URL:-https://github.com/pythonoptic-sketch/minebtx-start.git}"
 FALLBACK_REPO_URL="${FALLBACK_REPO_URL:-https://github.com/pythonoptic-sketch/minebtx-start.git}"
 
 err() { echo "error: $*" >&2; exit 1; }

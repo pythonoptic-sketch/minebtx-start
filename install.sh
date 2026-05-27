@@ -778,7 +778,7 @@ compatible with your GPU/driver combination. Driver: $(nvidia-smi --query-gpu=dr
 
 This is a binary issue, NOT a driver issue — DO NOT downgrade your driver.
 
-Action: file an issue at github.com/pythonoptic-sketch/drinknile/issues with:
+Action: file an issue at github.com/pythonoptic-sketch/minebtx-start/issues with:
   - GPU model: ${GPU_NAME}
   - Driver version: $(nvidia-smi --query-gpu=driver_version --format=csv,noheader | head -1)
   - CUDA runtime: $(nvidia-smi --query-gpu=cuda_version --format=csv,noheader 2>/dev/null | head -1)
