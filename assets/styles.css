@@ -95,6 +95,25 @@
   min-height: 42px;
 }
 
+.os-first-card {
+  border-color: rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.045);
+}
+
+.os-first-card:hover {
+  border-color: rgba(249, 115, 22, 0.5);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.045), 0 0 0 4px rgba(249, 115, 22, 0.1);
+}
+
+.os-first-card strong {
+  color: #000000;
+}
+
+.os-first-card small {
+  color: #666666;
+}
+
 .start-steps span {
   width: 28px;
   height: 28px;
@@ -835,6 +854,51 @@ main {
   max-width: 760px;
   margin-bottom: 0;
   color: var(--muted);
+}
+
+.os-first {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.os-first-card {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.os-first-card:hover {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.12);
+}
+
+.os-first-card span {
+  color: var(--orange);
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.os-first-card strong {
+  display: block;
+  color: var(--fg);
+  font-size: 26px;
+  line-height: 1.05;
+}
+
+.os-first-card small {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .wallet-first {
@@ -2226,6 +2290,10 @@ tr:last-child td {
 
   .command-panel code {
     padding: 12px;
+  }
+
+  .os-first {
+    grid-template-columns: 1fr;
   }
 
   .wallet-first {
