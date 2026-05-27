@@ -2838,7 +2838,7 @@ td small {
 
 /* Premium landing polish inspired by institutional crypto homepages. */
 :root {
-  --bg: #f5f2ea;
+  --bg: #f6f8fb;
   --bg-soft: #ffffff;
   --bg-panel: #ffffff;
   --fg: #050505;
@@ -3066,7 +3066,7 @@ h1 {
 .os-first-card {
   border-radius: 8px;
   border-color: rgba(5, 5, 5, 0.08);
-  background: #faf9f5;
+  background: #ffffff;
   box-shadow: none;
   transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
 }
@@ -3158,7 +3158,7 @@ h1 {
 .dashboard-worker-list {
   border-radius: 8px;
   border-color: rgba(5, 5, 5, 0.08);
-  background: #faf9f5;
+  background: #ffffff;
   box-shadow: none;
 }
 
@@ -3207,7 +3207,7 @@ h1 {
   padding: 64px 24px;
   border-top: 1px solid rgba(5, 5, 5, 0.08);
   border-bottom: 1px solid rgba(5, 5, 5, 0.08);
-  background: #f9f7f1;
+  background: #f6f8fb;
 }
 
 .section-heading h2,
@@ -3225,12 +3225,12 @@ h1 {
 }
 
 th {
-  background: #f3f0e8;
+  background: #f8fafc;
   color: #77746c;
 }
 
 .footer {
-  background: #f5f2ea;
+  background: #f6f8fb;
 }
 
 @media (max-width: 920px) {
@@ -3249,5 +3249,210 @@ th {
 
   .hero-proof {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Cool fintech pass: neutral Stripe-like surfaces and higher hero start. */
+:root {
+  --bg: #f6f8fb;
+  --bg-soft: #ffffff;
+  --bg-panel: #ffffff;
+  --fg: #05070a;
+  --muted: #475467;
+  --quiet: #667085;
+  --orange: #0a2540;
+  --orange-dark: #0a2540;
+  --line: #e5e7eb;
+  --line-strong: #d0d5dd;
+  --shadow: rgba(15, 23, 42, 0.08);
+}
+
+html,
+body {
+  background: #f6f8fb;
+}
+
+body {
+  background:
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 52%, #f6f8fb 100%);
+}
+
+.topnav {
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 54px rgba(15, 23, 42, 0.08);
+}
+
+.nav-links {
+  background: #f8fafc;
+  border-color: #e5e7eb;
+}
+
+.nav-links a,
+.nav-actions a {
+  color: #475467;
+}
+
+.nav-links a[aria-current="page"],
+.nav-links a:hover,
+.nav-actions a:hover {
+  color: #0f172a;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.simple-hero {
+  min-height: auto;
+  padding-top: clamp(28px, 4vw, 52px);
+  align-items: start;
+}
+
+.simple-hero-copy {
+  top: 92px;
+  padding-top: clamp(4px, 1vw, 12px);
+}
+
+.eyebrow,
+.os-first-card span {
+  color: #0a2540;
+}
+
+.simple-hero h1,
+h1 {
+  color: #020617;
+}
+
+.simple-hero-copy > p:not(.eyebrow) {
+  color: #344054;
+}
+
+.hero-proof {
+  border-color: #d0d5dd;
+  background: #d0d5dd;
+}
+
+.hero-proof article {
+  background: #ffffff;
+}
+
+.hero-proof strong {
+  color: #020617;
+}
+
+.hero-proof span,
+.address-builder small,
+.command-block p,
+.wallet-first p,
+.personal-dashboard > p,
+.status-strip p,
+.live-stats p,
+.setup-choice-card p,
+.seo-faq-grid p,
+.treasury-card p,
+.tracker-grid p,
+.profile-metric p,
+.fine-print {
+  color: #667085;
+}
+
+.backend-pill,
+.backend-pill.live,
+.backend-pill.warning {
+  border-color: #d0d5dd;
+  background: #ffffff;
+  color: #344054;
+}
+
+.mining-card {
+  border-color: rgba(15, 23, 42, 0.09);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 34px 100px rgba(15, 23, 42, 0.12);
+}
+
+.fee-badge,
+.confidence {
+  border-color: #d0d5dd;
+  background: #f8fafc;
+  color: #0a2540;
+}
+
+.os-first-card,
+.dashboard-metrics article,
+.dashboard-worker-list {
+  border-color: #e5e7eb;
+  background: #ffffff;
+}
+
+.os-first-card:hover {
+  border-color: #98a2b3;
+  background: #f8fafc;
+}
+
+.wallet-first {
+  border-color: #d0d5dd;
+  background: #f8fafc;
+}
+
+.address-builder input,
+.filter-row input,
+.filter-row select {
+  border-color: #d0d5dd;
+  background: #ffffff;
+}
+
+.address-builder input:focus,
+.filter-row input:focus,
+.filter-row select:focus {
+  border-color: #0a2540;
+  box-shadow: 0 0 0 4px rgba(10, 37, 64, 0.1);
+}
+
+.command-panel {
+  border-color: #020617;
+  background: #020617;
+}
+
+.status-strip article,
+.live-stats article,
+.setup-choice-card,
+.setup-os-panel,
+.seo-faq-grid article,
+.treasury-card,
+.tracker-grid article,
+.profile-metric,
+.reference-panel,
+.table-wrap {
+  border-color: #e5e7eb;
+  background: #ffffff;
+}
+
+.reference-band,
+.footer {
+  background: #f6f8fb;
+  border-color: #e5e7eb;
+}
+
+th {
+  color: #667085;
+  background: #f8fafc;
+}
+
+td {
+  border-bottom-color: #eef2f6;
+}
+
+@media (max-width: 920px) {
+  body {
+    background: #f6f8fb;
+  }
+
+  .simple-hero {
+    padding-top: 22px;
+  }
+
+  .topnav {
+    margin-top: 8px;
+    background: rgba(255, 255, 255, 0.96);
   }
 }
