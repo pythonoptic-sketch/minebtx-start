@@ -10,29 +10,34 @@
   "health": {
     "btxd": {
       "reachable": true,
-      "blocks": 113230,
-      "headers": 113230,
+      "blocks": 113367,
+      "headers": 113367,
       "ibd": false,
-      "verification_progress": 0.9999994465315428,
-      "network_hash_ps": 2432388.246581586
+      "verification_progress": 0.9999741291537965,
+      "network_hash_ps": 2592073.186024281
     },
     "shares_accepted": 0,
     "shares_rejected": 0
   },
   "policy": {
-    "owned_backend_active": false,
-    "status": "provisioning",
+    "owned_backend_active": true,
+    "status": "live",
+    "can_accept_real_shares": true,
+    "share_validation_mode": "solver",
+    "block_submission_enabled": true,
     "fee_model": "per_wallet_trial_then_pool_fee",
     "fee_routing": "pool_payout_accounting",
     "account_key_scope": "payout_address",
     "trial_days": 7,
     "trial_fee_bps": 0,
     "post_trial_fee_bps": 50,
+    "pplns_window_hours": 24,
     "pool_fee_bps": 50,
     "treasury_address": "btx1zjv7rsh3kpzyq7jzpud7zcneg3ar5gk23n0yp8v64967th06nw0fqdwzzxd",
     "fee_address": "btx1zjv7rsh3kpzyq7jzpud7zcneg3ar5gk23n0yp8v64967th06nw0fqdwzzxd",
     "stratum_endpoint": "stratum.drinknile.com:3333",
-    "stats_url": "https://api.drinknile.com/stats"
+    "stats_url": "https://api.drinknile.com/stats",
+    "share_target_hex": "00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
   },
-  "fetched_at": "2026-05-27T13:52:07Z"
+  "fetched_at": "2026-05-27T17:18:32Z"
 }
