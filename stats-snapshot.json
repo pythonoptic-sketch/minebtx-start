@@ -10,11 +10,11 @@
   "health": {
     "btxd": {
       "reachable": true,
-      "blocks": 72089,
-      "headers": 113086,
-      "ibd": true,
-      "verification_progress": 0.6169998380234828,
-      "network_hash_ps": 24869.7303132189
+      "blocks": 113230,
+      "headers": 113230,
+      "ibd": false,
+      "verification_progress": 0.9999994465315428,
+      "network_hash_ps": 2432388.246581586
     },
     "shares_accepted": 0,
     "shares_rejected": 0
@@ -34,5 +34,5 @@
     "stratum_endpoint": "stratum.drinknile.com:3333",
     "stats_url": "https://api.drinknile.com/stats"
   },
-  "fetched_at": "2026-05-27T10:14:07Z"
+  "fetched_at": "2026-05-27T13:52:07Z"
 }
