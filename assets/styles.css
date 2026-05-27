@@ -3456,3 +3456,231 @@ td {
     background: rgba(255, 255, 255, 0.96);
   }
 }
+
+/* Resource modules: compact Stripe-inspired cards and Vast acceleration CTA. */
+.reference-band {
+  padding: 76px 24px;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #f6f8fb 44%, #f6f8fb 100%);
+}
+
+.reference-band > .section-heading {
+  width: min(1180px, 100%);
+  max-width: 1180px;
+  margin: 0 auto 28px;
+}
+
+.reference-band > .section-heading .eyebrow {
+  color: #635bff;
+}
+
+.reference-band > .section-heading h2 {
+  max-width: 760px;
+  color: #0a2540;
+  font-size: clamp(42px, 6vw, 76px);
+  font-weight: 760;
+  line-height: 0.94;
+}
+
+.reference-band > .section-heading p:not(.eyebrow) {
+  max-width: 760px;
+  color: #425466;
+  font-size: clamp(17px, 2vw, 22px);
+  line-height: 1.42;
+}
+
+.reference-cta {
+  position: relative;
+  width: min(1180px, 100%);
+  margin: 0 auto 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  overflow: hidden;
+  padding: 28px;
+  border: 1px solid rgba(99, 91, 255, 0.18);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, #0a2540 0%, #102a43 58%, #111827 100%);
+  color: #ffffff;
+  box-shadow: 0 24px 70px rgba(10, 37, 64, 0.18);
+}
+
+.reference-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.8), transparent 78%);
+  pointer-events: none;
+}
+
+.reference-cta > * {
+  position: relative;
+}
+
+.reference-cta .metric-label {
+  color: #7dd3fc;
+}
+
+.reference-cta h3 {
+  max-width: 620px;
+  margin: 6px 0 8px;
+  color: #ffffff;
+  font-size: clamp(30px, 4vw, 52px);
+  font-weight: 760;
+  line-height: 0.98;
+}
+
+.reference-cta p {
+  max-width: 650px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.reference-cta-link {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  border-radius: 999px;
+  color: #0a2540;
+  background: #ffffff;
+  font-weight: 760;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.reference-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.reference-panel {
+  position: relative;
+  border-radius: 12px;
+  border-color: #e6ebf1;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+}
+
+.reference-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #635bff, #00d4ff, #0a2540);
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.reference-panel:hover,
+.reference-panel[open] {
+  border-color: #c9d4e2;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.07);
+}
+
+.reference-panel:hover::before,
+.reference-panel[open]::before {
+  opacity: 1;
+}
+
+.reference-panel[open] {
+  grid-column: 1 / -1;
+}
+
+.reference-panel summary {
+  min-height: 116px;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 6px 18px;
+  padding: 24px 26px;
+}
+
+.reference-panel summary span {
+  grid-column: 1;
+  grid-row: 1;
+  color: #0a2540;
+  font-size: clamp(21px, 2.4vw, 28px);
+  font-weight: 760;
+  line-height: 1.05;
+}
+
+.reference-panel summary small {
+  grid-column: 1;
+  grid-row: 2;
+  max-width: 620px;
+  margin: 0;
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.reference-panel summary::after {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #d9e2ec;
+  border-radius: 999px;
+  color: #0a2540;
+  background: #f8fafc;
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.reference-panel:hover summary::after,
+.reference-panel[open] summary::after {
+  color: #ffffff;
+  background: #0a2540;
+  transform: scale(1.03);
+}
+
+.reference-content {
+  padding: 0 26px 26px;
+}
+
+@media (max-width: 920px) {
+  .reference-band {
+    padding: 52px 16px;
+  }
+
+  .reference-cta,
+  .reference-list {
+    width: min(1180px, 100%);
+  }
+
+  .reference-cta,
+  .reference-list {
+    grid-template-columns: 1fr;
+  }
+
+  .reference-cta {
+    padding: 24px;
+  }
+
+  .reference-cta-link {
+    width: 100%;
+  }
+
+  .reference-panel[open] {
+    grid-column: auto;
+  }
+
+  .reference-panel summary {
+    min-height: 104px;
+    padding: 22px;
+  }
+}
