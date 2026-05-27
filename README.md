@@ -12,6 +12,7 @@ proof-of-work.
 - **Revenue model**: [REVENUE_MODEL.md](REVENUE_MODEL.md)
 - **GPU rentals**: [VAST_AI.md](VAST_AI.md)
 - **Apple Silicon setup**: [MAC_SETUP.md](MAC_SETUP.md)
+- **Windows setup**: [WINDOWS_SETUP.md](WINDOWS_SETUP.md)
 - **Backend scaffold**: [backend/README.md](backend/README.md)
 
 ---
@@ -118,6 +119,41 @@ curl -fsSL https://drinknile.com/install.sh | bash -s -- \
 The current pinned release artifact is still the Linux/NVIDIA solver. Mac
 users need a local Apple Silicon `btx-gbt-solve` binary until a Mac artifact is
 published and hash-pinned. See [MAC_SETUP.md](MAC_SETUP.md).
+
+## Windows PCs
+
+Windows desktops and laptops use Ubuntu under WSL2. Install the latest NVIDIA
+driver in Windows first, then run the miner installer from the Ubuntu terminal,
+not PowerShell:
+
+```powershell
+wsl --install -d Ubuntu
+```
+
+Inside Ubuntu, verify GPU passthrough:
+
+```bash
+nvidia-smi
+```
+
+Then check the host:
+
+```bash
+curl -fsSL https://drinknile.com/install.sh | bash -s -- \
+  --preflight \
+  --address 'btx1z...YOUR_BTX_ADDRESS...' \
+  --worker 'windows'
+```
+
+Install after preflight passes:
+
+```bash
+curl -fsSL https://drinknile.com/install.sh | bash -s -- \
+  --address 'btx1z...YOUR_BTX_ADDRESS...' \
+  --worker 'windows'
+```
+
+See [WINDOWS_SETUP.md](WINDOWS_SETUP.md) for the full Windows path.
 
 ## BTX Start helper CLI
 

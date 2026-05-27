@@ -950,6 +950,10 @@ main {
   margin-bottom: 18px;
 }
 
+.os-setup-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .local-card,
 .mac-card {
   min-width: 0;
@@ -991,6 +995,21 @@ main {
 .mac-card p {
   margin-bottom: 0;
   color: var(--muted);
+}
+
+.setup-list {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.setup-list li::marker {
+  color: var(--orange);
+  font-weight: 800;
 }
 
 .local-card code,
@@ -1042,6 +1061,32 @@ main {
 }
 
 .local-command-grid .command-block {
+  margin-top: 0;
+}
+
+.os-command-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.setup-os-panel {
+  min-width: 0;
+  padding: 20px;
+  background: rgba(21, 29, 38, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.setup-os-panel-header {
+  margin-bottom: 14px;
+}
+
+.setup-os-panel-header h3 {
+  margin-bottom: 0;
+}
+
+.setup-os-panel .command-block:first-of-type {
   margin-top: 0;
 }
 
@@ -1833,9 +1878,11 @@ tr:last-child td {
   .stat-grid,
   .tracking-grid,
   .local-grid,
+  .os-setup-grid,
   .mac-grid,
   .local-steps,
   .local-command-grid,
+  .os-command-grid,
   .status-grid,
   .treasury-grid,
   .tracker-grid,
@@ -1947,9 +1994,11 @@ tr:last-child td {
   .stat-grid,
   .tracking-grid,
   .local-grid,
+  .os-setup-grid,
   .mac-grid,
   .local-steps,
   .local-command-grid,
+  .os-command-grid,
   .status-grid,
   .treasury-grid,
   .tracker-grid,
@@ -2154,7 +2203,9 @@ h1 {
 
 .backend-pill code,
 .local-card code,
-.mac-card code {
+.mac-card code,
+.setup-list code,
+.setup-os-panel p code {
   border-color: #ddddd5;
   background: #f3f3ef;
   color: #111111;
@@ -2221,6 +2272,7 @@ h3 {
 .friction-grid p,
 .local-card p,
 .mac-card p,
+.setup-list,
 .treasury-card p,
 .tracker-grid p,
 .profile-metric p,
@@ -2293,6 +2345,7 @@ h3 {
 .friction-grid article,
 .local-card,
 .mac-card,
+.setup-os-panel,
 .status-card,
 .treasury-card,
 .tracker-grid article,
@@ -2314,6 +2367,7 @@ h3 {
 .live-stats strong,
 .local-card strong,
 .mac-card strong,
+.setup-os-panel h3,
 .status-card strong,
 .treasury-card strong,
 .profile-metric strong,
@@ -2324,6 +2378,7 @@ h3 {
 
 .local-card.emphasis,
 .mac-card.emphasis,
+.setup-os-panel,
 .status-card.positive,
 .treasury-card.highlight {
   border-color: rgba(249, 115, 22, 0.24);

@@ -147,7 +147,7 @@
           <p class="eyebrow">Reference</p>
           <h2 id="reference-title">Everything else stays available when someone asks for it.</h2>
           <p>
-            Local setup, Mac setup, GPU ranking, rental pricing, tracking, and fee transparency are available here,
+            Mac setup, Windows setup, GPU ranking, rental pricing, tracking, and fee transparency are available here,
             but the main action stays simple.
           </p>
         </div>
@@ -155,53 +155,109 @@
         <div class="reference-list">
           <details class="reference-panel" id="track-panel">
             <summary>
-              <span>Local setup, Mac setup, and progress checks</span>
-              <small>Use your own machine first.</small>
+              <span>Mac and Windows local setup</span>
+              <small>Two clear paths for personal machines.</small>
             </summary>
             <div class="reference-content">
-              <div class="local-grid">
+              <div class="local-grid os-setup-grid">
                 <article class="local-card emphasis">
-                  <span class="metric-label">Best path</span>
-                  <strong>Linux + NVIDIA</strong>
-                  <p>Run preflight first. If <code>nvidia-smi</code> works and the BTX Start service is reachable, use the install command above.</p>
+                  <span class="metric-label">Mac users</span>
+                  <strong>Apple Silicon Mac</strong>
+                  <p>Use this path for M-series MacBook, Mac mini, Mac Studio, Max, and Ultra machines.</p>
+                  <ol class="setup-list">
+                    <li>Open Terminal on the Mac.</li>
+                    <li>Install Xcode command line tools and Homebrew if they are missing.</li>
+                    <li>Place the Apple Silicon <code>btx-gbt-solve</code> binary at <code>~/.dexbtx-miner/bin/btx-gbt-solve</code>.</li>
+                    <li>Run the Mac preflight command first, then the Mac install command.</li>
+                  </ol>
                 </article>
                 <article class="local-card">
-                  <span class="metric-label">Apple Silicon</span>
-                  <strong>Mac</strong>
-                  <p>Use the Metal setup only with a local Mac-capable solver. The command below stays explicit about the local binary path.</p>
-                </article>
-                <article class="local-card">
-                  <span class="metric-label">Windows</span>
-                  <strong>WSL2</strong>
-                  <p>Install Ubuntu under WSL2 and verify NVIDIA passthrough inside WSL before running the Linux installer.</p>
+                  <span class="metric-label">Windows users</span>
+                  <strong>Windows + WSL2</strong>
+                  <p>Use this path for Windows desktops, laptops, and gaming PCs with NVIDIA GPUs.</p>
+                  <ol class="setup-list">
+                    <li>Install the current NVIDIA driver in Windows.</li>
+                    <li>Install Ubuntu under WSL2 from PowerShell.</li>
+                    <li>Open the Ubuntu app and confirm <code>nvidia-smi</code> works inside WSL.</li>
+                    <li>Run the Windows WSL preflight command first, then the Windows WSL install command.</li>
+                  </ol>
                 </article>
               </div>
 
-              <div class="local-command-grid">
-                <div class="command-block">
-                  <div>
-                    <h3>Local Linux install</h3>
-                    <p>Same command as the primary flow, repeated here for laptop users.</p>
+              <div class="os-command-grid">
+                <section class="setup-os-panel" aria-labelledby="mac-setup-title">
+                  <div class="setup-os-panel-header">
+                    <span class="metric-label">Mac commands</span>
+                    <h3 id="mac-setup-title">Run in Terminal</h3>
                   </div>
-                  <div class="command-panel">
-                    <code id="local-install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
-                    <button class="icon-button" type="button" data-copy-target="local-install-command" aria-label="Copy local install command">
-                      <span aria-hidden="true">Copy</span>
-                    </button>
+                  <div class="command-block">
+                    <div>
+                      <h3>1. Mac preflight</h3>
+                      <p>Checks the local solver path and verifies the service endpoint before installing.</p>
+                    </div>
+                    <div class="command-panel">
+                      <code id="mac-preflight-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --worker 'mac-ultra' --solver-backend metal --local-solver "$HOME/.dexbtx-miner/bin/btx-gbt-solve" --trust-local-solver</code>
+                      <button class="icon-button" type="button" data-copy-target="mac-preflight-command" aria-label="Copy Mac preflight command">
+                        <span aria-hidden="true">Copy</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div class="command-block">
-                  <div>
-                    <h3>Mac Metal setup</h3>
-                    <p>For maxed-out Mac Studio, Mac Ultra, or MacBook Pro testing with a trusted local solver.</p>
+                  <div class="command-block">
+                    <div>
+                      <h3>2. Mac install</h3>
+                      <p>Uses your BTX address and the local Metal solver. Intel Macs are not a practical mining target.</p>
+                    </div>
+                    <div class="command-panel">
+                      <code id="mac-install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'mac-ultra' --solver-backend metal --local-solver "$HOME/.dexbtx-miner/bin/btx-gbt-solve" --trust-local-solver</code>
+                      <button class="icon-button" type="button" data-copy-target="mac-install-command" aria-label="Copy Mac install command">
+                        <span aria-hidden="true">Copy</span>
+                      </button>
+                    </div>
                   </div>
-                  <div class="command-panel">
-                    <code id="mac-install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'mac-ultra' --solver-backend metal --local-solver "$HOME/.dexbtx-miner/bin/btx-gbt-solve" --trust-local-solver</code>
-                    <button class="icon-button" type="button" data-copy-target="mac-install-command" aria-label="Copy Mac install command">
-                      <span aria-hidden="true">Copy</span>
-                    </button>
+                </section>
+
+                <section class="setup-os-panel" aria-labelledby="windows-setup-title">
+                  <div class="setup-os-panel-header">
+                    <span class="metric-label">Windows commands</span>
+                    <h3 id="windows-setup-title">Run PowerShell, then Ubuntu</h3>
                   </div>
-                </div>
+                  <div class="command-block">
+                    <div>
+                      <h3>1. Install Ubuntu WSL2</h3>
+                      <p>Run this once in Windows PowerShell, then restart if Windows asks.</p>
+                    </div>
+                    <div class="command-panel">
+                      <code id="windows-wsl-command">wsl --install -d Ubuntu</code>
+                      <button class="icon-button" type="button" data-copy-target="windows-wsl-command" aria-label="Copy Windows WSL setup command">
+                        <span aria-hidden="true">Copy</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="command-block">
+                    <div>
+                      <h3>2. Windows WSL preflight</h3>
+                      <p>Run inside the Ubuntu terminal, not PowerShell. If <code>nvidia-smi</code> fails, fix the Windows driver first.</p>
+                    </div>
+                    <div class="command-panel">
+                      <code id="windows-preflight-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --worker 'windows'</code>
+                      <button class="icon-button" type="button" data-copy-target="windows-preflight-command" aria-label="Copy Windows WSL preflight command">
+                        <span aria-hidden="true">Copy</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="command-block">
+                    <div>
+                      <h3>3. Windows WSL install</h3>
+                      <p>Run inside the Ubuntu terminal after preflight passes.</p>
+                    </div>
+                    <div class="command-panel">
+                      <code id="windows-install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'windows'</code>
+                      <button class="icon-button" type="button" data-copy-target="windows-install-command" aria-label="Copy Windows WSL install command">
+                        <span aria-hidden="true">Copy</span>
+                      </button>
+                    </div>
+                  </div>
+                </section>
               </div>
 
               <div class="tracker-grid" id="dashboard">
@@ -218,7 +274,7 @@
                 <article>
                   <span class="metric-label">Miner log</span>
                   <strong>Accepted shares</strong>
-                  <p><code>journalctl -u dexbtx-miner -f</code></p>
+                  <p><code>tail -f ~/.dexbtx-miner/miner.log</code> or <code>journalctl -u dexbtx-miner -f</code></p>
                 </article>
               </div>
             </div>
