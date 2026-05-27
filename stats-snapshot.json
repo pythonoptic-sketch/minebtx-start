@@ -1,45 +1,23 @@
 {
   "pool": {
+    "workers_active_now": 0,
     "workers_active_24h": 0,
-    "workers_total": 0,
     "shares_24h": 0,
     "blocks_found_24h": 0,
-    "blocks_matured_total": 0,
-    "total_btx_paid_sat": 0,
     "pending_fee_sat": 0,
-    "pending_miner_payout_sat": 0,
-    "workers_active_now": 0,
-    "workers_active_pay_period": 0,
-    "blocks_found_pay_period": 0,
-    "shares_accepted_pay_period": 0,
-    "estimated_pool_hashrate_nps": 0,
-    "pool_hashrate_live_nps": 0,
-    "network_hash_nps": null,
-    "pool_share_of_network": 0
+    "pending_miner_payout_sat": 0
   },
   "health": {
     "btxd": {
-      "blocks": null,
-      "headers": null,
-      "peers": 0,
+      "reachable": true,
+      "blocks": 9741,
+      "headers": 112732,
       "ibd": true,
-      "verification_progress": 0,
-      "network_hash_ps": null,
-      "last_probe_unix": null,
-      "reachable": false
+      "verification_progress": 0.07129453782391346,
+      "network_hash_ps": 4.363636363636363
     },
-    "dispatcher_errors": 0,
     "shares_accepted": 0,
-    "shares_rejected": 0,
-    "rpc_p50_ms": null,
-    "rpc_p95_ms": null,
-    "share_validation_p50_ms": null,
-    "share_validation_p95_ms": null,
-    "last_probe_age_secs": null,
-    "hashrate_ema_nps": 0,
-    "rpc_by_method": {},
-    "share_reject_by_code": {},
-    "task_heartbeat_age_secs": {}
+    "shares_rejected": 0
   },
   "policy": {
     "owned_backend_active": false,
@@ -51,10 +29,10 @@
     "trial_fee_bps": 0,
     "post_trial_fee_bps": 50,
     "pool_fee_bps": 50,
-    "treasury_address": null,
-    "fee_address": null,
+    "treasury_address": "btx1zjv7rsh3kpzyq7jzpud7zcneg3ar5gk23n0yp8v64967th06nw0fqdwzzxd",
+    "fee_address": "btx1zjv7rsh3kpzyq7jzpud7zcneg3ar5gk23n0yp8v64967th06nw0fqdwzzxd",
     "stratum_endpoint": "stratum.drinknile.com:3333",
     "stats_url": "https://api.drinknile.com/stats"
   },
-  "fetched_at": "2026-05-26T09:15:00Z"
+  "fetched_at": "2026-05-27T01:34:21Z"
 }
