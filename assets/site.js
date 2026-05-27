@@ -491,7 +491,7 @@ function setupAddressBuilder() {
       : "Check the wallet that owns your BTX address";
     wrapper.dataset.valid = address ? String(looksValid) : "";
     if (!address) {
-      help.textContent = "The command mines to this address. Do not use someone else's address.";
+      help.textContent = "Already have one? Paste it here. Rewards are credited to this address.";
     } else if (looksValid) {
       help.textContent = "Command updated. Shares and payouts will be credited to this address.";
     } else {
@@ -516,22 +516,26 @@ async function hydratePersonalDashboard(address = null) {
   const help = document.getElementById("dashboard-help");
   const status = document.getElementById("dashboard-status");
   const workers = document.getElementById("dashboard-workers");
+  const hashrate = document.getElementById("dashboard-hashrate");
   const shares = document.getElementById("dashboard-shares");
+  const totalBtx = document.getElementById("dashboard-total-btx");
   const balance = document.getElementById("dashboard-balance");
   const fees = document.getElementById("dashboard-fees");
   const lastSeen = document.getElementById("dashboard-last-seen");
   const workerList = document.getElementById("dashboard-worker-list");
-  if (!status || !workers || !shares || !balance || !fees || !lastSeen || !workerList) return;
+  if (!status || !workers || !hashrate || !shares || !totalBtx || !balance || !fees || !lastSeen || !workerList) return;
 
   if (!payoutAddress) {
     status.textContent = "Waiting for address";
     workers.textContent = "0";
+    hashrate.textContent = "No worker yet";
     shares.textContent = "0";
+    totalBtx.textContent = "0.00000000 BTX";
     balance.textContent = "0.00000000 BTX";
     fees.textContent = "0.00000000 BTX";
     lastSeen.textContent = "No worker yet";
     workerList.textContent = "No workers are attached to this address yet.";
-    if (help) help.textContent = "Paste your BTX address above. The dashboard uses only your payout address, never private keys.";
+    if (help) help.textContent = "Get a BTX address first, then paste it above. No private keys are used.";
     return;
   }
 
@@ -554,19 +558,24 @@ async function hydratePersonalDashboard(address = null) {
     const rejected = Number(dashboard.shares?.rejected) || 0;
     const balanceData = dashboard.balance || {};
     const latestWorker = dashboardWorkers[0];
+    const hashrateNps = Number(dashboard.hashrate_nps ?? dashboard.estimated_hashrate_nps ?? dashboard.hashrate?.nps);
 
     status.textContent = dashboard.known ? "Found" : "No worker yet";
     workers.textContent = formatMaybeNumber(dashboardWorkers.length);
+    hashrate.textContent = Number.isFinite(hashrateNps) && hashrateNps > 0
+      ? formatHashrate(hashrateNps)
+      : "Pending";
     shares.textContent = accepted24h > 0
       ? `${formatMaybeNumber(accepted24h)} / 24h`
       : formatMaybeNumber(accepted);
+    totalBtx.textContent = formatSatToBtx(balanceData.gross_sat || 0);
     balance.textContent = formatSatToBtx(balanceData.payable_sat || 0);
     fees.textContent = formatSatToBtx(balanceData.fee_sat || 0);
     lastSeen.textContent = latestWorker ? formatDateTime(latestWorker.last_seen_at) : "No worker yet";
 
     if (!dashboard.known) {
       workerList.textContent = "This address is not in the pool database yet. It will appear here after the first worker connects.";
-      if (help) help.textContent = "Dashboard ready. No worker has connected with this payout address yet.";
+      if (help) help.textContent = "Dashboard ready. This address will show workers, hashrate, and BTX after the first miner connects.";
       return;
     }
 
@@ -583,7 +592,7 @@ async function hydratePersonalDashboard(address = null) {
     if (help) {
       help.textContent = rejected > 0
         ? `${formatMaybeNumber(rejected)} rejected shares are recorded. Once validation is live, accepted shares and pending payout update here.`
-        : "Dashboard ready. Accepted shares, workers, pending payout, and fee state update here.";
+        : "Dashboard ready. Workers, hashrate, mined BTX, pending payout, and fee state update here.";
     }
   } catch (error) {
     status.textContent = "Unavailable";

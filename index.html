@@ -155,12 +155,12 @@
           <p class="eyebrow">BTX mining launcher</p>
           <h1 id="hero-title">Mine BTX to your own wallet.</h1>
           <p>
-            Paste your address, run preflight, then install. Your wallet stays yours.
+            Get a BTX address, paste it here, then start the miner. Your wallet stays yours.
           </p>
           <ol class="start-steps" aria-label="Start mining steps">
-            <li><span>1</span><strong>Paste address</strong></li>
-            <li><span>2</span><strong>Run preflight</strong></li>
-            <li><span>3</span><strong>Install miner</strong></li>
+            <li><span>1</span><strong>Get BTX address</strong></li>
+            <li><span>2</span><strong>Paste address</strong></li>
+            <li><span>3</span><strong>Preflight + install</strong></li>
           </ol>
           <div class="backend-pill warning">
             <strong>Status:</strong>
@@ -172,13 +172,22 @@
           <div class="mining-card-header">
             <div>
               <span class="metric-label">Start here</span>
-              <h2>Set up the miner</h2>
+              <h2>Get an address. Start mining.</h2>
             </div>
             <span class="fee-badge" id="platform-fee-hero">0% first 7d</span>
           </div>
 
+          <section class="wallet-first" aria-label="Get a BTX payout address">
+            <div>
+              <span class="metric-label">Step 1</span>
+              <h3>Get a BTX payout address</h3>
+              <p>New miners need a BTX address before running the miner. The page never asks for private keys.</p>
+            </div>
+            <a class="primary-link" href="WALLET_SETUP.md">Open wallet guide</a>
+          </section>
+
           <label class="address-builder" for="btx-address-input">
-            <span>BTX payout address</span>
+            <span>Step 2: paste BTX payout address</span>
             <input
               id="btx-address-input"
               type="text"
@@ -188,7 +197,7 @@
               placeholder="btx1z...YOUR_BTX_ADDRESS..."
               aria-describedby="address-help"
             >
-            <small id="address-help">Rewards are credited to this address. No private keys needed.</small>
+            <small id="address-help">Already have one? Paste it here. Rewards are credited to this address.</small>
           </label>
 
           <label class="address-builder compact-input" for="worker-name-input">
@@ -208,7 +217,7 @@
 
           <div class="command-block">
             <div>
-              <h3>1. Preflight</h3>
+              <h3>Step 3A: Preflight</h3>
               <p>Checks the machine before anything installs.</p>
             </div>
             <div class="command-panel">
@@ -221,7 +230,7 @@
 
           <div class="command-block">
             <div>
-              <h3>2. Install</h3>
+              <h3>Step 3B: Install</h3>
               <p>Run only after preflight passes.</p>
             </div>
             <div class="command-panel">
@@ -236,14 +245,14 @@
             <div class="personal-dashboard-header">
               <div>
                 <span class="metric-label">Live dashboard</span>
-                <h3 id="personal-dashboard-title">Same address, no terminal watching</h3>
+                <h3 id="personal-dashboard-title">Your address becomes your dashboard</h3>
               </div>
               <button class="icon-button" type="button" id="dashboard-refresh" aria-label="Refresh personal dashboard">
                 <span aria-hidden="true">Refresh</span>
               </button>
             </div>
             <p id="dashboard-help">
-              Paste your address above. When the miner connects, worker activity and payout status appear here.
+              The address above loads your workers, hashrate, shares, mined BTX, pending payout, and fees.
             </p>
             <div class="dashboard-metrics" aria-label="Personal mining metrics">
               <article>
@@ -255,8 +264,16 @@
                 <strong id="dashboard-workers">0</strong>
               </article>
               <article>
+                <span class="metric-label">Hashrate</span>
+                <strong id="dashboard-hashrate">No worker yet</strong>
+              </article>
+              <article>
                 <span class="metric-label">Accepted shares</span>
                 <strong id="dashboard-shares">0</strong>
+              </article>
+              <article>
+                <span class="metric-label">Total mined</span>
+                <strong id="dashboard-total-btx">0.00000000 BTX</strong>
               </article>
               <article>
                 <span class="metric-label">Pending payout</span>
