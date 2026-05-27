@@ -79,28 +79,34 @@ class StratumSession:
     async def run(self) -> None:
         notify_task = asyncio.create_task(self._notify_loop())
         try:
-            while not self.reader.at_eof():
-                line = await self.reader.readline()
-                if not line:
-                    break
-                try:
-                    message = json.loads(line.decode("utf-8"))
-                    response = await self.handle_message(message)
-                except Exception as exc:
-                    response = {"id": None, "result": None, "error": [20, str(exc), None]}
-                if response is not None:
-                    await self._send(response)
-                if self._notify_after_response:
-                    self._notify_after_response = False
-                    await self._send_initial_job()
+            try:
+                while not self.reader.at_eof():
+                    line = await self.reader.readline()
+                    if not line:
+                        break
+                    try:
+                        message = json.loads(line.decode("utf-8"))
+                        response = await self.handle_message(message)
+                    except Exception as exc:
+                        response = {"id": None, "result": None, "error": [20, str(exc), None]}
+                    if response is not None:
+                        await self._send(response)
+                    if self._notify_after_response:
+                        self._notify_after_response = False
+                        await self._send_initial_job()
+            except (BrokenPipeError, ConnectionResetError):
+                pass
         finally:
             notify_task.cancel()
             try:
                 await notify_task
             except (asyncio.CancelledError, Exception):
                 pass
-            self.writer.close()
-            await self.writer.wait_closed()
+            try:
+                self.writer.close()
+                await self.writer.wait_closed()
+            except (BrokenPipeError, ConnectionResetError):
+                pass
 
     async def handle_message(self, message: dict[str, Any]) -> dict[str, Any] | None:
         method = message.get("method")
