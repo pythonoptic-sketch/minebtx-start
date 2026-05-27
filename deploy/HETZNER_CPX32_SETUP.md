@@ -1,4 +1,4 @@
-# Hetzner CPX31 Setup
+# Hetzner CPX32 Falkenstein Setup
 
 This is the cheapest sensible production path for the BTX Start managed mining
 service. Users do not set up nodes; this server runs the service side.
@@ -9,16 +9,22 @@ Create one Hetzner Cloud server:
 
 | Setting | Value |
 |---|---|
-| Location | US East/West if available, otherwise Germany or Finland |
-| Image | Ubuntu 24.04 |
-| Type | CPX31 |
+| Location | Falkenstein (`fsn1`) |
+| Type | Shared Resources, Regular Performance, x86 AMD |
+| Image | Ubuntu 24.04 LTS |
+| Server | CPX32 |
 | CPU/RAM | 4 vCPU / 8 GB RAM |
 | Disk | 160 GB local NVMe |
 | IPv4 | Enabled |
-| Backups | Optional after launch; off for cheapest testing |
+| IPv6 | Enabled; no extra cost |
+| Private networks | Off |
+| Volumes | None |
+| Backups | Off for cheapest testing; enable after launch if budget allows |
+| Placement groups | None |
+| Labels | Optional: `app=drinknile-btx`, `role=backend`, `location=fsn1` |
+| Cloud config | Blank |
+| Name | `drinknile-btx-01` |
 | SSH key | Add your local SSH public key |
-
-Do not add an extra volume yet.
 
 ## Firewall
 
@@ -27,6 +33,7 @@ Allow inbound:
 | Port | Protocol | Purpose |
 |---|---|---|
 | 22 | TCP | SSH administration |
+| 80 | TCP | Caddy/Let's Encrypt HTTP validation and redirect |
 | 443 | TCP | `api.drinknile.com` HTTPS API |
 | 3333 | TCP | `stratum.drinknile.com` miner connections |
 | 19335 | TCP | Optional BTX P2P inbound |
@@ -41,8 +48,8 @@ Add these custom records at the DNS provider:
 
 | Type | Name | Value |
 |---|---|---|
-| A | `api` | Hetzner server IPv4 |
-| A | `stratum` | Hetzner server IPv4 |
+| A | `api` | `162.55.41.215` |
+| A | `stratum` | `162.55.41.215` |
 
 Wait until these resolve:
 

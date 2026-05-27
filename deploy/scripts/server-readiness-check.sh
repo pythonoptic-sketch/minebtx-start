@@ -1,5 +1,5 @@
 #!/bin/sh
-# Quick non-destructive check for the CPX31 backend host.
+# Quick non-destructive check for the CPX32 backend host.
 
 set -eu
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${PATH:-}"
@@ -41,14 +41,14 @@ mem_mb="$(free -m | awk '/^Mem:/ {print $2}')"
 if [ "${mem_mb:-0}" -ge 7000 ]; then
   pass "RAM looks sufficient: ${mem_mb} MB"
 else
-  fail "RAM below CPX31 target: ${mem_mb:-unknown} MB"
+  fail "RAM below CPX32 target: ${mem_mb:-unknown} MB"
 fi
 
 root_gb="$(df -BG / | awk 'NR==2 {gsub(/G/, \"\", $2); print $2}')"
 if [ "${root_gb:-0}" -ge 140 ]; then
   pass "root disk looks sufficient: ${root_gb} GB"
 else
-  fail "root disk below CPX31 target: ${root_gb:-unknown} GB"
+  fail "root disk below CPX32 target: ${root_gb:-unknown} GB"
 fi
 
 if systemctl is-system-running >/dev/null 2>&1 || systemctl is-system-running | grep -Eq 'running|degraded'; then
