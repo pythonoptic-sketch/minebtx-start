@@ -229,10 +229,54 @@
             </div>
           </div>
 
+          <section class="personal-dashboard" aria-labelledby="personal-dashboard-title">
+            <div class="personal-dashboard-header">
+              <div>
+                <span class="metric-label">Personal dashboard</span>
+                <h3 id="personal-dashboard-title">Track from this page</h3>
+              </div>
+              <button class="icon-button" type="button" id="dashboard-refresh" aria-label="Refresh personal dashboard">
+                <span aria-hidden="true">Refresh</span>
+              </button>
+            </div>
+            <p id="dashboard-help">
+              Paste your BTX address above. The dashboard uses only your payout address, never private keys.
+            </p>
+            <div class="dashboard-metrics" aria-label="Personal mining metrics">
+              <article>
+                <span class="metric-label">Status</span>
+                <strong id="dashboard-status">Waiting for address</strong>
+              </article>
+              <article>
+                <span class="metric-label">Workers</span>
+                <strong id="dashboard-workers">0</strong>
+              </article>
+              <article>
+                <span class="metric-label">Accepted shares</span>
+                <strong id="dashboard-shares">0</strong>
+              </article>
+              <article>
+                <span class="metric-label">Pending payout</span>
+                <strong id="dashboard-balance">0.00000000 BTX</strong>
+              </article>
+              <article>
+                <span class="metric-label">Platform fee</span>
+                <strong id="dashboard-fees">0.00000000 BTX</strong>
+              </article>
+              <article>
+                <span class="metric-label">Last seen</span>
+                <strong id="dashboard-last-seen">No worker yet</strong>
+              </article>
+            </div>
+            <div class="dashboard-worker-list" id="dashboard-worker-list" aria-live="polite">
+              No workers are attached to this address yet.
+            </div>
+          </section>
+
           <div class="quick-links" aria-label="Helpful links">
             <a href="install.sh">Installer source</a>
             <a href="WALLET_SETUP.md">Wallet setup</a>
-            <a href="#track-panel">Progress checks</a>
+            <a href="#track-panel">Mac and Windows setup</a>
           </div>
         </div>
       </section>
@@ -419,19 +463,19 @@
 
               <div class="tracker-grid" id="dashboard">
                 <article>
-                  <span class="metric-label">Worker identity</span>
+                  <span class="metric-label">Browser dashboard key</span>
                   <strong id="worker-id-command">btx1z...your_address.default</strong>
-                  <p>Future dashboard rows key off this address plus worker label.</p>
+                  <p>The dashboard reads the payout address above and groups rigs by worker label.</p>
                 </article>
                 <article>
-                  <span class="metric-label">Wallet balance</span>
+                  <span class="metric-label">Wallet view</span>
                   <strong id="wallet-balance-command">Check the wallet that owns your BTX address</strong>
-                  <p>Use your wallet or explorer until the first-party balance index is live.</p>
+                  <p>The page shows pool-side shares and pending payout; your wallet remains self-custodied.</p>
                 </article>
                 <article>
-                  <span class="metric-label">Miner log</span>
-                  <strong>Accepted shares</strong>
-                  <p><code>tail -f ~/.dexbtx-miner/miner.log</code> or <code>journalctl -u dexbtx-miner -f</code></p>
+                  <span class="metric-label">No terminal watching</span>
+                  <strong>Refresh on page</strong>
+                  <p>Once mining is live, accepted shares and worker activity appear in the personal dashboard.</p>
                 </article>
               </div>
             </div>

@@ -1,6 +1,7 @@
 const siteBaseUrl = "https://drinknile.com";
 const installerUrl = `${siteBaseUrl}/install.sh`;
 const statsUrl = "https://api.drinknile.com/stats";
+const dashboardBaseUrl = "https://api.drinknile.com/dashboard";
 const statsFallbackUrl = "stats-snapshot.json";
 const treasuryUrl = "platform-treasury.json";
 const vastOffersUrl = "vast-offers.json";
@@ -137,6 +138,18 @@ function formatSatToBtx(value) {
   const number = Number(value);
   if (!Number.isFinite(number)) return "0.00000000 BTX";
   return `${formatBtx.format(number / 100_000_000)} BTX`;
+}
+
+function formatDateTime(value) {
+  if (!value) return "No worker yet";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function formatFeeBps(value) {
@@ -437,6 +450,7 @@ function setupAddressBuilder() {
   const wrapper = document.querySelector(".address-builder");
   const help = document.getElementById("address-help");
   if (!input || !command || !wrapper || !help) return;
+  let dashboardTimer = null;
 
   function updateCommand() {
     const address = input.value.trim();
@@ -483,11 +497,106 @@ function setupAddressBuilder() {
     } else {
       help.textContent = "This does not look like a BTX address yet. The command still uses the placeholder.";
     }
+
+    if (dashboardTimer) window.clearTimeout(dashboardTimer);
+    dashboardTimer = window.setTimeout(() => {
+      hydratePersonalDashboard(looksValid ? address : "");
+    }, 350);
   }
 
   input.addEventListener("input", updateCommand);
   workerInput?.addEventListener("input", updateCommand);
   updateCommand();
+}
+
+async function hydratePersonalDashboard(address = null) {
+  const input = document.getElementById("btx-address-input");
+  const payoutAddress = address ?? input?.value.trim() ?? "";
+  const looksValid = /^btx1z[a-z0-9]{20,}$/i.test(payoutAddress);
+  const help = document.getElementById("dashboard-help");
+  const status = document.getElementById("dashboard-status");
+  const workers = document.getElementById("dashboard-workers");
+  const shares = document.getElementById("dashboard-shares");
+  const balance = document.getElementById("dashboard-balance");
+  const fees = document.getElementById("dashboard-fees");
+  const lastSeen = document.getElementById("dashboard-last-seen");
+  const workerList = document.getElementById("dashboard-worker-list");
+  if (!status || !workers || !shares || !balance || !fees || !lastSeen || !workerList) return;
+
+  if (!payoutAddress) {
+    status.textContent = "Waiting for address";
+    workers.textContent = "0";
+    shares.textContent = "0";
+    balance.textContent = "0.00000000 BTX";
+    fees.textContent = "0.00000000 BTX";
+    lastSeen.textContent = "No worker yet";
+    workerList.textContent = "No workers are attached to this address yet.";
+    if (help) help.textContent = "Paste your BTX address above. The dashboard uses only your payout address, never private keys.";
+    return;
+  }
+
+  if (!looksValid) {
+    status.textContent = "Invalid address";
+    workerList.textContent = "Enter a valid BTX address to load a personal dashboard.";
+    if (help) help.textContent = "This address does not look valid yet.";
+    return;
+  }
+
+  status.textContent = "Loading";
+  if (help) help.textContent = "Loading pool-side dashboard data for this payout address.";
+  try {
+    const response = await fetch(`${dashboardBaseUrl}/${encodeURIComponent(payoutAddress)}`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`dashboard ${response.status}`);
+    const dashboard = await response.json();
+    const dashboardWorkers = Array.isArray(dashboard.workers) ? dashboard.workers : [];
+    const accepted = Number(dashboard.shares?.accepted) || 0;
+    const accepted24h = Number(dashboard.shares?.accepted_24h) || 0;
+    const rejected = Number(dashboard.shares?.rejected) || 0;
+    const balanceData = dashboard.balance || {};
+    const latestWorker = dashboardWorkers[0];
+
+    status.textContent = dashboard.known ? "Found" : "No worker yet";
+    workers.textContent = formatMaybeNumber(dashboardWorkers.length);
+    shares.textContent = accepted24h > 0
+      ? `${formatMaybeNumber(accepted24h)} / 24h`
+      : formatMaybeNumber(accepted);
+    balance.textContent = formatSatToBtx(balanceData.payable_sat || 0);
+    fees.textContent = formatSatToBtx(balanceData.fee_sat || 0);
+    lastSeen.textContent = latestWorker ? formatDateTime(latestWorker.last_seen_at) : "No worker yet";
+
+    if (!dashboard.known) {
+      workerList.textContent = "This address is not in the pool database yet. It will appear here after the first worker connects.";
+      if (help) help.textContent = "Dashboard ready. No worker has connected with this payout address yet.";
+      return;
+    }
+
+    if (!dashboardWorkers.length) {
+      workerList.textContent = "Address found, but no worker is currently attached.";
+    } else {
+      workerList.innerHTML = dashboardWorkers.map((worker) => `
+        <div>
+          <strong>${escapeHtml(worker.worker_name || "default")}</strong>
+          <span>${escapeHtml(formatDateTime(worker.last_seen_at))}</span>
+        </div>
+      `).join("");
+    }
+    if (help) {
+      help.textContent = rejected > 0
+        ? `${formatMaybeNumber(rejected)} rejected shares are recorded. Once validation is live, accepted shares and pending payout update here.`
+        : "Dashboard ready. Accepted shares, workers, pending payout, and fee state update here.";
+    }
+  } catch (error) {
+    status.textContent = "Unavailable";
+    workerList.textContent = "Dashboard API is not reachable right now. Try refresh again shortly.";
+    if (help) help.textContent = "Could not load the dashboard API.";
+  }
+}
+
+function setupPersonalDashboard() {
+  document.getElementById("dashboard-refresh")?.addEventListener("click", () => {
+    hydratePersonalDashboard();
+  });
+  hydratePersonalDashboard();
 }
 
 function renderGpuRanking() {
@@ -796,6 +905,7 @@ function setupHeroCanvas() {
 setupHeroCanvas();
 setupCopyButtons();
 setupAddressBuilder();
+setupPersonalDashboard();
 setupGpuRanking();
 setupVastOffers();
 renderOperatingModel();
