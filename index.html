@@ -139,12 +139,12 @@
       </a>
       <div class="nav-links">
         <a href="#start" aria-current="page">Start</a>
-        <a href="#status">Status</a>
-        <a href="#reference">Reference</a>
-        <a href="#track-panel">Track</a>
+        <a href="#dashboard-card">Dashboard</a>
+        <a href="#track-panel">Mac / Windows</a>
+        <a href="#reference">More</a>
       </div>
       <div class="nav-actions">
-        <a href="WALLET_SETUP.md">Wallet guide</a>
+        <a href="WALLET_SETUP.md">Wallet</a>
         <a href="https://github.com/pythonoptic-sketch/minebtx-start" target="_blank" rel="noreferrer">GitHub</a>
       </div>
     </nav>
@@ -155,12 +155,15 @@
           <p class="eyebrow">BTX mining launcher</p>
           <h1 id="hero-title">Mine BTX to your own wallet.</h1>
           <p>
-            Paste your BTX address, copy the generated command, and run a preflight before installing.
-            BTX Start is a wallet-first path into BTX / Bitcore MatMul proof-of-work mining:
-            you keep your address, and only run the miner on your machine.
+            Paste your address, run preflight, then install. Your wallet stays yours.
           </p>
+          <ol class="start-steps" aria-label="Start mining steps">
+            <li><span>1</span><strong>Paste address</strong></li>
+            <li><span>2</span><strong>Run preflight</strong></li>
+            <li><span>3</span><strong>Install miner</strong></li>
+          </ol>
           <div class="backend-pill warning">
-            <strong>Service status:</strong>
+            <strong>Status:</strong>
             <span>Being connected. Mining through BTX Start is not live yet, but users will not need to set up a node when it opens.</span>
           </div>
         </div>
@@ -168,8 +171,8 @@
         <div class="mining-card" aria-label="Mining command builder">
           <div class="mining-card-header">
             <div>
-              <span class="metric-label">Primary action</span>
-              <h2>Generate your miner command</h2>
+              <span class="metric-label">Start here</span>
+              <h2>Set up the miner</h2>
             </div>
             <span class="fee-badge" id="platform-fee-hero">0% first 7d</span>
           </div>
@@ -185,11 +188,11 @@
               placeholder="btx1z...YOUR_BTX_ADDRESS..."
               aria-describedby="address-help"
             >
-            <small id="address-help">The command mines to this address. Do not use someone else's address.</small>
+            <small id="address-help">Rewards are credited to this address. No private keys needed.</small>
           </label>
 
           <label class="address-builder compact-input" for="worker-name-input">
-            <span>Worker name, optional</span>
+            <span>Worker label</span>
             <input
               id="worker-name-input"
               type="text"
@@ -200,13 +203,13 @@
               value="default"
               aria-describedby="worker-help"
             >
-            <small id="worker-help">Use one stable label per machine so progress is easy to identify.</small>
+            <small id="worker-help">Optional. Use one stable label per machine.</small>
           </label>
 
           <div class="command-block">
             <div>
-              <h3>Run preflight first</h3>
-              <p>Checks your machine, GPU, BTX address, download artifacts, and service reachability without installing.</p>
+              <h3>1. Preflight</h3>
+              <p>Checks the machine before anything installs.</p>
             </div>
             <div class="command-panel">
               <code id="preflight-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --worker 'default'</code>
@@ -218,8 +221,8 @@
 
           <div class="command-block">
             <div>
-              <h3>Install after preflight passes</h3>
-              <p>Connects your miner to the managed BTX Start service and mines to your own BTX address.</p>
+              <h3>2. Install</h3>
+              <p>Run only after preflight passes.</p>
             </div>
             <div class="command-panel">
               <code id="install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'default'</code>
@@ -229,18 +232,18 @@
             </div>
           </div>
 
-          <section class="personal-dashboard" aria-labelledby="personal-dashboard-title">
+          <section class="personal-dashboard" id="dashboard-card" aria-labelledby="personal-dashboard-title">
             <div class="personal-dashboard-header">
               <div>
-                <span class="metric-label">Personal dashboard</span>
-                <h3 id="personal-dashboard-title">Track from this page</h3>
+                <span class="metric-label">Live dashboard</span>
+                <h3 id="personal-dashboard-title">Same address, no terminal watching</h3>
               </div>
               <button class="icon-button" type="button" id="dashboard-refresh" aria-label="Refresh personal dashboard">
                 <span aria-hidden="true">Refresh</span>
               </button>
             </div>
             <p id="dashboard-help">
-              Paste your BTX address above. The dashboard uses only your payout address, never private keys.
+              Paste your address above. When the miner connects, worker activity and payout status appear here.
             </p>
             <div class="dashboard-metrics" aria-label="Personal mining metrics">
               <article>
@@ -274,9 +277,9 @@
           </section>
 
           <div class="quick-links" aria-label="Helpful links">
+            <a href="#track-panel">Mac / Windows setup</a>
+            <a href="#gpu-panel">GPU estimates</a>
             <a href="install.sh">Installer source</a>
-            <a href="WALLET_SETUP.md">Wallet setup</a>
-            <a href="#track-panel">Mac and Windows setup</a>
           </div>
         </div>
       </section>
@@ -306,11 +309,10 @@
 
       <section class="reference-band" id="reference" aria-labelledby="reference-title">
         <div class="section-heading compact">
-          <p class="eyebrow">Reference</p>
-          <h2 id="reference-title">Everything else stays available when someone asks for it.</h2>
+          <p class="eyebrow">More detail</p>
+          <h2 id="reference-title">Open only what you need.</h2>
           <p>
-            Mac setup, Windows setup, GPU ranking, rental pricing, tracking, and fee transparency are available here,
-            but the main action stays simple.
+            Mac, Windows, GPU ranking, rental pricing, and fee transparency stay out of the way until they are useful.
           </p>
         </div>
 
@@ -357,44 +359,34 @@
           <details class="reference-panel" id="track-panel">
             <summary>
               <span>Mac and Windows local setup</span>
-              <small>Two clear paths for personal machines.</small>
+              <small>Choose your machine only if the main command needs more context.</small>
             </summary>
             <div class="reference-content">
-              <div class="local-grid os-setup-grid">
-                <article class="local-card emphasis">
+              <div class="setup-choice-grid">
+                <article class="setup-choice-card">
                   <span class="metric-label">Mac users</span>
                   <strong>Apple Silicon Mac</strong>
-                  <p>Use this path for M-series MacBook, Mac mini, Mac Studio, Max, and Ultra machines.</p>
-                  <ol class="setup-list">
-                    <li>Open Terminal on the Mac.</li>
-                    <li>Install Xcode command line tools and Homebrew if they are missing.</li>
-                    <li>Place the Apple Silicon <code>btx-gbt-solve</code> binary at <code>~/.dexbtx-miner/bin/btx-gbt-solve</code>.</li>
-                    <li>Run the Mac preflight command first, then the Mac install command.</li>
-                  </ol>
+                  <p>Use Terminal, a local Metal-capable solver, then the Mac commands below.</p>
+                  <a class="mini-link" href="MAC_SETUP.md">Full Mac guide</a>
                 </article>
-                <article class="local-card">
+                <article class="setup-choice-card">
                   <span class="metric-label">Windows users</span>
                   <strong>Windows + WSL2</strong>
-                  <p>Use this path for Windows desktops, laptops, and gaming PCs with NVIDIA GPUs.</p>
-                  <ol class="setup-list">
-                    <li>Install the current NVIDIA driver in Windows.</li>
-                    <li>Install Ubuntu under WSL2 from PowerShell.</li>
-                    <li>Open the Ubuntu app and confirm <code>nvidia-smi</code> works inside WSL.</li>
-                    <li>Run the Windows WSL preflight command first, then the Windows WSL install command.</li>
-                  </ol>
+                  <p>Install Ubuntu under WSL2, confirm <code>nvidia-smi</code>, then run the commands below inside Ubuntu.</p>
+                  <a class="mini-link" href="WINDOWS_SETUP.md">Full Windows guide</a>
                 </article>
               </div>
 
-              <div class="os-command-grid">
-                <section class="setup-os-panel" aria-labelledby="mac-setup-title">
-                  <div class="setup-os-panel-header">
-                    <span class="metric-label">Mac commands</span>
-                    <h3 id="mac-setup-title">Run in Terminal</h3>
-                  </div>
+              <div class="os-command-grid compact">
+                <details class="setup-os-panel" aria-labelledby="mac-setup-title">
+                  <summary>
+                    <span id="mac-setup-title">Mac commands</span>
+                    <small>Run in Terminal.</small>
+                  </summary>
                   <div class="command-block">
                     <div>
                       <h3>1. Mac preflight</h3>
-                      <p>Checks the local solver path and verifies the service endpoint before installing.</p>
+                      <p>Checks the local solver path before installing.</p>
                     </div>
                     <div class="command-panel">
                       <code id="mac-preflight-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --worker 'mac-ultra' --solver-backend metal --local-solver "$HOME/.dexbtx-miner/bin/btx-gbt-solve" --trust-local-solver</code>
@@ -406,7 +398,7 @@
                   <div class="command-block">
                     <div>
                       <h3>2. Mac install</h3>
-                      <p>Uses your BTX address and the local Metal solver. Intel Macs are not a practical mining target.</p>
+                      <p>Uses your address and local Metal solver.</p>
                     </div>
                     <div class="command-panel">
                       <code id="mac-install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'mac-ultra' --solver-backend metal --local-solver "$HOME/.dexbtx-miner/bin/btx-gbt-solve" --trust-local-solver</code>
@@ -415,17 +407,17 @@
                       </button>
                     </div>
                   </div>
-                </section>
+                </details>
 
-                <section class="setup-os-panel" aria-labelledby="windows-setup-title">
-                  <div class="setup-os-panel-header">
-                    <span class="metric-label">Windows commands</span>
-                    <h3 id="windows-setup-title">Run PowerShell, then Ubuntu</h3>
-                  </div>
+                <details class="setup-os-panel" aria-labelledby="windows-setup-title">
+                  <summary>
+                    <span id="windows-setup-title">Windows commands</span>
+                    <small>PowerShell first, Ubuntu after.</small>
+                  </summary>
                   <div class="command-block">
                     <div>
                       <h3>1. Install Ubuntu WSL2</h3>
-                      <p>Run this once in Windows PowerShell, then restart if Windows asks.</p>
+                      <p>Run once in PowerShell.</p>
                     </div>
                     <div class="command-panel">
                       <code id="windows-wsl-command">wsl --install -d Ubuntu</code>
@@ -437,7 +429,7 @@
                   <div class="command-block">
                     <div>
                       <h3>2. Windows WSL preflight</h3>
-                      <p>Run inside the Ubuntu terminal, not PowerShell. If <code>nvidia-smi</code> fails, fix the Windows driver first.</p>
+                      <p>Run inside Ubuntu, not PowerShell.</p>
                     </div>
                     <div class="command-panel">
                       <code id="windows-preflight-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --preflight --worker 'windows'</code>
@@ -449,7 +441,7 @@
                   <div class="command-block">
                     <div>
                       <h3>3. Windows WSL install</h3>
-                      <p>Run inside the Ubuntu terminal after preflight passes.</p>
+                      <p>Run after preflight passes.</p>
                     </div>
                     <div class="command-panel">
                       <code id="windows-install-command">curl -fsSL https://drinknile.com/install.sh | bash -s -- --address 'btx1z...YOUR_BTX_ADDRESS...' --worker 'windows'</code>
@@ -458,19 +450,19 @@
                       </button>
                     </div>
                   </div>
-                </section>
+                </details>
               </div>
 
               <div class="tracker-grid" id="dashboard">
                 <article>
                   <span class="metric-label">Browser dashboard key</span>
                   <strong id="worker-id-command">btx1z...your_address.default</strong>
-                  <p>The dashboard reads the payout address above and groups rigs by worker label.</p>
+                  <p>The dashboard groups rigs by payout address and worker label.</p>
                 </article>
                 <article>
                   <span class="metric-label">Wallet view</span>
                   <strong id="wallet-balance-command">Check the wallet that owns your BTX address</strong>
-                  <p>The page shows pool-side shares and pending payout; your wallet remains self-custodied.</p>
+                  <p>The page shows pool-side shares and pending payout. Your wallet remains self-custodied.</p>
                 </article>
                 <article>
                   <span class="metric-label">No terminal watching</span>
@@ -481,7 +473,7 @@
             </div>
           </details>
 
-          <details class="reference-panel">
+          <details class="reference-panel" id="gpu-panel">
             <summary>
               <span>GPU ranking and expected BTX yield</span>
               <small>Search by GPU, sort by yield, speed, or efficiency.</small>

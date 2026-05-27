@@ -80,6 +80,38 @@
   background: #090d12;
 }
 
+.start-steps {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.start-steps li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+}
+
+.start-steps span {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--orange);
+  color: #ffffff;
+  font-weight: 850;
+}
+
+.start-steps strong {
+  color: var(--fg);
+  font-size: 16px;
+}
+
 .mining-card {
   min-width: 0;
   padding: 22px;
@@ -1034,6 +1066,33 @@ main {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.setup-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.setup-choice-card {
+  min-width: 0;
+  padding: 18px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.setup-choice-card strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--fg);
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.setup-choice-card p {
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+
 .local-card,
 .mac-card {
   min-width: 0;
@@ -1168,6 +1227,49 @@ main {
 
 .setup-os-panel .command-block:first-of-type {
   margin-top: 0;
+}
+
+.setup-os-panel > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  cursor: pointer;
+  list-style: none;
+}
+
+.setup-os-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.setup-os-panel > summary::after {
+  content: "+";
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--orange);
+  font-weight: 850;
+}
+
+.setup-os-panel[open] > summary::after {
+  content: "-";
+}
+
+.setup-os-panel > summary span {
+  color: var(--fg);
+  font-weight: 850;
+}
+
+.setup-os-panel > summary small {
+  color: var(--muted);
+}
+
+.os-command-grid.compact .command-block {
+  margin-top: 16px;
 }
 
 .mac-steps {
@@ -1981,6 +2083,7 @@ tr:last-child td {
   .tracking-grid,
   .local-grid,
   .os-setup-grid,
+  .setup-choice-grid,
   .mac-grid,
   .local-steps,
   .local-command-grid,
@@ -2110,6 +2213,7 @@ tr:last-child td {
   .tracking-grid,
   .local-grid,
   .os-setup-grid,
+  .setup-choice-grid,
   .mac-grid,
   .local-steps,
   .local-command-grid,
@@ -2298,8 +2402,17 @@ h1 {
 .simple-hero-copy > p:not(.eyebrow) {
   max-width: 610px;
   color: #3f3f3f;
-  font-size: 19px;
+  font-size: 21px;
   line-height: 1.45;
+}
+
+.start-steps span {
+  background: #000000;
+  color: #ffffff;
+}
+
+.start-steps strong {
+  color: #111111;
 }
 
 .backend-pill {
@@ -2320,6 +2433,7 @@ h1 {
 .backend-pill code,
 .local-card code,
 .mac-card code,
+.setup-choice-card code,
 .setup-list code,
 .setup-os-panel p code {
   border-color: #ddddd5;
@@ -2387,6 +2501,7 @@ h3 {
 .live-stats p,
 .flow-grid p,
 .friction-grid p,
+.setup-choice-card p,
 .local-card p,
 .mac-card p,
 .setup-list,
@@ -2425,6 +2540,19 @@ h3 {
 .dashboard-worker-list {
   border-color: rgba(0, 0, 0, 0.09);
   background: #ffffff;
+}
+
+.setup-os-panel > summary::after {
+  border-color: #deded6;
+  background: #f7f7f4;
+}
+
+.setup-os-panel > summary span {
+  color: #000000;
+}
+
+.setup-os-panel > summary small {
+  color: #666666;
 }
 
 .dashboard-worker-list div {
@@ -2475,6 +2603,7 @@ h3 {
 .personal-dashboard,
 .dashboard-metrics article,
 .dashboard-worker-list,
+.setup-choice-card,
 .local-card,
 .mac-card,
 .setup-os-panel,
@@ -2500,6 +2629,7 @@ h3 {
 .live-stats strong,
 .dashboard-metrics strong,
 .dashboard-worker-list strong,
+.setup-choice-card strong,
 .local-card strong,
 .mac-card strong,
 .setup-os-panel h3,
