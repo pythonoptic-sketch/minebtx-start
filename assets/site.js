@@ -327,10 +327,26 @@ async function hydrateStats() {
     setText("blocks-24h", formatMaybeNumber(pool.blocks_found_24h));
     const backendFeeBps = Number(policy.post_trial_fee_bps ?? policy.pool_fee_bps ?? 0);
     const backendFee = formatFeePolicy(policy);
+    const backendLive = Boolean(policy.owned_backend_active && policy.can_accept_real_shares && policy.block_submission_enabled);
     currentNetworkHashNps = Number(pool.network_hash_nps || btxd.network_hash_ps) || currentNetworkHashNps;
     const feeAddress = policy.fee_address || "Pending managed service";
     const treasuryAddress = policy.treasury_address || "Pending managed service";
     setText("backend-live-fee", backendFee);
+    setText("backend-live-status", backendLive ? "Live" : "Connecting");
+    setText(
+      "backend-live-copy",
+      backendLive
+        ? "The page, API, stratum endpoint, and full node are active."
+        : "The page is live while the managed mining backend finishes connecting."
+    );
+    setText(
+      "service-status-text",
+      backendLive
+        ? "Live backend. Users connect to BTX Start and do not need to set up a node."
+        : "Being connected. Users will not need to set up a node when it opens."
+    );
+    document.getElementById("service-status-pill")?.classList.toggle("warning", !backendLive);
+    document.getElementById("service-status-pill")?.classList.toggle("live", backendLive);
     setText("backend-policy-fee", backendFee);
     setText("fee-address", feeAddress);
     setText("treasury-address", treasuryAddress);

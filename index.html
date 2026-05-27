@@ -157,14 +157,28 @@
           <p>
             Choose macOS or Windows, follow the guide, then start the miner. Your wallet stays yours.
           </p>
+          <div class="hero-proof" aria-label="BTX Start service proof">
+            <article>
+              <strong>Live</strong>
+              <span>Managed stratum</span>
+            </article>
+            <article>
+              <strong>0 nodes</strong>
+              <span>For miners to run</span>
+            </article>
+            <article>
+              <strong>Self-custody</strong>
+              <span>Your BTX address</span>
+            </article>
+          </div>
           <ol class="start-steps" aria-label="Start mining steps">
             <li><span>1</span><strong>Choose macOS or Windows</strong></li>
             <li><span>2</span><strong>Get BTX address</strong></li>
             <li><span>3</span><strong>Start miner</strong></li>
           </ol>
-          <div class="backend-pill warning">
+          <div class="backend-pill live" id="service-status-pill">
             <strong>Status:</strong>
-            <span>Being connected. Mining through BTX Start is not live yet, but users will not need to set up a node when it opens.</span>
+            <span id="service-status-text">Live backend. Users connect to BTX Start and do not need to set up a node.</span>
           </div>
         </div>
 
@@ -317,8 +331,8 @@
       <section class="status-strip" id="status" aria-label="BTX Start status">
         <article>
           <span class="metric-label">Can users mine now?</span>
-          <strong>Not yet</strong>
-          <p>The page is live. The managed mining service is still being connected.</p>
+          <strong id="backend-live-status">Live</strong>
+          <p id="backend-live-copy">The page, API, stratum endpoint, and full node are active.</p>
         </article>
         <article>
           <span class="metric-label">Node setup</span>
@@ -328,7 +342,7 @@
         <article>
           <span class="metric-label">Fee</span>
           <strong id="backend-live-fee">0% first 7d</strong>
-          <p>Fee logic remains inactive until mining through BTX Start is live.</p>
+          <p>First seven days are fee-free. The modeled pool fee applies afterward.</p>
         </article>
         <article>
           <span class="metric-label">Live workers</span>
