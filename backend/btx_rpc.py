@@ -67,6 +67,9 @@ class BtxRpcClient:
     def getmatmulchallenge(self) -> dict[str, Any]:
         return dict(self.call("getmatmulchallenge"))
 
+    def validateaddress(self, address: str) -> dict[str, Any]:
+        return dict(self.call("validateaddress", [address]))
+
     def submitblock(self, block_hex: str) -> Any:
         return self.call("submitblock", [block_hex])
 

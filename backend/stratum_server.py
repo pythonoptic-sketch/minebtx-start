@@ -16,7 +16,9 @@ import secrets
 from dataclasses import dataclass
 from typing import Any
 
+from .block_builder import build_block_hex
 from .btx_rpc import BtxRpcClient
+from .fee_policy import FeePolicy
 from .repository import BackendRepository, ShareRecord
 from .settings import BackendSettings
 from .share_validation import SubmittedShare, build_share_validator
@@ -52,6 +54,8 @@ class StratumSession:
         settings: BackendSettings,
         job_manager: StratumJobManager,
         share_validator: Any,
+        rpc: BtxRpcClient,
+        policy: FeePolicy,
     ):
         self.reader = reader
         self.writer = writer
@@ -59,6 +63,8 @@ class StratumSession:
         self.settings = settings
         self.job_manager = job_manager
         self.share_validator = share_validator
+        self.rpc = rpc
+        self.policy = policy
         self.identity: WorkerIdentity | None = None
         self.agent_string: str | None = None
         self.extranonce1 = secrets.token_hex(4)
@@ -224,20 +230,65 @@ class StratumSession:
             )
         )
         if is_block:
-            self.repo.record_event(
-                "stratum.block_candidate",
-                {
-                    "job_id": job.job_id,
-                    "payout_address": self.identity.payout_address,
-                    "worker_name": self.identity.worker_name,
-                    "nonce_hex": nonce_hex,
-                    "digest_hex": getattr(validation, "digest_hex", None),
-                    "block_submission_enabled": self.settings.block_submission_enabled,
-                    "submitted": False,
-                    "reason": "full block construction is not implemented in this backend",
-                },
-            )
+            await self._submit_block_candidate(job, share, validation, nonce_hex)
         return {"id": message_id, "result": True, "error": None}
+
+    async def _submit_block_candidate(
+        self,
+        job: PoolJob,
+        share: SubmittedShare,
+        validation: Any,
+        nonce_hex: str,
+    ) -> None:
+        raw = getattr(validation, "raw_output", None) or {}
+        digest_hex = raw.get("matmul_digest") or raw.get("digest") or getattr(validation, "digest_hex", None)
+        matrix_c_data_hex = raw.get("matrix_c_data_hex")
+        event = {
+            "job_id": job.job_id,
+            "payout_address": self.identity.payout_address if self.identity else None,
+            "worker_name": self.identity.worker_name if self.identity else None,
+            "nonce_hex": nonce_hex,
+            "digest_hex": digest_hex,
+            "block_submission_enabled": self.settings.block_submission_enabled,
+            "submitted": False,
+        }
+        if not self.settings.block_submission_enabled:
+            event["reason"] = "block submission disabled"
+            self.repo.record_event("stratum.block_candidate", event)
+            return
+        if not job.block_template or not job.address_script_pubkey_hex:
+            event["reason"] = "missing block template or coinbase script"
+            self.repo.record_event("stratum.block_candidate", event)
+            return
+        if not digest_hex or not matrix_c_data_hex:
+            event["reason"] = "validator did not return block payload data"
+            self.repo.record_event("stratum.block_candidate", event)
+            return
+        try:
+            block_hex = build_block_hex(
+                job.block_template,
+                address_script_pubkey_hex=job.address_script_pubkey_hex,
+                nonce64=share.nonce,
+                matmul_digest_hex=digest_hex,
+                matrix_c_data_hex=matrix_c_data_hex,
+            )
+            submit_result = await asyncio.to_thread(self.rpc.submitblock, block_hex)
+        except Exception as exc:
+            event["reason"] = f"submit error: {exc}"
+            self.repo.record_event("stratum.block_candidate", event)
+            return
+        event["submitted"] = submit_result is None
+        event["submit_result"] = submit_result
+        event["coinbase_address"] = job.coinbase_address
+        event["height"] = job.height
+        self.repo.record_event("stratum.block_candidate", event)
+        if submit_result is None:
+            await asyncio.to_thread(
+                self.repo.credit_pplns_reward,
+                int(job.block_template["coinbasevalue"]),
+                self.policy,
+                window_hours=self.settings.pplns_window_hours,
+            )
 
     async def _notify_loop(self) -> None:
         while True:
@@ -284,11 +335,19 @@ async def serve(settings: BackendSettings) -> None:
         rpc,
         share_target_hex=settings.pool_share_target_hex,
         refresh_interval_s=settings.stratum_job_refresh_s,
+        coinbase_address=settings.pool_coinbase_address,
     )
     share_validator = build_share_validator(settings)
+    policy = FeePolicy(
+        trial_days=settings.trial_days,
+        trial_fee_bps=settings.trial_fee_bps,
+        post_trial_fee_bps=settings.post_trial_fee_bps,
+        fee_address=settings.fee_address,
+        treasury_address=settings.treasury_address,
+    )
 
     async def handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
-        await StratumSession(reader, writer, repo, settings, job_manager, share_validator).run()
+        await StratumSession(reader, writer, repo, settings, job_manager, share_validator, rpc, policy).run()
 
     server = await asyncio.start_server(handler, host="0.0.0.0", port=settings.public_stratum_port)
     async with server:

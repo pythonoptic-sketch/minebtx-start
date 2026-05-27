@@ -22,6 +22,7 @@ class BackendSettings:
     public_stratum_port: int = 3333
     fee_address: str | None = None
     treasury_address: str | None = None
+    pool_coinbase_address: str | None = None
     trial_days: int = 7
     trial_fee_bps: int = 0
     post_trial_fee_bps: int = 50
@@ -62,6 +63,12 @@ class BackendSettings:
             public_stratum_port=int(os.environ.get("PUBLIC_STRATUM_PORT", cls.public_stratum_port)),
             fee_address=os.environ.get("FEE_ADDRESS") or None,
             treasury_address=os.environ.get("TREASURY_ADDRESS") or None,
+            pool_coinbase_address=(
+                os.environ.get("POOL_COINBASE_ADDRESS")
+                or os.environ.get("TREASURY_ADDRESS")
+                or os.environ.get("FEE_ADDRESS")
+                or None
+            ),
             trial_days=int(os.environ.get("TRIAL_DAYS", cls.trial_days)),
             trial_fee_bps=int(os.environ.get("TRIAL_FEE_BPS", cls.trial_fee_bps)),
             post_trial_fee_bps=int(os.environ.get("POST_TRIAL_FEE_BPS", cls.post_trial_fee_bps)),

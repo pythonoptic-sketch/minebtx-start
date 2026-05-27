@@ -1,8 +1,4 @@
-"""BTX MatMul stratum job construction.
-
-The public miner client only needs the header context from btxd. The pool still
-needs separate full-block construction before block candidates can be submitted.
-"""
+"""BTX MatMul stratum job construction."""
 
 from __future__ import annotations
 
@@ -11,6 +7,7 @@ import time
 from dataclasses import dataclass
 from typing import Any
 
+from .block_builder import merkle_root_for_template
 from .btx_rpc import BtxRpcClient
 
 
@@ -66,7 +63,10 @@ class PoolJob:
     matmul_r: int
     epsilon_bits: int
     created_at: float
-    source: str = "getmatmulchallenge"
+    block_template: dict[str, Any] | None = None
+    coinbase_address: str | None = None
+    address_script_pubkey_hex: str | None = None
+    source: str = "getblocktemplate"
 
     @property
     def share_work(self) -> float:
@@ -137,6 +137,46 @@ def job_from_matmul_challenge(payload: dict[str, Any], *, share_target_hex: str)
     )
 
 
+def job_from_block_template(
+    template: dict[str, Any],
+    *,
+    share_target_hex: str,
+    coinbase_address: str,
+    address_script_pubkey_hex: str,
+) -> PoolJob:
+    payload = dict(template)
+    payload["_merkle_root_hex_be"] = merkle_root_for_template(payload, address_script_pubkey_hex)
+    bits = _clean_hex(payload["bits"], length=8)
+    target = _clean_hex(payload.get("target") or compact_bits_to_target_hex(bits), length=64)
+    prevhash = _clean_hex(payload["previousblockhash"], length=64)
+    merkleroot = _clean_hex(payload["_merkle_root_hex_be"], length=64)
+    seed_a = _clean_hex(payload["seed_a"], length=64)
+    seed_b = _clean_hex(payload["seed_b"], length=64)
+    height = int(payload["height"])
+    ntime = int(payload["curtime"])
+    return PoolJob(
+        job_id=f"{height}:{prevhash[:16]}:{ntime}:{merkleroot[:16]}",
+        version=int(payload["version"]),
+        previousblockhash=prevhash,
+        merkleroot=merkleroot,
+        time=ntime,
+        bits=bits,
+        block_target=target,
+        share_target=_clean_hex(share_target_hex, length=64),
+        height=height,
+        seed_a=seed_a,
+        seed_b=seed_b,
+        matmul_n=int(payload.get("matmul_n") or (payload.get("matmul") or {}).get("n") or 512),
+        matmul_b=int(payload.get("matmul_b") or (payload.get("matmul") or {}).get("b") or 16),
+        matmul_r=int(payload.get("matmul_r") or (payload.get("matmul") or {}).get("r") or 8),
+        epsilon_bits=int(payload.get("epsilon_bits") or 18),
+        created_at=time.time(),
+        block_template=payload,
+        coinbase_address=coinbase_address,
+        address_script_pubkey_hex=address_script_pubkey_hex,
+    )
+
+
 class StratumJobManager:
     def __init__(
         self,
@@ -144,10 +184,13 @@ class StratumJobManager:
         *,
         share_target_hex: str = DEFAULT_SHARE_TARGET_HEX,
         refresh_interval_s: int = 20,
+        coinbase_address: str | None = None,
     ):
         self.rpc = rpc
         self.share_target_hex = share_target_hex
         self.refresh_interval_s = refresh_interval_s
+        self.coinbase_address = coinbase_address
+        self._address_script_pubkey_hex: str | None = None
         self._lock = asyncio.Lock()
         self._current: PoolJob | None = None
         self._last_refresh = 0.0
@@ -165,8 +208,21 @@ class StratumJobManager:
                 and now - self._last_refresh < self.refresh_interval_s
             ):
                 return self._current
-            payload = await asyncio.to_thread(self.rpc.getmatmulchallenge)
-            job = job_from_matmul_challenge(payload, share_target_hex=self.share_target_hex)
+            if not self.coinbase_address:
+                raise RuntimeError("coinbase address is required for stratum jobs")
+            if self._address_script_pubkey_hex is None:
+                address_info = await asyncio.to_thread(self.rpc.validateaddress, self.coinbase_address)
+                script = address_info.get("scriptPubKey")
+                if not address_info.get("isvalid") or not script:
+                    raise RuntimeError("coinbase address is not valid according to btxd")
+                self._address_script_pubkey_hex = str(script)
+            payload = await asyncio.to_thread(self.rpc.getblocktemplate)
+            job = job_from_block_template(
+                payload,
+                share_target_hex=self.share_target_hex,
+                coinbase_address=self.coinbase_address,
+                address_script_pubkey_hex=self._address_script_pubkey_hex,
+            )
             self._last_refresh = now
             self._current = job
             return job

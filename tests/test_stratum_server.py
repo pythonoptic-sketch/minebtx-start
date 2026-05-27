@@ -10,8 +10,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from backend.repository import BackendRepository
 from backend.settings import BackendSettings
+from backend.fee_policy import FeePolicy
 from backend.share_validation import ValidationResult
-from backend.stratum_jobs import PoolJob, job_from_matmul_challenge
+from backend.stratum_jobs import PoolJob, job_from_block_template, job_from_matmul_challenge
 from backend.stratum_server import StratumSession, parse_worker_identity
 
 
@@ -25,6 +26,11 @@ class _Writer:
 class _Validator:
     async def validate(self, job, share):
         return ValidationResult(True, difficulty=job.share_work)
+
+
+class _Rpc:
+    def submitblock(self, block_hex):
+        return None
 
 
 class StratumServerTest(unittest.TestCase):
@@ -66,6 +72,32 @@ class StratumServerTest(unittest.TestCase):
         self.assertEqual(notify[8]["block_height"], 123)
         self.assertEqual(notify[8]["nonce64_start"], 99)
 
+    def test_job_from_block_template_uses_real_merkle_root(self) -> None:
+        job = job_from_block_template(
+            {
+                "height": 123,
+                "coinbasevalue": 50_000_000,
+                "default_witness_commitment": "6a24aa21a9ed" + "00" * 32,
+                "transactions": [],
+                "version": 536870912,
+                "previousblockhash": "a" * 64,
+                "curtime": 1779672814,
+                "bits": "1d17c609",
+                "target": "00" + "f" * 62,
+                "seed_a": "c" * 64,
+                "seed_b": "d" * 64,
+                "matmul_n": 512,
+                "matmul_b": 16,
+                "matmul_r": 8,
+            },
+            share_target_hex="00000" + "f" * 59,
+            coinbase_address="btx1z" + "e" * 52,
+            address_script_pubkey_hex="0014" + "11" * 20,
+        )
+
+        self.assertNotEqual(job.merkleroot, "0" * 64)
+        self.assertEqual(job.block_template["_merkle_root_hex_be"], job.merkleroot)
+
     def test_submit_accepted_share_records_accounting(self) -> None:
         async def run_case() -> None:
             with tempfile.TemporaryDirectory() as tmp:
@@ -79,6 +111,8 @@ class StratumServerTest(unittest.TestCase):
                     settings,
                     job_manager=type("JobManager", (), {})(),
                     share_validator=_Validator(),
+                    rpc=_Rpc(),
+                    policy=FeePolicy(),
                 )
                 address = "btx1z" + "a" * 52
                 session.identity = parse_worker_identity(address + ".mac")
