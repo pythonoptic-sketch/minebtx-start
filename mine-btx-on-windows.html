@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mine BTX on Windows | WSL2 Bitcore GPU Mining Setup</title>
+    <meta
+      name="description"
+      content="Set up BTX / Bitcore mining on Windows with Ubuntu under WSL2, NVIDIA drivers, nvidia-smi, and a personal BTX payout address."
+    >
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://drinknile.com/mine-btx-on-windows.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://drinknile.com/mine-btx-on-windows.html">
+    <meta property="og:title" content="Mine BTX on Windows">
+    <meta property="og:description" content="Windows WSL2 BTX mining setup for NVIDIA GPU machines.">
+    <meta property="og:image" content="https://drinknile.com/assets/og-image.png">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "Mine BTX on Windows with WSL2",
+        "description": "Prepare a Windows NVIDIA GPU machine for BTX mining through Ubuntu under WSL2.",
+        "step": [
+          {
+            "@type": "HowToStep",
+            "name": "Install NVIDIA drivers",
+            "text": "Install the current NVIDIA driver in Windows."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Install Ubuntu WSL2",
+            "text": "Run wsl --install -d Ubuntu from Windows PowerShell."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Verify GPU passthrough",
+            "text": "Open Ubuntu and confirm nvidia-smi works."
+          },
+          {
+            "@type": "HowToStep",
+            "name": "Start mining",
+            "text": "Run the BTX Start preflight and install commands inside Ubuntu."
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <main class="seo-page">
+      <article class="seo-article">
+        <nav class="seo-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">BTX Start</a>
+          <a href="btx-mining.html">BTX mining guide</a>
+          <span>Windows setup</span>
+        </nav>
+        <header class="seo-hero">
+          <p class="eyebrow">Windows BTX mining</p>
+          <h1>Mine BTX on Windows with WSL2.</h1>
+          <p>
+            Windows miners should use Ubuntu under WSL2, verify NVIDIA GPU access with <code>nvidia-smi</code>, then run
+            the BTX Start preflight and install commands inside Ubuntu.
+          </p>
+          <div class="seo-actions">
+            <a class="primary-link" href="/#start">Open command builder</a>
+            <a class="mini-link" href="WINDOWS_SETUP.md">Full Windows notes</a>
+          </div>
+        </header>
+        <section>
+          <h2>Windows setup checklist</h2>
+          <ol class="seo-list">
+            <li>Install the current NVIDIA driver in Windows.</li>
+            <li>Install Ubuntu under WSL2 with <code>wsl --install -d Ubuntu</code>.</li>
+            <li>Open Ubuntu and confirm <code>nvidia-smi</code> works.</li>
+            <li>Paste your BTX payout address on the home page.</li>
+            <li>Run the generated preflight and install commands inside Ubuntu.</li>
+          </ol>
+        </section>
+        <section>
+          <h2>Good Windows candidates</h2>
+          <p>
+            Windows desktops with NVIDIA GPUs are usually better candidates than small laptops. If you do not own a
+            strong GPU, BTX Start also links to Vast.ai rental GPU pricing for faster experiments.
+          </p>
+          <p><a class="mini-link" href="btx-gpu-mining.html">Compare GPU yield estimates</a></p>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>

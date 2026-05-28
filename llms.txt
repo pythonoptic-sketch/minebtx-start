@@ -8,6 +8,11 @@ Primary URL: https://drinknile.com/
 Useful pages:
 
 - Home and command builder: https://drinknile.com/
+- BTX mining guide: https://drinknile.com/btx-mining.html
+- Apple Silicon Mac BTX mining: https://drinknile.com/mine-btx-on-mac.html
+- Windows WSL2 BTX mining: https://drinknile.com/mine-btx-on-windows.html
+- BTX GPU mining guide: https://drinknile.com/btx-gpu-mining.html
+- Vast.ai GPU rental guide: https://drinknile.com/rent-gpu-btx-mining.html
 - Wallet setup: https://drinknile.com/WALLET_SETUP.md
 - Apple Silicon Mac setup: https://drinknile.com/MAC_SETUP.md
 - Windows WSL2 setup: https://drinknile.com/WINDOWS_SETUP.md
@@ -17,9 +22,9 @@ Useful pages:
 
 Current public status:
 
-- BTX Start is live as an onboarding and setup website.
-- Managed mining through BTX Start is marked as not live until the backend
-  stratum share validation, block submission, and payout accounting are ready.
+- BTX Start is live as an onboarding, setup, and managed mining website.
+- Managed mining through BTX Start uses the public stratum endpoint at
+  stratum.drinknile.com:3333.
 - Users keep their own BTX payout address and private keys.
 - The page includes Mac, Windows, NVIDIA GPU, rental GPU, wallet, fee, and
   public service-status guidance.
