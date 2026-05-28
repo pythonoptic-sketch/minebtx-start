@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Guided Cloud BTX Mining Setup | Run Your Own Node and GPU Miner</title>
+    <meta
+      name="description"
+      content="Advanced BTX / Bitcore mining option for users who want a self-managed Hetzner node, rental GPU miner, and terminal dashboard guided by Claude Code."
+    >
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://drinknile.com/guided-cloud-btx-mining.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://drinknile.com/guided-cloud-btx-mining.html">
+    <meta property="og:title" content="Guided Cloud BTX Mining Setup">
+    <meta property="og:description" content="Run your own BTX wallet node and rental GPU miner with a Claude-guided cloud playbook.">
+    <meta property="og:image" content="https://drinknile.com/assets/og-image.png">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Guided Cloud BTX Mining Setup",
+        "description": "Advanced BTX / Bitcore mining option for users who want a self-managed Hetzner wallet node, rental GPU miner, and terminal dashboard.",
+        "mainEntityOfPage": "https://drinknile.com/guided-cloud-btx-mining.html",
+        "dateModified": "2026-05-28",
+        "author": {
+          "@type": "Organization",
+          "name": "BTX Start"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "BTX Start",
+          "url": "https://drinknile.com/"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "BTX Start",
+            "item": "https://drinknile.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "BTX Mining Guide",
+            "item": "https://drinknile.com/btx-mining.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Guided Cloud Setup",
+            "item": "https://drinknile.com/guided-cloud-btx-mining.html"
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <main class="seo-page">
+      <article class="seo-article">
+        <nav class="seo-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">BTX Start</a>
+          <a href="btx-mining.html">BTX mining guide</a>
+          <span>Guided cloud setup</span>
+        </nav>
+
+        <header class="seo-hero">
+          <p class="eyebrow">Advanced cloud option</p>
+          <h1>Run your own BTX node and GPU miner.</h1>
+          <p>
+            This is a separate path for miners who want full control: a persistent cloud wallet node, a rented GPU miner,
+            and a local terminal dashboard. For the fastest start, use the main BTX Start flow instead.
+          </p>
+          <div class="seo-actions">
+            <a class="primary-link" href="https://github.com/mattymostudio/btx-mining-for-dummies" target="_blank" rel="noreferrer">
+              Open source playbook
+            </a>
+            <a class="mini-link" href="/">Use managed BTX Start instead</a>
+          </div>
+        </header>
+
+        <section class="seo-callout">
+          <h2>How this differs from BTX Start</h2>
+          <p>
+            The main BTX Start page connects miners to the managed stratum at <code>stratum.drinknile.com:3333</code>
+            and shows a browser dashboard by payout address. This advanced setup creates your own infrastructure:
+            a Hetzner node that holds the wallet and a RunPod or Vast GPU miner that points rewards to that node.
+          </p>
+        </section>
+
+        <section class="seo-grid">
+          <a href="#cloud-steps">
+            <span class="metric-label">Step 1</span>
+            <strong>Clone the playbook</strong>
+            <p>Use the public MIT-licensed setup scripts and Claude packet.</p>
+          </a>
+          <a href="#node-gpu">
+            <span class="metric-label">Step 2</span>
+            <strong>Create node and miner</strong>
+            <p>Provision a wallet node, then connect a cloud GPU miner.</p>
+          </a>
+          <a href="#dashboard">
+            <span class="metric-label">Step 3</span>
+            <strong>Watch a terminal dashboard</strong>
+            <p>Track sync, balance, spend, and break-even locally.</p>
+          </a>
+          <a href="#risk">
+            <span class="metric-label">Important</span>
+            <strong>Costs and risk are yours</strong>
+            <p>Cloud miners spend real money before BTX has a liquid market.</p>
+          </a>
+        </section>
+
+        <section id="cloud-steps">
+          <h2>Start with the Claude-guided packet</h2>
+          <p>
+            The referenced playbook is designed to be opened in Claude Code. It asks Claude to read the operational
+            packet, then walk the miner through account setup, server provisioning, sync checks, GPU setup, and dashboard
+            verification.
+          </p>
+          <div class="command-block">
+            <div>
+              <h3>Clone and open the guide</h3>
+              <p>Run this on your own Mac, Linux machine, or Windows WSL terminal.</p>
+            </div>
+            <div class="command-panel">
+              <code>git clone https://github.com/mattymostudio/btx-mining-for-dummies.git && cd btx-mining-for-dummies && claude</code>
+            </div>
+          </div>
+          <div class="command-block">
+            <div>
+              <h3>Prompt Claude Code</h3>
+              <p>Paste this after Claude Code opens in the repository.</p>
+            </div>
+            <div class="command-panel">
+              <code>Please read CLAUDE_PACKET.md and walk me through BTX mining setup. I'm a layperson - go slow, confirm each step.</code>
+            </div>
+          </div>
+        </section>
+
+        <section id="node-gpu">
+          <h2>What the playbook sets up</h2>
+          <p>
+            The source repository provides scripts for a Hetzner BTX wallet node, a RunPod GPU miner, a Vast.ai GPU miner,
+            an optional owned-hardware rig, and a local dashboard. That architecture is more involved than the BTX Start
+            managed path, but it gives the miner direct control over the node and reward wallet.
+          </p>
+          <ul class="seo-list">
+            <li><code>cloud-node-setup.sh</code> provisions the persistent BTX node and wallet host.</li>
+            <li><code>runpod-bootstrap.sh</code> provisions a CUDA GPU miner on RunPod.</li>
+            <li><code>vast-miner-bootstrap.sh</code> provisions a CUDA GPU miner on Vast.ai.</li>
+            <li><code>garage-rig-setup.sh</code> helps configure owned GPU hardware.</li>
+            <li><code>dashboard.sh</code> shows node sync, balance, spend, and break-even in the terminal.</li>
+          </ul>
+        </section>
+
+        <section id="dashboard">
+          <h2>Dashboard expectations</h2>
+          <p>
+            This option uses the playbook's local terminal dashboard rather than the BTX Start browser dashboard. If the
+            miner wants browser-based worker tracking by payout address, the managed BTX Start flow is the cleaner path.
+          </p>
+        </section>
+
+        <section id="risk" class="seo-callout">
+          <h2>Cost and risk disclosure</h2>
+          <p>
+            This is speculative mining infrastructure. BTX may have no liquid market when a miner starts, cloud GPU costs
+            can accumulate quickly, and chain conditions can change. This page is setup guidance, not financial advice.
+          </p>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>
