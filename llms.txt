@@ -14,6 +14,8 @@ Useful pages:
 - BTX GPU mining guide: https://drinknile.com/btx-gpu-mining.html
 - Vast.ai GPU rental guide: https://drinknile.com/rent-gpu-btx-mining.html
 - Advanced guided cloud setup: https://drinknile.com/guided-cloud-btx-mining.html
+- BTX shovel tools: https://drinknile.com/btx-shovel-tools.html
+- Faststart image manifest: https://drinknile.com/faststart-images.json
 - Wallet setup: https://drinknile.com/WALLET_SETUP.md
 - Apple Silicon Mac setup: https://drinknile.com/MAC_SETUP.md
 - Windows WSL2 setup: https://drinknile.com/WINDOWS_SETUP.md
@@ -31,3 +33,6 @@ Current public status:
   public service-status guidance.
 - The guided cloud setup page is a separate advanced option for users who want
   their own BTX node, wallet host, rental GPU miner, and terminal dashboard.
+- Shovel tools include a rental GPU verifier, btx1z UTXO scan dashboard,
+  faststart image manifest, measured-hashrate managed mining framing, and
+  mine-vs-buy economics.

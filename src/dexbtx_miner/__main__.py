@@ -138,6 +138,9 @@ def main() -> int:
     if len(sys.argv) >= 2 and sys.argv[1] == "benchmark":
         from dexbtx_miner.benchmark import main as bench_main
         return bench_main(sys.argv[2:])
+    if len(sys.argv) >= 2 and sys.argv[1] == "verify-rental":
+        from dexbtx_miner.verifier import main as verifier_main
+        return verifier_main(sys.argv[2:])
     args = _make_argparser().parse_args()
     cfg = _build_config(args)
     try:

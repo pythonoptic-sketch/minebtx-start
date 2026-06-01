@@ -11,6 +11,8 @@ proof-of-work.
 - **BTX Start platform fee**: 0.00% for 7 days per payout address, then 0.50% after backend launch
 - **Revenue model**: [REVENUE_MODEL.md](REVENUE_MODEL.md)
 - **GPU rentals**: [VAST_AI.md](VAST_AI.md)
+- **Shovel tools**: [btx-shovel-tools.html](btx-shovel-tools.html)
+- **Faststart image template**: [faststart/vast-cuda](faststart/vast-cuda)
 - **Apple Silicon setup**: [MAC_SETUP.md](MAC_SETUP.md)
 - **Windows setup**: [WINDOWS_SETUP.md](WINDOWS_SETUP.md)
 - **Backend scaffold**: [backend/README.md](backend/README.md)

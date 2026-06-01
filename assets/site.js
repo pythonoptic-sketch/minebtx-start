@@ -2,6 +2,8 @@ const siteBaseUrl = "https://drinknile.com";
 const installerUrl = `${siteBaseUrl}/install.sh`;
 const statsUrl = "https://api.drinknile.com/stats";
 const dashboardBaseUrl = "https://api.drinknile.com/dashboard";
+const addressUtxoBaseUrl = "https://api.drinknile.com/address";
+const verifierQuoteUrl = "https://api.drinknile.com/verifier/quote";
 const statsFallbackUrl = "stats-snapshot.json";
 const treasuryUrl = "platform-treasury.json";
 const vastOffersUrl = "vast-offers.json";
@@ -177,6 +179,13 @@ function formatCostPerBtx(value) {
   const number = Number(value);
   if (!Number.isFinite(number)) return "Unknown";
   return `${formatUsdPrecise.format(number)}/BTX`;
+}
+
+function formatUsdFlexible(value) {
+  if (value === null || value === undefined || value === "") return "Unknown";
+  const number = Number(value);
+  if (!Number.isFinite(number)) return "Unknown";
+  return number >= 100 ? formatUsd.format(number) : formatUsdPrecise.format(number);
 }
 
 function formatBtxRate(value) {
@@ -775,6 +784,157 @@ function setupVastOffers() {
   hydrateVastOffers();
 }
 
+function localVerifiedQuote({ measuredNps, hourlyUsd, maxCostPerBtx, buyPrice }) {
+  const feeMultiplier = Math.max(0, 1 - currentPlatformFeeBps / 10_000);
+  const btxHour = (
+    Number.isFinite(measuredNps)
+    && Number.isFinite(currentNetworkHashNps)
+    && currentNetworkHashNps > 0
+  )
+    ? (measuredNps / currentNetworkHashNps) * blockRewardBtx * blocksPerHour * feeMultiplier
+    : 0;
+  const costPerBtx = btxHour > 0 && Number.isFinite(hourlyUsd) ? hourlyUsd / btxHour : null;
+  const clearsCostGate = costPerBtx !== null && Number.isFinite(maxCostPerBtx) && costPerBtx <= maxCostPerBtx;
+  const buyBeatsMine = costPerBtx !== null && Number.isFinite(buyPrice) && buyPrice > 0 && buyPrice < costPerBtx;
+  let recommendation = "Reject: measured hashrate or network reference is missing.";
+  if (costPerBtx !== null && buyBeatsMine) recommendation = "Buy: available BTX is cheaper than mining this rental.";
+  else if (costPerBtx !== null && !clearsCostGate) recommendation = "Reject: measured cost per BTX is above the threshold.";
+  else if (costPerBtx !== null) recommendation = "Rent: measured compute clears the configured gate.";
+  return {
+    btx_per_hour: btxHour,
+    btx_per_day: btxHour * 24,
+    cost_per_btx_usd: costPerBtx,
+    clears_cost_gate: clearsCostGate,
+    buy_beats_mine: buyBeatsMine,
+    recommendation,
+  };
+}
+
+async function renderVerifiedQuote() {
+  const result = document.getElementById("verified-result");
+  if (!result) return;
+  const measuredNps = Number(document.getElementById("verified-measured-nps")?.value);
+  const hourlyUsd = Number(document.getElementById("verified-hourly-usd")?.value);
+  const maxCostPerBtx = Number(document.getElementById("verified-max-cost")?.value);
+  const buyPriceValue = document.getElementById("verified-buy-price")?.value;
+  const buyPrice = buyPriceValue ? Number(buyPriceValue) : null;
+  const local = localVerifiedQuote({ measuredNps, hourlyUsd, maxCostPerBtx, buyPrice });
+  result.textContent = "Calculating against the backend verifier.";
+  try {
+    const response = await fetch(verifierQuoteUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        measured_nps: measuredNps,
+        hourly_usd: hourlyUsd,
+        network_nps: currentNetworkHashNps,
+        max_cost_per_btx_usd: maxCostPerBtx,
+        reference_buy_price_usd: buyPrice,
+        fee_bps: currentPlatformFeeBps,
+      }),
+    });
+    if (!response.ok) throw new Error(`verifier ${response.status}`);
+    const quote = await response.json();
+    result.innerHTML = `
+      <strong>${quote.clears_cost_gate && !quote.buy_beats_mine ? "Pass" : "Reject"}</strong>
+      <span>${escapeHtml(quote.recommendation)}</span>
+      <small>${formatBtxRate(Number(quote.btx_per_hour))} BTX/h · ${formatCostPerBtx(Number(quote.cost_per_btx_usd))}</small>
+    `;
+  } catch (error) {
+    result.innerHTML = `
+      <strong>${local.clears_cost_gate && !local.buy_beats_mine ? "Pass" : "Reject"}</strong>
+      <span>${escapeHtml(local.recommendation)}</span>
+      <small>${formatBtxRate(local.btx_per_hour)} BTX/h · ${formatCostPerBtx(local.cost_per_btx_usd)}</small>
+    `;
+  }
+}
+
+async function scanUtxos() {
+  const input = document.getElementById("shovel-address-input");
+  const result = document.getElementById("utxo-scan-result");
+  if (!input || !result) return;
+  const address = input.value.trim();
+  if (!/^btx1z[a-z0-9]{20,}$/i.test(address)) {
+    result.textContent = "Enter a public btx1z address. Never paste a private key.";
+    return;
+  }
+  result.textContent = "Scanning the backend node UTXO set.";
+  try {
+    const response = await fetch(`${addressUtxoBaseUrl}/${encodeURIComponent(address)}/utxos`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`utxo ${response.status}`);
+    const payload = await response.json();
+    result.innerHTML = `
+      <strong>${formatBtx.format(Number(payload.total_btx || 0))} BTX</strong>
+      <span>${formatMaybeNumber(payload.unspent_count)} UTXOs · ${escapeHtml(payload.source || "node scan")}${payload.cached ? " · cached" : ""}</span>
+      <small>${escapeHtml(payload.scanned_at || "fresh scan")}</small>
+    `;
+  } catch (error) {
+    result.textContent = "UTXO scan is unavailable right now. The pool dashboard can still show shares and pending payout.";
+  }
+}
+
+function renderMineVsBuy() {
+  const result = document.getElementById("buycalc-result");
+  if (!result) return;
+  const measuredNps = Number(document.getElementById("buycalc-nps")?.value);
+  const hourlyUsd = Number(document.getElementById("buycalc-hourly")?.value);
+  const buyPrice = Number(document.getElementById("buycalc-price")?.value);
+  const quote = localVerifiedQuote({
+    measuredNps,
+    hourlyUsd,
+    maxCostPerBtx: Number.POSITIVE_INFINITY,
+    buyPrice,
+  });
+  const miningCost = quote.cost_per_btx_usd;
+  const buyWins = miningCost !== null && Number.isFinite(buyPrice) && buyPrice > 0 && buyPrice < miningCost;
+  result.innerHTML = `
+    <strong>${buyWins ? "Buy beats mining" : "Mining is cheaper on these inputs"}</strong>
+    <span>Mining cost: ${formatUsdFlexible(miningCost)} / BTX · Buy price: ${formatUsdFlexible(buyPrice)} / BTX</span>
+    <small>${formatBtxRate(quote.btx_per_hour)} BTX/h at ${formatHashrate(measuredNps)} against ${formatHashrate(currentNetworkHashNps)} network.</small>
+  `;
+}
+
+function renderManagedComputeQuote() {
+  const result = document.getElementById("managed-quote-result");
+  if (!result) return;
+  const kns = Number(document.getElementById("managed-kns")?.value);
+  const pricePerKnh = Number(document.getElementById("managed-price-knh")?.value);
+  const hours = Number(document.getElementById("managed-hours")?.value);
+  const measuredNps = kns * 1000;
+  const hourlyUsd = kns * pricePerKnh;
+  const quote = localVerifiedQuote({
+    measuredNps,
+    hourlyUsd,
+    maxCostPerBtx: Number.POSITIVE_INFINITY,
+    buyPrice: null,
+  });
+  const totalCost = Number.isFinite(hourlyUsd) && Number.isFinite(hours) ? hourlyUsd * hours : null;
+  const totalBtx = Number.isFinite(quote.btx_per_hour) && Number.isFinite(hours) ? quote.btx_per_hour * hours : null;
+  result.innerHTML = `
+    <strong>${formatBtxRate(totalBtx)} BTX expected</strong>
+    <span>${formatHashrate(measuredNps)} verified hashrate for ${formatMaybeNumber(hours)} hours · ${formatUsdFlexible(totalCost)} total compute spend</span>
+    <small>Effective mining cost: ${formatUsdFlexible(quote.cost_per_btx_usd)} / BTX before liquidity and variance risk.</small>
+  `;
+}
+
+function setupShovelTools() {
+  document.getElementById("verified-quote-button")?.addEventListener("click", renderVerifiedQuote);
+  document.getElementById("utxo-scan-button")?.addEventListener("click", scanUtxos);
+  document.getElementById("buycalc-button")?.addEventListener("click", renderMineVsBuy);
+  document.getElementById("managed-quote-button")?.addEventListener("click", renderManagedComputeQuote);
+  ["verified-measured-nps", "verified-hourly-usd", "verified-max-cost", "verified-buy-price"].forEach((id) => {
+    document.getElementById(id)?.addEventListener("input", () => {
+      const measuredNps = document.getElementById("verified-measured-nps")?.value || "76000";
+      const hourlyUsd = document.getElementById("verified-hourly-usd")?.value || "0.50";
+      const maxCost = document.getElementById("verified-max-cost")?.value || "1.00";
+      const command = document.getElementById("verify-rental-command");
+      if (command) {
+        command.textContent = `dexbtx-miner verify-rental --backend cuda --measured-nps ${measuredNps} --network-nps ${Math.round(currentNetworkHashNps)} --hourly-usd ${hourlyUsd} --max-cost-per-btx ${maxCost} --fee-bps ${currentPlatformFeeBps}`;
+      }
+    });
+  });
+}
+
 function renderOperatingModel() {
   const body = document.getElementById("operating-model-body");
   if (!body) return;
@@ -933,6 +1093,7 @@ setupAddressBuilder();
 setupPersonalDashboard();
 setupGpuRanking();
 setupVastOffers();
+setupShovelTools();
 renderOperatingModel();
 hydrateStats();
 hydrateTreasuryConfig();

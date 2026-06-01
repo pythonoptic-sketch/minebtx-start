@@ -70,6 +70,12 @@ class BtxRpcClient:
     def validateaddress(self, address: str) -> dict[str, Any]:
         return dict(self.call("validateaddress", [address]))
 
+    def scantxoutset(self, scan_objects: list[str | dict[str, Any]], action: str = "start") -> dict[str, Any]:
+        return dict(self.call("scantxoutset", [action, scan_objects]))
+
+    def scantxoutset_address(self, address: str) -> dict[str, Any]:
+        return self.scantxoutset([f"addr({address})"])
+
     def submitblock(self, block_hex: str) -> Any:
         return self.call("submitblock", [block_hex])
 

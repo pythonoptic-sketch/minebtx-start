@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BTX Mining Shovel Tools | Verifier, Dashboard, Faststart Images</title>
+    <meta
+      name="description"
+      content="BTX mining shovel tools: rental GPU verifier, btx1z address UTXO dashboard, faststart miner images, measured BTX compute, and mine-vs-buy economics."
+    >
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://drinknile.com/btx-shovel-tools.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://drinknile.com/btx-shovel-tools.html">
+    <meta property="og:title" content="BTX Mining Shovel Tools">
+    <meta property="og:description" content="Verify productive BTX compute before renting GPUs or scaling mining spend.">
+    <meta property="og:image" content="https://drinknile.com/assets/og-image.png">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "BTX Mining Shovel Tools",
+        "description": "Rental verifier, address UTXO dashboard, faststart images, measured BTX compute, and mine-vs-buy economics.",
+        "mainEntityOfPage": "https://drinknile.com/btx-shovel-tools.html",
+        "dateModified": "2026-06-01",
+        "author": {
+          "@type": "Organization",
+          "name": "BTX Start"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "BTX Start",
+          "url": "https://drinknile.com/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="seo-page shovel-page">
+      <article class="seo-article">
+        <nav class="seo-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">BTX Start</a>
+          <a href="btx-mining.html">BTX mining guide</a>
+          <span>Shovel tools</span>
+        </nav>
+
+        <header class="seo-hero">
+          <p class="eyebrow">BTX shovel strategy</p>
+          <h1>Buy productive BTX compute, not GPU stories.</h1>
+          <p>
+            These tools turn the pain points into products: verify rented GPUs, scan btx1z balances from our node,
+            publish faststart miner images, sell measured hashrate, and compare mining against buying BTX directly.
+          </p>
+          <div class="seo-actions">
+            <a class="primary-link" href="#rental-verifier">Verify a rental</a>
+            <a class="mini-link" href="#mine-vs-buy">Mine vs buy</a>
+          </div>
+        </header>
+
+        <section id="rental-verifier" class="seo-callout">
+          <h2>Rental GPU verifier</h2>
+          <p>
+            The verifier rejects rentals unless the miner can prove CUDA, the patched BTX solver, measured useful
+            hashrate, and a cost per BTX below the threshold. Run the command on the rented instance after the solver
+            is installed.
+          </p>
+          <div class="command-block">
+            <div>
+              <h3>Command</h3>
+              <p>Replace the numbers with the rental's measured BTX hashrate and hourly price.</p>
+            </div>
+            <div class="command-panel">
+              <code id="verify-rental-command">dexbtx-miner verify-rental --backend cuda --measured-nps 76000 --network-nps 2338067 --hourly-usd 0.50 --max-cost-per-btx 1.00 --fee-bps 50</code>
+              <button class="icon-button" type="button" data-copy-target="verify-rental-command" aria-label="Copy verifier command">
+                <span aria-hidden="true">Copy</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="shovel-form">
+            <label>
+              <span>Measured hashrate</span>
+              <input id="verified-measured-nps" type="number" inputmode="decimal" value="76000">
+            </label>
+            <label>
+              <span>Hourly rental cost</span>
+              <input id="verified-hourly-usd" type="number" inputmode="decimal" step="0.001" value="0.50">
+            </label>
+            <label>
+              <span>Max cost per BTX</span>
+              <input id="verified-max-cost" type="number" inputmode="decimal" step="0.01" value="1.00">
+            </label>
+            <label>
+              <span>Buy/OTC price if available</span>
+              <input id="verified-buy-price" type="number" inputmode="decimal" step="0.01" placeholder="optional">
+            </label>
+            <button class="primary-link" type="button" id="verified-quote-button">Calculate gate</button>
+          </div>
+          <div class="shovel-result" id="verified-result">Enter measured values to price productive BTX compute.</div>
+        </section>
+
+        <section id="address-dashboard">
+          <h2>BTX address and UTXO dashboard</h2>
+          <p>
+            This scanner uses the backend BTX node rather than a public explorer. It is meant to support btx1z addresses
+            even when explorer UIs reject the address format.
+          </p>
+          <div class="shovel-form">
+            <label class="wide">
+              <span>BTX address</span>
+              <input id="shovel-address-input" type="text" placeholder="btx1z...">
+            </label>
+            <button class="primary-link" type="button" id="utxo-scan-button">Scan UTXOs</button>
+          </div>
+          <div class="shovel-result" id="utxo-scan-result">Paste a public BTX address. Never paste a private key.</div>
+        </section>
+
+        <section id="faststart-images">
+          <h2>Faststart miner images</h2>
+          <p>
+            Faststart images package the verified solver, miner config, health checks, and service startup so rented
+            GPUs can begin useful work in minutes. The public manifest records the current image profiles and gates.
+          </p>
+          <div class="seo-actions">
+            <a class="mini-link" href="faststart-images.json">Open image manifest</a>
+            <a class="mini-link" href="faststart/vast-cuda/README.md">Vast CUDA image</a>
+            <a class="mini-link" href="VAST_AI.md">Rental GPU notes</a>
+          </div>
+        </section>
+
+        <section id="measured-compute">
+          <h2>Managed mining with measured hashrate</h2>
+          <p>
+            The product unit is verified KN/s: the backend estimates useful hashrate from accepted shares and the
+            advertised pool share target. Customers should buy productive BTX compute, not GPU model names.
+          </p>
+          <div class="shovel-form">
+            <label>
+              <span>Verified KN/s</span>
+              <input id="managed-kns" type="number" inputmode="decimal" value="76">
+            </label>
+            <label>
+              <span>Price per KN/s-hour</span>
+              <input id="managed-price-knh" type="number" inputmode="decimal" step="0.0001" value="0.0066">
+            </label>
+            <label>
+              <span>Hours</span>
+              <input id="managed-hours" type="number" inputmode="decimal" value="24">
+            </label>
+            <button class="primary-link" type="button" id="managed-quote-button">Quote verified compute</button>
+          </div>
+          <div class="shovel-result" id="managed-quote-result">Quote managed capacity by measured KN/s, not card labels.</div>
+          <div class="seo-grid">
+            <a href="/#dashboard-card">
+              <span class="metric-label">Measurement source</span>
+              <strong>Accepted shares</strong>
+              <p>Worker dashboards estimate hashrate from accepted pool shares over the recent window.</p>
+            </a>
+            <a href="/#reference">
+              <span class="metric-label">Sales unit</span>
+              <strong>Verified KN/s</strong>
+              <p>Offer capacity only after the verifier proves useful BTX hashrate and cost discipline.</p>
+            </a>
+          </div>
+        </section>
+
+        <section id="mine-vs-buy" class="seo-callout">
+          <h2>Accumulate only when mining beats buying</h2>
+          <p>
+            If real exchange or OTC BTX can be bought below the measured mining cost, buying is the rational path.
+            Mining only makes sense when measured hashrate is cheap enough.
+          </p>
+          <div class="shovel-form">
+            <label>
+              <span>Hashrate n/s</span>
+              <input id="buycalc-nps" type="number" inputmode="decimal" value="76000">
+            </label>
+            <label>
+              <span>Cost per hour</span>
+              <input id="buycalc-hourly" type="number" inputmode="decimal" step="0.001" value="0.50">
+            </label>
+            <label>
+              <span>BTX buy price</span>
+              <input id="buycalc-price" type="number" inputmode="decimal" step="0.01" value="120">
+            </label>
+            <button class="primary-link" type="button" id="buycalc-button">Compare</button>
+          </div>
+          <div class="shovel-result" id="buycalc-result">Run the comparison with real measured hashrate and current liquidity.</div>
+        </section>
+      </article>
+    </main>
+    <script src="assets/site.js"></script>
+  </body>
+</html>

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import asdict
 from typing import Any
 from uuid import uuid4
@@ -16,10 +17,13 @@ except ImportError as exc:  # pragma: no cover - deployment dependency
 
 from .billing import CheckoutRequest, create_checkout_session, subscription_payload_from_event, verify_stripe_signature
 from .btx_rpc import BtxRpcClient, BtxRpcError
+from .economics import quote_verified_compute
 from .fee_policy import FeePolicy
 from .repository import BackendRepository
 from .settings import BackendSettings
 from .stratum_jobs import target_to_work
+
+ADDRESS_RE = re.compile(r"^btx1z[0-9a-zA-Z]{20,}$")
 
 settings = BackendSettings.from_env()
 settings.ensure_database_parent()
@@ -47,6 +51,19 @@ app.add_middleware(
 class CheckoutBody(BaseModel):
     email: str | None = None
     account_id: str | None = None
+
+
+class VerifierQuoteBody(BaseModel):
+    measured_nps: float
+    hourly_usd: float
+    network_nps: float | None = None
+    max_cost_per_btx_usd: float | None = None
+    reference_buy_price_usd: float | None = None
+    fee_bps: int | None = None
+
+
+def _valid_btx_address(address: str) -> bool:
+    return bool(ADDRESS_RE.match(address.strip()))
 
 
 @app.get("/health")
@@ -141,7 +158,7 @@ def stats() -> dict[str, Any]:
 
 @app.get("/dashboard/{payout_address}")
 def dashboard(payout_address: str) -> dict[str, Any]:
-    if not payout_address.startswith("btx1z"):
+    if not _valid_btx_address(payout_address):
         raise HTTPException(status_code=400, detail="invalid BTX payout address")
     payload = repo.miner_dashboard(payout_address)
     work_per_share = target_to_work(settings.pool_share_target_hex)
@@ -150,6 +167,84 @@ def dashboard(payout_address: str) -> dict[str, Any]:
     payload["share_target_hex"] = settings.pool_share_target_hex
     payload["share_work"] = work_per_share
     return payload
+
+
+@app.get("/address/{payout_address}/utxos")
+def address_utxos(payout_address: str, refresh: bool = False) -> dict[str, Any]:
+    if not _valid_btx_address(payout_address):
+        raise HTTPException(status_code=400, detail="invalid BTX payout address")
+    if not settings.address_scan_enabled:
+        return {
+            "address": payout_address,
+            "enabled": False,
+            "source": "disabled",
+            "cached": False,
+            "total_amount": "0",
+            "total_btx": 0,
+            "unspent_count": 0,
+            "unspents": [],
+        }
+    if not refresh:
+        cached = repo.get_address_balance_scan(
+            payout_address,
+            max_age_seconds=settings.address_scan_cache_ttl_s,
+        )
+        if cached is not None:
+            return cached
+    try:
+        scan = rpc.scantxoutset_address(payout_address)
+    except BtxRpcError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    unspents = list(scan.get("unspents") or [])
+    total_amount = scan.get("total_amount", scan.get("total", 0))
+    try:
+        total_btx = float(total_amount)
+    except (TypeError, ValueError):
+        total_btx = 0.0
+    payload = {
+        "address": payout_address,
+        "enabled": True,
+        "source": "btxd.scantxoutset",
+        "cached": False,
+        "success": bool(scan.get("success", True)),
+        "searched_items": scan.get("searched_items"),
+        "total_amount": str(total_amount),
+        "total_btx": total_btx,
+        "unspent_count": len(unspents),
+        "unspents": unspents[:50],
+    }
+    return repo.record_address_balance_scan(
+        payout_address,
+        source="btxd.scantxoutset",
+        payload=payload,
+    )
+
+
+@app.post("/verifier/quote")
+def verifier_quote(body: VerifierQuoteBody) -> dict[str, Any]:
+    network_nps = body.network_nps
+    if network_nps is None:
+        try:
+            network_nps = float(rpc.getnetworkhashps() or 0)
+        except BtxRpcError:
+            network_nps = 0
+    quote = quote_verified_compute(
+        measured_nps=float(body.measured_nps),
+        network_nps=float(network_nps or 0),
+        hourly_usd=float(body.hourly_usd),
+        fee_bps=int(body.fee_bps if body.fee_bps is not None else settings.verifier_default_fee_bps),
+        max_cost_per_btx_usd=(
+            float(body.max_cost_per_btx_usd)
+            if body.max_cost_per_btx_usd is not None
+            else settings.verifier_default_max_cost_per_btx_usd
+        ),
+        reference_buy_price_usd=(
+            float(body.reference_buy_price_usd)
+            if body.reference_buy_price_usd is not None
+            else None
+        ),
+    )
+    return quote.to_dict()
 
 
 @app.post("/billing/checkout")

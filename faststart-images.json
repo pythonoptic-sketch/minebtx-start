@@ -1,0 +1,47 @@
+{
+  "schema": "https://drinknile.com/faststart-images.schema.json",
+  "updated_at": "2026-06-01",
+  "status": "pilot",
+  "purpose": "Prebuilt BTX miner images that reduce rented GPU setup time and verify productive BTX compute before spend scales.",
+  "required_gates": [
+    "patched btx-gbt-solve exposes --daemon",
+    "patched btx-gbt-solve exposes --share-target",
+    "BTX_MATMUL_BACKEND=cuda for NVIDIA rental images",
+    "BTX_MATMUL_GPU_INPUTS=0 to avoid the slow GPU-input path",
+    "dexbtx-miner verify-rental clears the configured cost/BTX threshold",
+    "miner points rewards to the user's own btx1z payout address"
+  ],
+  "profiles": [
+    {
+      "id": "vast-cuda-btx-start",
+      "provider": "Vast.ai",
+      "status": "build-ready",
+      "backend": "cuda",
+      "min_gpu": "RTX 30-series or newer",
+      "dockerfile": "faststart/vast-cuda/Dockerfile",
+      "build_context": "faststart/vast-cuda",
+      "required_env": [
+        "BTX_ADDRESS"
+      ],
+      "optional_gate_env": [
+        "BTX_MEASURED_NPS",
+        "BTX_NETWORK_NPS",
+        "BTX_RENTAL_HOURLY_USD",
+        "BTX_MAX_COST_PER_BTX_USD"
+      ],
+      "miner_command": "dexbtx-miner --pool stratum.drinknile.com:3333 --address <BTX_ADDRESS> --worker <WORKER> --backend cuda",
+      "verification_command": "dexbtx-miner verify-rental --backend cuda --measured-nps <NPS> --network-nps <NETWORK_NPS> --hourly-usd <USD_PER_HOUR> --max-cost-per-btx <USD_THRESHOLD>",
+      "notes": "Use only after a measured hashrate proof. Do not rent by GPU name alone."
+    },
+    {
+      "id": "runpod-cuda-btx-start",
+      "provider": "RunPod",
+      "status": "build-ready",
+      "backend": "cuda",
+      "min_gpu": "RTX 30-series or newer",
+      "miner_command": "dexbtx-miner --pool stratum.drinknile.com:3333 --address <BTX_ADDRESS> --worker <WORKER> --backend cuda",
+      "verification_command": "dexbtx-miner verify-rental --backend cuda --measured-nps <NPS> --network-nps <NETWORK_NPS> --hourly-usd <USD_PER_HOUR> --max-cost-per-btx <USD_THRESHOLD>",
+      "notes": "Prefer secured cloud inventory when uptime matters."
+    }
+  ]
+}

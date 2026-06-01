@@ -102,3 +102,10 @@ CREATE TABLE IF NOT EXISTS backend_events (
   payload_json TEXT NOT NULL,
   created_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS address_balance_scans (
+  payout_address TEXT PRIMARY KEY,
+  source TEXT NOT NULL,
+  payload_json TEXT NOT NULL,
+  scanned_at TEXT NOT NULL
+);

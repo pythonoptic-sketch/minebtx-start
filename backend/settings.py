@@ -53,6 +53,10 @@ class BackendSettings:
     network_agent_snapshot_path: str = "backend/network-agent.local.json"
     network_agent_min_score: float = 0.70
     network_agent_apply_peers: bool = False
+    address_scan_enabled: bool = True
+    address_scan_cache_ttl_s: int = 600
+    verifier_default_max_cost_per_btx_usd: float = 1.00
+    verifier_default_fee_bps: int = 50
 
     @classmethod
     def from_env(cls) -> "BackendSettings":
@@ -141,6 +145,22 @@ class BackendSettings:
                 "NETWORK_AGENT_APPLY_PEERS",
                 cls.network_agent_apply_peers,
             ),
+            address_scan_enabled=_bool_env(
+                "ADDRESS_SCAN_ENABLED",
+                cls.address_scan_enabled,
+            ),
+            address_scan_cache_ttl_s=int(os.environ.get(
+                "ADDRESS_SCAN_CACHE_TTL_S",
+                cls.address_scan_cache_ttl_s,
+            )),
+            verifier_default_max_cost_per_btx_usd=float(os.environ.get(
+                "VERIFIER_DEFAULT_MAX_COST_PER_BTX_USD",
+                cls.verifier_default_max_cost_per_btx_usd,
+            )),
+            verifier_default_fee_bps=int(os.environ.get(
+                "VERIFIER_DEFAULT_FEE_BPS",
+                cls.verifier_default_fee_bps,
+            )),
         )
 
     def ensure_database_parent(self) -> None:

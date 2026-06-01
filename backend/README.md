@@ -30,6 +30,8 @@ Endpoints:
 - `GET /stats`
 - `GET /policy`
 - `GET /dashboard/{payout_address}`
+- `GET /address/{payout_address}/utxos`
+- `POST /verifier/quote`
 - `POST /billing/checkout`
 - `POST /billing/webhook`
 
@@ -90,6 +92,10 @@ Copy `backend/.env.example` to a private env file on the server and fill:
 - `BTX_RPC_PASSWORD`
 - `FEE_ADDRESS`
 - `TREASURY_ADDRESS`
+- `ADDRESS_SCAN_ENABLED`
+- `ADDRESS_SCAN_CACHE_TTL_S`
+- `VERIFIER_DEFAULT_MAX_COST_PER_BTX_USD`
+- `VERIFIER_DEFAULT_FEE_BPS`
 - optional Stripe values
 
 Never commit the real env file.

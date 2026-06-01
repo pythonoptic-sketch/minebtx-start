@@ -406,6 +406,60 @@ class BackendRepository:
                 (event_type, json.dumps(payload, sort_keys=True), iso()),
             )
 
+    def get_address_balance_scan(
+        self,
+        payout_address: str,
+        *,
+        max_age_seconds: int,
+    ) -> dict[str, Any] | None:
+        cutoff = utc_now() - timedelta(seconds=max(0, max_age_seconds))
+        with self.connect() as conn:
+            row = conn.execute(
+                """
+                SELECT source, payload_json, scanned_at
+                FROM address_balance_scans
+                WHERE payout_address = ?
+                """,
+                (payout_address,),
+            ).fetchone()
+        if row is None:
+            return None
+        scanned_at = parse_iso(row["scanned_at"])
+        if scanned_at < cutoff:
+            return None
+        payload = json.loads(row["payload_json"])
+        payload["source"] = row["source"]
+        payload["scanned_at"] = row["scanned_at"]
+        payload["cached"] = True
+        return payload
+
+    def record_address_balance_scan(
+        self,
+        payout_address: str,
+        *,
+        source: str,
+        payload: dict[str, Any],
+        when: datetime | None = None,
+    ) -> dict[str, Any]:
+        scanned_at = iso(when)
+        stored = dict(payload)
+        stored["source"] = source
+        stored["scanned_at"] = scanned_at
+        stored["cached"] = False
+        with self.connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO address_balance_scans(payout_address, source, payload_json, scanned_at)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(payout_address) DO UPDATE SET
+                  source = excluded.source,
+                  payload_json = excluded.payload_json,
+                  scanned_at = excluded.scanned_at
+                """,
+                (payout_address, source, json.dumps(payload, sort_keys=True), scanned_at),
+            )
+        return stored
+
     def upsert_subscription(
         self,
         *,
