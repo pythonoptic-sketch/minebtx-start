@@ -1,3 +1,15 @@
+drinknile.com, www.drinknile.com {
+  encode zstd gzip
+  root * /opt/evarian
+
+  handle /api/* {
+    reverse_proxy 127.0.0.1:8000
+  }
+
+  try_files {path} /index.html
+  file_server
+}
+
 api.drinknile.com {
   encode zstd gzip
   reverse_proxy 127.0.0.1:8000

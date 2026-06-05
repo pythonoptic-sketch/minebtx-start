@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BTX Start">
-  <rect width="64" height="64" rx="14" fill="#050505"/>
-  <path d="M15 37c9-2 17-9 22-23 2 13-1 25-11 34 9-2 17-8 24-18-3 15-14 25-30 27 4-5 6-11 5-17-3 1-6 1-10-3Z" fill="#f97316"/>
-  <circle cx="25" cy="28" r="10" fill="none" stroke="#ffffff" stroke-width="5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Evarian">
+  <rect width="64" height="64" rx="18" fill="#102018"/>
+  <path d="M12 38c12-20 29-27 44-29-8 7-13 17-16 31l-8-11c-5 3-10 8-20 9Z" fill="#fff8ec"/>
+  <circle cx="45" cy="17" r="5" fill="#f5a553"/>
 </svg>
