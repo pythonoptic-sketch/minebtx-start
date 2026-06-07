@@ -10,11 +10,11 @@
   "health": {
     "btxd": {
       "reachable": true,
-      "blocks": 123458,
-      "headers": 123666,
+      "blocks": 123474,
+      "headers": 123729,
       "ibd": false,
-      "verification_progress": 0.9999395556601348,
-      "network_hash_ps": 156038.3399474376
+      "verification_progress": 0.9999533384685468,
+      "network_hash_ps": 107116.319472768
     },
     "shares_accepted": 0,
     "shares_rejected": 0
@@ -39,5 +39,5 @@
     "stats_url": "https://api.drinknile.com/stats",
     "share_target_hex": "00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
   },
-  "fetched_at": "2026-06-07T10:28:19Z"
+  "fetched_at": "2026-06-07T12:08:53Z"
 }
