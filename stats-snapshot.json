@@ -13,7 +13,7 @@
       "blocks": 128514,
       "headers": 125600,
       "ibd": false,
-      "verification_progress": 0.930525186693779,
+      "verification_progress": 0.9297961760334211,
       "network_hash_ps": 225.0985640241312
     },
     "shares_accepted": 0,
@@ -39,5 +39,5 @@
     "stats_url": "https://api.drinknile.com/stats",
     "share_target_hex": "00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
   },
-  "fetched_at": "2026-06-21T23:47:06Z"
+  "fetched_at": "2026-06-22T02:11:26Z"
 }
